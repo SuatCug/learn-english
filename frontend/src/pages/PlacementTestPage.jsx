@@ -91,7 +91,7 @@ function MCQuestionItem({ question, number, value, onChange, disabled }) {
         <span className="mt-0.5 shrink-0 w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">
           {number}
         </span>
-        <p className="text-sm text-gray-800 leading-relaxed">{question.title}</p>
+        <p className="text-sm text-gray-800 leading-relaxed break-words min-w-0">{question.title}</p>
       </div>
       <div className="ml-9 space-y-2">
         {question.options.map((option, i) => {
@@ -105,10 +105,10 @@ function MCQuestionItem({ question, number, value, onChange, disabled }) {
               type="button"
               disabled={disabled}
               onClick={() => onChange(option)}
-              className={`w-full flex items-center gap-3 rounded-lg border px-4 py-2.5 text-left text-sm transition-colors disabled:cursor-default ${stateClass}`}
+              className={`w-full flex items-center gap-3 rounded-lg border px-3 py-2.5 sm:px-4 text-left text-sm transition-colors disabled:cursor-default ${stateClass}`}
             >
-              <span className="font-semibold text-gray-400 w-4">{OPTION_LETTERS[i]}</span>
-              {option}
+              <span className="font-semibold text-gray-400 w-4 shrink-0">{OPTION_LETTERS[i]}</span>
+              <span className="min-w-0 break-words">{option}</span>
             </button>
           );
         })}
@@ -121,22 +121,22 @@ function GrammarClozeGroup({ passage, questions, answers, onChange, disabled, st
   const segments = passage.split('___');
 
   return (
-    <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-5 mb-8 text-sm text-gray-800 leading-loose whitespace-pre-line">
+    <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 sm:p-5 mb-8 text-sm text-gray-800 leading-loose whitespace-pre-line break-words">
       {segments.map((segment, i) => {
         const question = questions[i];
         return (
           <span key={i}>
             {segment}
             {question && (
-              <span className="inline-flex items-center align-middle mx-1">
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-bold mr-1">
+              <span className="inline-flex items-center align-middle mx-1 max-w-full">
+                <span className="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full bg-emerald-600 text-white text-[10px] font-bold mr-1">
                   {startNumber + i}
                 </span>
                 <select
                   value={answers[question.id] ?? ''}
                   onChange={(e) => onChange(question.id, e.target.value)}
                   disabled={disabled}
-                  className="inline-block rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-50"
+                  className="inline-block max-w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-50"
                 >
                   <option value="">...</option>
                   {question.options.map((option) => (
@@ -166,15 +166,15 @@ function WritingClozeGroup({ passage, questions, answers, onChange, disabled, st
           {wordBank.join('  –  ')}
         </div>
       )}
-      <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-5 text-sm text-gray-800 leading-loose whitespace-pre-line">
+      <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 sm:p-5 text-sm text-gray-800 leading-loose whitespace-pre-line break-words">
         {segments.map((segment, i) => {
           const question = questions[i];
           return (
             <span key={i}>
               {segment}
               {question && (
-                <span className="inline-flex items-center align-middle mx-1">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-bold mr-1">
+                <span className="inline-flex items-center align-middle mx-1 max-w-full">
+                  <span className="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full bg-emerald-600 text-white text-[10px] font-bold mr-1">
                     {startNumber + i}
                   </span>
                   <input
@@ -182,7 +182,7 @@ function WritingClozeGroup({ passage, questions, answers, onChange, disabled, st
                     value={answers[question.id] ?? ''}
                     onChange={(e) => onChange(question.id, e.target.value)}
                     disabled={disabled}
-                    className="inline-block w-28 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-50"
+                    className="inline-block w-24 sm:w-28 max-w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-50"
                   />
                 </span>
               )}
@@ -519,7 +519,7 @@ export default function PlacementTestPage() {
                       return (
                         <div key={group.key} className="mb-8">
                           {groupPassage && (
-                            <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-5 mb-5 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                            <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 sm:p-5 mb-5 text-sm text-gray-700 leading-relaxed whitespace-pre-line break-words">
                               {groupPassage}
                             </div>
                           )}

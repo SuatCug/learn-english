@@ -90,14 +90,14 @@ function ExercisePager({ active, onChange, numbers, theme }) {
   if (numbers.length <= 1) return null;
 
   return (
-    <div className="flex items-center gap-2.5 shrink-0">
-      <span className="text-sm text-gray-400 uppercase tracking-wide">Exercises:</span>
+    <div className="flex items-center flex-wrap gap-2 sm:gap-2.5 sm:shrink-0">
+      <span className="text-xs sm:text-sm text-gray-400 uppercase tracking-wide">Exercises:</span>
       {numbers.map((n) => (
         <button
           key={n}
           type="button"
           onClick={() => onChange(n)}
-          className={`w-9 h-9 rounded text-base font-semibold border transition-colors ${
+          className={`w-8 h-8 sm:w-9 sm:h-9 rounded text-sm sm:text-base font-semibold border transition-colors ${
             active === n
               ? `${theme.solid} ${theme.border} text-white`
               : `bg-white border-gray-300 text-gray-600 ${theme.hoverBorder}`
@@ -137,7 +137,7 @@ function InlineQuestionField({ question, value, onChange, disabled, theme }) {
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className={`mx-1.5 inline-block w-32 rounded border border-gray-300 px-2.5 py-1.5 text-base text-gray-900 focus:outline-none focus:ring-2 ${theme.ring} disabled:bg-gray-50`}
+        className={`mx-1.5 inline-block w-24 max-w-full sm:w-32 rounded border border-gray-300 px-2.5 py-1.5 text-base text-gray-900 focus:outline-none focus:ring-2 ${theme.ring} disabled:bg-gray-50`}
       />
     );
 
@@ -181,8 +181,8 @@ function InlineBlankInput({ value, onChange, disabled, result, index, theme }) {
     : 'border-gray-300';
 
   return (
-    <span className="inline-flex items-center align-middle mx-1">
-      <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full ${theme.solid} text-white text-xs font-bold mr-1`}>
+    <span className="inline-flex items-center align-middle mx-1 max-w-full">
+      <span className={`inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full ${theme.solid} text-white text-xs font-bold mr-1`}>
         {index + 1}
       </span>
       <input
@@ -190,7 +190,7 @@ function InlineBlankInput({ value, onChange, disabled, result, index, theme }) {
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className={`inline-block w-28 rounded border px-2 py-1 text-base text-gray-900 focus:outline-none focus:ring-2 ${theme.ring} disabled:bg-gray-50 ${stateClass}`}
+        className={`inline-block w-20 sm:w-28 max-w-full rounded border px-2 py-1 text-base text-gray-900 focus:outline-none focus:ring-2 ${theme.ring} disabled:bg-gray-50 ${stateClass}`}
       />
     </span>
   );
@@ -212,7 +212,7 @@ function WritingBlanksExercise({ passage, questions, answers, onChange, resultsB
         </div>
       )}
 
-      <div className={`rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-6 text-base text-gray-800 leading-loose whitespace-pre-line`}>
+      <div className={`rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-4 sm:p-6 text-base text-gray-800 leading-loose whitespace-pre-line break-words`}>
         {segments.map((segment, i) => {
           const question = questions[i];
           return (
@@ -255,14 +255,14 @@ const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 function OptionsQuestionItem({ question, index, value, onChange, result, disabled, theme }) {
   return (
     <div>
-      <div className="flex items-start gap-3 mb-3">
+      <div className="flex items-start gap-2.5 sm:gap-3 mb-3">
         <span className={`mt-0.5 shrink-0 w-7 h-7 rounded-full ${theme.solid} text-white text-sm font-bold flex items-center justify-center`}>
           {index + 1}
         </span>
-        <p className="text-base text-gray-800 leading-relaxed">{question.title}</p>
+        <p className="text-base text-gray-800 leading-relaxed break-words min-w-0">{question.title}</p>
       </div>
 
-      <div className="ml-10 space-y-2.5">
+      <div className="ml-0 sm:ml-10 space-y-2.5">
         {question.options.map((option, i) => {
           const isSelected = value === option;
           const isCorrectOption = result && option === result.correctAnswer;
@@ -284,16 +284,16 @@ function OptionsQuestionItem({ question, index, value, onChange, result, disable
               type="button"
               disabled={disabled}
               onClick={() => onChange(option)}
-              className={`w-full flex items-center gap-3 rounded-lg border px-4 py-3 text-left text-base transition-colors disabled:cursor-default ${stateClass}`}
+              className={`w-full flex items-center gap-3 rounded-lg border px-3 py-2.5 sm:px-4 sm:py-3 text-left text-base transition-colors disabled:cursor-default ${stateClass}`}
             >
-              <span className="font-semibold text-gray-400 w-4">{OPTION_LETTERS[i]}</span>
-              {option}
+              <span className="font-semibold text-gray-400 w-4 shrink-0">{OPTION_LETTERS[i]}</span>
+              <span className="min-w-0 break-words">{option}</span>
             </button>
           );
         })}
       </div>
 
-      {result?.explanation && <p className="ml-10 mt-2.5 text-sm text-gray-500">{result.explanation}</p>}
+      {result?.explanation && <p className="ml-0 sm:ml-10 mt-2.5 text-sm text-gray-500">{result.explanation}</p>}
     </div>
   );
 }
@@ -305,18 +305,18 @@ function ExerciseItem({ question, index, value, onChange, result, disabled, them
     status === 'correct' ? 'border-emerald-300' : status === 'incorrect' ? 'border-rose-300' : 'border-transparent';
 
   return (
-    <div className={`border-l-4 ${borderClass} pl-4 py-2 transition-colors`}>
-      <div className="flex items-start gap-3">
+    <div className={`border-l-4 ${borderClass} pl-3 sm:pl-4 py-2 transition-colors`}>
+      <div className="flex items-start gap-2.5 sm:gap-3">
         <span className={`mt-0.5 shrink-0 w-7 h-7 rounded-full ${theme.solid} text-white text-sm font-bold flex items-center justify-center`}>
           {index + 1}
         </span>
-        <p className="text-base text-gray-800 leading-relaxed">
+        <p className="text-base text-gray-800 leading-relaxed break-words min-w-0">
           <InlineQuestionField question={question} value={value} onChange={onChange} disabled={disabled} theme={theme} />
         </p>
       </div>
 
       {result && (
-        <div className="ml-10 mt-2 text-sm">
+        <div className="ml-9 sm:ml-10 mt-2 text-sm">
           {!result.correct && (
             <p className="text-rose-600 font-medium">Correct answer: {String(result.correctAnswer)}</p>
           )}
@@ -667,7 +667,7 @@ export default function LessonPage() {
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto px-6 py-6 flex-1 w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full">
         {isLoading && <LessonSkeleton />}
 
         {loadFailed && <LessonLoadError />}
@@ -692,11 +692,11 @@ export default function LessonPage() {
                 ))}
               </div>
 
-              <div className="rounded-b-xl rounded-tr-xl border border-t-0 border-gray-100 p-8">
+              <div className="rounded-b-xl rounded-tr-xl border border-t-0 border-gray-100 p-4 sm:p-6 lg:p-8">
                 {activeTab === 'exercises' && (
                   <>
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <h2 className={`text-2xl font-bold ${theme.text}`}>{topic.title}</h2>
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
+                      <h2 className={`text-xl sm:text-2xl font-bold ${theme.text} break-words`}>{topic.title}</h2>
                       <ExercisePager
                         active={activeExercise}
                         onChange={handleExerciseChange}
@@ -711,7 +711,7 @@ export default function LessonPage() {
                         <span className={`text-sm ${theme.text} font-medium`}>
                           ✓ You've already completed this exercise.
                         </span>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <button
                             type="button"
                             onClick={handleSeeAnswers}
@@ -740,7 +740,7 @@ export default function LessonPage() {
                     {showExerciseContent && (
                       <>
                         {passage && !isWritingBlanks && (
-                          <div className={`rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-6 mb-6 text-base text-gray-700 leading-relaxed space-y-3`}>
+                          <div className={`rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-4 sm:p-6 mb-6 text-base text-gray-700 leading-relaxed space-y-3`}>
                             {passage.split('\n\n').map((paragraph, i) => (
                               <p key={i}>{paragraph}</p>
                             ))}
@@ -834,7 +834,7 @@ export default function LessonPage() {
                     )}
 
                     {resultsById && (
-                      <div className={`mt-6 rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-5`}>
+                      <div className={`mt-6 rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-4 sm:p-5`}>
                         <p className="text-lg font-bold text-gray-900">You scored {score}%</p>
                         <p className="text-sm text-gray-500 mt-1">
                           {Object.values(resultsById).filter((r) => r.correct).length} / {questions.length} correct

@@ -45,7 +45,7 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
 
   return (
     <div>
-      <div className="flex items-center gap-4 px-5 py-4">
+      <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-4">
         <span className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${avatarClass(student.email || student.name)}`}>
           {student.name?.trim()?.charAt(0)?.toUpperCase() || '?'}
         </span>
@@ -90,12 +90,12 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
           {assignments.map((a) => {
             const cell = resultsRow?.scores?.[a.id];
             return (
-              <div key={a.id} className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">{a.topicTitle}</span>
+              <div key={a.id} className="flex items-center justify-between gap-3 text-sm">
+                <span className="text-gray-600 truncate min-w-0">{a.topicTitle}</span>
                 {cell?.completed ? (
-                  <span className="font-semibold text-emerald-700">{cell.score}</span>
+                  <span className="font-semibold text-emerald-700 shrink-0">{cell.score}</span>
                 ) : (
-                  <span className="text-gray-400">Not completed</span>
+                  <span className="text-gray-400 shrink-0">Not completed</span>
                 )}
               </div>
             );

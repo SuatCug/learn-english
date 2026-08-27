@@ -44,7 +44,7 @@ export default function LevelCategoriesPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-10 flex-1 w-full">
-        <h2 className="text-3xl font-bold text-gray-900 text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center text-balance">
           What would you like to <span className="text-emerald-600">study</span> at {levelInfo.code}?
         </h2>
         <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto">

@@ -96,13 +96,13 @@ function AssignmentsSection({ classroomId, assignments }) {
   return (
     <div className="space-y-4 mb-8">
       {/* Section header — always visible, this is the "closed" state */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h3 className="text-base font-semibold text-gray-900">Assignments ({assignments.length})</h3>
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <button
             type="button"
             onClick={() => navigate(`/classroom/${classroomId}/game/new`)}
-            className="flex items-center gap-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors px-4 py-2 text-sm font-semibold"
+            className="flex items-center justify-center gap-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors px-4 py-2 text-sm font-semibold"
           >
             <Gamepad2 className="h-4 w-4" />
             Start Game
@@ -110,7 +110,7 @@ function AssignmentsSection({ classroomId, assignments }) {
           <button
             type="button"
             onClick={handleToggleForm}
-            className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+            className={`flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
               isFormOpen ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-emerald-600 text-white hover:bg-emerald-700'
             }`}
           >
@@ -137,22 +137,22 @@ function AssignmentsSection({ classroomId, assignments }) {
       >
         <div className="overflow-hidden">
           <div className="rounded-2xl border border-emerald-100 bg-white shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-emerald-50 bg-gradient-to-r from-emerald-50/60 to-white">
-              <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-white">
+            <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 sm:py-5 border-b border-emerald-50 bg-gradient-to-r from-emerald-50/60 to-white">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
                   <Sparkles className="h-4 w-4" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h4 className="text-sm font-semibold text-gray-900">Assign a lesson</h4>
-                  <p className="text-xs text-gray-500">Pick a topic and set a due date</p>
+                  <p className="text-xs text-gray-500 truncate">Pick a topic and set a due date</p>
                 </div>
               </div>
-              <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1">
+              <span className="shrink-0 whitespace-nowrap text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1">
                 {stepsComplete}/4 selected
               </span>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-6">
               {/* Step 1: Category */}
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">1. Category</p>
@@ -351,9 +351,9 @@ function DeleteAssignmentConfirm({ open, onCancel, onConfirm, deleting }) {
 function TeacherView({ classroom, assignments, classroomId }) {
   return (
     <>
-      <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-5 mb-8">
+      <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 sm:p-5 mb-8">
         <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Join code</p>
-        <p className="text-2xl font-extrabold tracking-[0.3em] text-emerald-700">{classroom.joinCode}</p>
+        <p className="text-2xl font-extrabold tracking-[0.2em] sm:tracking-[0.3em] text-emerald-700 break-all">{classroom.joinCode}</p>
       </div>
 
       <StudentsCard classroomId={classroomId} count={classroom.students.length} />

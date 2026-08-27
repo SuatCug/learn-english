@@ -272,13 +272,13 @@ function DeleteAccountForm() {
             <p className="text-sm text-rose-500 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2">{error}</p>
           )}
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <button
               type="submit"
               disabled={!canSubmit || isLoading}
-              className="inline-flex items-center gap-2 rounded-lg bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} className="shrink-0" />
               {isLoading ? 'Deleting...' : 'Permanently Delete My Account'}
             </button>
             <button

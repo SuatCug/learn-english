@@ -33,9 +33,9 @@ function LanguageCard({ group, theme }) {
 export default function WritingExplanation({ data, theme, onNext }) {
   return (
     <div>
-      <div className="flex items-center gap-2.5 mb-1.5">
-        <h2 className="text-xl font-bold text-gray-900">{data.heading}</h2>
-        <span className={`rounded-full ${theme.lightBg} ${theme.text} text-xs font-semibold px-2.5 py-1`}>
+      <div className="flex items-center flex-wrap gap-2.5 mb-1.5">
+        <h2 className="text-xl font-bold text-gray-900 break-words min-w-0">{data.heading}</h2>
+        <span className={`shrink-0 rounded-full ${theme.lightBg} ${theme.text} text-xs font-semibold px-2.5 py-1`}>
           {data.textType}
         </span>
       </div>

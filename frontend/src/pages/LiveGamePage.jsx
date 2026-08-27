@@ -25,11 +25,11 @@ function RoomCodeBadge({ roomCode }) {
           // clipboard not available — badge still shows the code visually
         }
       }}
-      className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50 px-8 py-4 hover:bg-indigo-100 transition-colors"
+      className="inline-flex max-w-full items-center gap-2 sm:gap-3 rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50 px-5 sm:px-8 py-3 sm:py-4 hover:bg-indigo-100 transition-colors"
       title="Copy room code"
     >
-      <span className="text-3xl font-extrabold tracking-[0.3em] text-indigo-700">{roomCode}</span>
-      {copied ? <Check className="h-5 w-5 text-emerald-600" /> : <Copy className="h-5 w-5 text-indigo-400" />}
+      <span className="text-2xl sm:text-3xl font-extrabold tracking-[0.2em] sm:tracking-[0.3em] text-indigo-700 break-all">{roomCode}</span>
+      {copied ? <Check className="h-5 w-5 shrink-0 text-emerald-600" /> : <Copy className="h-5 w-5 shrink-0 text-indigo-400" />}
     </button>
   );
 }
@@ -278,15 +278,15 @@ function GameOverScreen({ finalLeaderboard, classroomId, isHost }) {
           {finalLeaderboard.map((p) => (
             <div
               key={p.id}
-              className={`flex items-center justify-between rounded-lg border px-4 py-2.5 ${
+              className={`flex items-center justify-between gap-3 rounded-lg border px-4 py-2.5 ${
                 MEDAL_ROW_CLASS[p.rank] ?? 'border-gray-100'
               }`}
             >
-              <span className="text-sm font-medium text-gray-800 flex items-center gap-2.5">
-                <span className="w-6 text-center text-base">{MEDALS[p.rank] ?? p.rank}</span>
-                {p.name}
+              <span className="text-sm font-medium text-gray-800 flex items-center gap-2.5 min-w-0">
+                <span className="w-6 shrink-0 text-center text-base">{MEDALS[p.rank] ?? p.rank}</span>
+                <span className="truncate">{p.name}</span>
               </span>
-              <span className="text-sm font-bold text-indigo-700">{p.score} pts</span>
+              <span className="text-sm font-bold text-indigo-700 shrink-0">{p.score} pts</span>
             </div>
           ))}
         </div>
