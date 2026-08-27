@@ -21,15 +21,15 @@ const DESCRIPTIONS = {
 
 export default function CategorySection() {
   return (
-    <section id="kategoriler" className="max-w-6xl mx-auto px-6 py-20">
-      <h2 className="text-3xl font-bold text-gray-900 text-center">
+    <section id="kategoriler" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">
         What would you like to <span className="text-emerald-600">study</span> today?
       </h2>
       <p className="text-gray-500 text-center mt-3 max-w-xl mx-auto">
         Pick one of the categories, choose your level, and start learning right away.
       </p>
 
-      <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="mt-10 sm:mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
         {CATEGORIES.map((category) => (
           <div
             key={category.slug}

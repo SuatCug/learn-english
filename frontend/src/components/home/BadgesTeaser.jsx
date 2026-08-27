@@ -9,7 +9,7 @@ const SAMPLE_BADGES = [
 export default function BadgesTeaser() {
   return (
     <section className="bg-emerald-50/40 border-y border-emerald-100 mb-10 sm:mb-14">
-      <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
         <h2 className="text-2xl font-bold text-gray-900">Earn badges as you progress</h2>
         <p className="text-gray-500 mt-2 max-w-lg mx-auto">
           Earn badges as you complete tests, level up, and get perfect scores.

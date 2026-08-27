@@ -65,10 +65,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-6xl mx-auto px-6 py-9 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-9 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 text-center lg:text-left">
         <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-8 flex-1">
           <div>
-            <Link to="/" className="flex items-center gap-2 w-fit">
+            <Link to="/" className="flex items-center gap-2 w-fit mx-auto lg:mx-0">
               <span className="text-2xl">🍃</span>
               <span className="text-lg font-bold text-white">
                 learn<span className="text-emerald-400">english</span>
@@ -143,7 +143,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-            <div className="flex items-center gap-2.5 mt-3">
+            <div className="flex items-center justify-center lg:justify-start gap-2.5 mt-3">
               {SOCIAL_LINKS.map((social) => (
                 <a
                   key={social.label}
@@ -160,7 +160,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="shrink-0 flex flex-col gap-2.5">
+        <div className="shrink-0 flex flex-col items-center lg:items-stretch gap-2.5 w-full sm:w-auto">
           <Link
             to="/placement-test"
             className="inline-flex items-center justify-center rounded-lg border border-gray-600 text-white text-sm font-semibold px-5 py-2.5 hover:bg-white/5 transition-colors"
