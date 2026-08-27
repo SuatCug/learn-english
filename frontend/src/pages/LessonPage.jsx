@@ -327,14 +327,105 @@ function ExerciseItem({ question, index, value, onChange, result, disabled, them
   );
 }
 
+// Ders içeriği ilk kez yüklenirken sayfayı boşaltmak yerine gerçek düzeni taklit eden bir
+// iskelet gösterilir; veri gelince alıştırma satırları kademeli (staggered) fade-in ile belirir.
+function LessonSkeleton() {
+  return (
+    <div className="card-enter">
+      <div className="flex flex-wrap gap-2 mb-6">
+        <div className="skeleton-box h-4 w-16 rounded" />
+        <div className="skeleton-box h-4 w-44 rounded" />
+        <div className="skeleton-box h-4 w-32 rounded" />
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-3 border-b border-gray-200">
+            <div className="skeleton-box h-8 w-24 rounded-t" />
+            <div className="skeleton-box h-8 w-28 rounded-t opacity-60" />
+          </div>
+
+          <div className="rounded-b-xl rounded-tr-xl border border-t-0 border-gray-100 p-8">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <div className="skeleton-box h-7 w-1/2 rounded" />
+              <div className="skeleton-box h-8 w-28 rounded" />
+            </div>
+            <div className="skeleton-box h-4 w-24 rounded mb-6" />
+
+            <div className="space-y-4">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="card-enter rounded-xl border border-gray-100 p-4"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <div className="skeleton-box h-4 w-3/4 rounded mb-3" />
+                  <div className="flex flex-wrap gap-2">
+                    <div className="skeleton-box h-9 w-24 rounded" />
+                    <div className="skeleton-box h-9 w-24 rounded" />
+                    <div className="skeleton-box h-9 w-24 rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="skeleton-box h-10 w-40 rounded mx-auto mt-8" />
+          </div>
+        </div>
+
+        <aside className="lg:w-64 shrink-0">
+          <div className="skeleton-box h-4 w-32 rounded mb-4" />
+          <div className="space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex items-center gap-3 rounded-lg border border-gray-100 p-3">
+                <div className="skeleton-box w-9 h-9 rounded-lg shrink-0" />
+                <div className="skeleton-box h-4 flex-1 rounded" />
+              </div>
+            ))}
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function LessonLoadError() {
+  return (
+    <div className="py-16 text-center">
+      <p className="text-4xl mb-3">😕</p>
+      <p className="text-gray-800 font-semibold">We couldn't load this lesson.</p>
+      <p className="text-gray-500 text-sm mt-1">It may have been removed, or the connection dropped.</p>
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 text-sm transition-colors"
+        >
+          Try again
+        </button>
+        <Link
+          to="/"
+          className="rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold px-5 py-2.5 text-sm hover:bg-gray-50 transition-colors"
+        >
+          Back to home
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function LessonPage() {
   const { topicId } = useParams();
   const [searchParams] = useSearchParams();
   const assignmentId = searchParams.get('assignmentId');
   const classroomId = searchParams.get('classroomId');
 
-  const { data: topicData, isLoading: topicLoading } = useGetTopicQuery(topicId);
-  const { data: questionsData, isLoading: questionsLoading } = useGetTopicQuestionsQuery(topicId);
+  const { data: topicData, isLoading: topicLoading, isError: topicError } = useGetTopicQuery(topicId);
+  const {
+    data: questionsData,
+    isLoading: questionsLoading,
+    isError: questionsError,
+  } = useGetTopicQuestionsQuery(topicId);
   const { data: meData } = useGetMeQuery();
   const [checkAnswers, { isLoading: checking }] = useCheckAnswersMutation();
   const [addProgress, { isLoading: saving }] = useAddProgressMutation();
@@ -526,6 +617,7 @@ export default function LessonPage() {
   };
 
   const isLoading = topicLoading || questionsLoading;
+  const loadFailed = !isLoading && (topicError || questionsError || !topic);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -569,8 +661,16 @@ export default function LessonPage() {
         </div>
       )}
 
+      {isLoading && (
+        <div className={`${DEFAULT_BANNER_CLASS} py-3`}>
+          <div className="mx-auto h-5 w-64 max-w-[80%] rounded bg-white/25 animate-pulse" />
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto px-6 py-6 flex-1 w-full">
-        {isLoading && <p className="text-gray-400 text-sm py-10">Loading...</p>}
+        {isLoading && <LessonSkeleton />}
+
+        {loadFailed && <LessonLoadError />}
 
         {!isLoading && topic && (
           <div className="flex flex-col lg:flex-row gap-8">
@@ -676,15 +776,19 @@ export default function LessonPage() {
                         )}
 
                         {questions.length > 0 && isWritingBlanks && (
-                          <WritingBlanksExercise
-                            passage={passage}
-                            questions={questions}
-                            answers={answers}
-                            onChange={(questionId, value) => setAnswers((prev) => ({ ...prev, [questionId]: value }))}
-                            resultsById={displayResultsById}
-                            disabled={answersDisabled}
-                            theme={theme}
-                          />
+                          <div className="card-enter">
+                            <WritingBlanksExercise
+                              passage={passage}
+                              questions={questions}
+                              answers={answers}
+                              onChange={(questionId, value) =>
+                                setAnswers((prev) => ({ ...prev, [questionId]: value }))
+                              }
+                              resultsById={displayResultsById}
+                              disabled={answersDisabled}
+                              theme={theme}
+                            />
+                          </div>
                         )}
 
                         {questions.length > 0 && !isWritingBlanks && (
@@ -692,16 +796,23 @@ export default function LessonPage() {
                             {questions.map((question, index) => {
                               const ItemComponent = activeExercise === 2 ? OptionsQuestionItem : ExerciseItem;
                               return (
-                                <ItemComponent
+                                <div
                                   key={question.id}
-                                  question={question}
-                                  index={index}
-                                  value={answers[question.id]}
-                                  onChange={(value) => setAnswers((prev) => ({ ...prev, [question.id]: value }))}
-                                  result={displayResultsById?.[question.id]}
-                                  disabled={answersDisabled}
-                                  theme={theme}
-                                />
+                                  className="card-enter"
+                                  style={{ animationDelay: `${index * 60}ms` }}
+                                >
+                                  <ItemComponent
+                                    question={question}
+                                    index={index}
+                                    value={answers[question.id]}
+                                    onChange={(value) =>
+                                      setAnswers((prev) => ({ ...prev, [question.id]: value }))
+                                    }
+                                    result={displayResultsById?.[question.id]}
+                                    disabled={answersDisabled}
+                                    theme={theme}
+                                  />
+                                </div>
                               );
                             })}
                           </div>

@@ -20,3 +20,58 @@ button:disabled,
 [role='button'][aria-disabled='true'] {
   cursor: not-allowed;
 }
+
+/* --- Skeleton "shimmer" ---
+   Gri bir placeholder kutunun üzerinden soldan sağa geçen açık bir parıltı bandı. */
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-box {
+  position: relative;
+  overflow: hidden;
+  background-color: rgb(229 231 235); /* gray-200 */
+}
+
+.skeleton-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+/* --- Kademeli (staggered) kart girişi ---
+   Gerçek içerik geldiğinde her kart hafifçe aşağıdan yukarı + fade-in ile belirir;
+   gecikme satır içinde animation-delay ile (index * 60ms) verilir. */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  animation: card-enter 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-box::after {
+    animation: none;
+  }
+  .card-enter {
+    animation: none;
+  }
+}
