@@ -18,7 +18,7 @@ platformu.**
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 ![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?style=flat&logo=redux&logoColor=white)
 
-🔗 **Canlı demo:** <!-- Netlify site adresini buraya ekle: https://<site-adı>.netlify.app -->
+🔗 **Canlı demo:** [learnenglishc.netlify.app](https://learnenglishc.netlify.app/)
 
 </div>
 
@@ -82,15 +82,12 @@ puan ve açıklamalı geri bildirim döner; sonuç kalıcı ilerlemeye (streak, 
 
 ## 📸 Ekran görüntüleri
 
-> Görselleri `docs/screenshots/` klasörüne ekleyip aşağıdaki tabloyu güncelleyin.
-> (Klasör henüz depoda yok; ilk görselleri eklerken siz oluşturacaksınız.)
-
 | | |
 |---|---|
 | **Ana sayfa** <br> ![Ana sayfa](docs/screenshots/01-anasayfa.png) | **Kategori / seviye seçimi** <br> ![Seviyeler](docs/screenshots/02-seviyeler.png) |
-| **Ders — alıştırma ve geri bildirim** <br> ![Ders](docs/screenshots/03-ders.png) | **Seviye tespit sınavı** <br> ![Seviye tespit](docs/screenshots/04-seviye-tespit.png) |
+| **Konu listesi — bir seviyenin dersleri** <br> ![Konular](docs/screenshots/03-konular.png) | **Seviye tespit sınavı** <br> ![Seviye tespit](docs/screenshots/04-seviye-tespit.png) |
 | **Profil — streak & ilerleme** <br> ![Profil](docs/screenshots/05-profil.png) | **Okul Modu — sınıf** <br> ![Sınıf](docs/screenshots/06-sinif.png) |
-| **Canlı quiz — soru** <br> ![Canlı quiz](docs/screenshots/07-canli-quiz.png) | **Canlı quiz — skor tablosu** <br> ![Skor tablosu](docs/screenshots/08-skor-tablosu.png) |
+| **Canlı quiz — soru** <br> ![Canlı quiz](docs/screenshots/07-canli-quiz.png) | **Canlı quiz — oyun sonu skor tablosu** <br> ![Skor tablosu](docs/screenshots/08-skor-tablosu.png) |
 
 ## 🛠 Kullanılan teknolojiler
 
