@@ -11,4 +11,12 @@ const loginRules = [
   body('password').notEmpty().withMessage('Şifre zorunludur.'),
 ];
 
-module.exports = { registerRules, loginRules };
+const verifyEmailRules = [
+  body('token').isString().isHexadecimal().isLength({ min: 64, max: 64 }).withMessage('Doğrulama linki geçersiz.'),
+];
+
+const resendVerificationRules = [
+  body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail(),
+];
+
+module.exports = { registerRules, loginRules, verifyEmailRules, resendVerificationRules };

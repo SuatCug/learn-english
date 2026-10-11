@@ -19,7 +19,18 @@ export const authApi = createApi({
     register: builder.mutation({
       query: (payload) => ({ url: '/auth/register', method: 'POST', body: payload }),
     }),
+    verifyEmail: builder.mutation({
+      query: (token) => ({ url: '/auth/verify-email', method: 'POST', body: { token } }),
+    }),
+    resendVerification: builder.mutation({
+      query: (email) => ({ url: '/auth/resend-verification', method: 'POST', body: { email } }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useVerifyEmailMutation,
+  useResendVerificationMutation,
+} = authApi;

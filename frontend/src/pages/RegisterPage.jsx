@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import AuthLayout from '@/components/auth/AuthLayout';
 import AuthBrand from '@/components/auth/AuthBrand';
 import PasswordField from '@/components/auth/PasswordField';
+import ResendVerificationButton from '@/components/auth/ResendVerificationButton';
 import { useRegisterMutation } from '@/services/authApi';
-import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [register, { isLoading }] = useRegisterMutation();
 
   const [name, setName] = useState('');
@@ -18,6 +15,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  // Kayıt başarılı olduğunda doğrulama maili gönderilen adres; dolu ise form yerine bilgi ekranı gösterilir.
+  const [registeredEmail, setRegisteredEmail] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,12 +33,36 @@ export default function RegisterPage() {
 
     try {
       const data = await register({ name, email, password }).unwrap();
-      dispatch(setCredentials(data.data));
-      navigate('/');
+      setRegisteredEmail(data.data.email);
     } catch (err) {
       setError(getErrorMessage(err));
     }
   };
+
+  if (registeredEmail) {
+    return (
+      <AuthLayout>
+        <AuthBrand />
+
+        <h1 className="text-3xl font-bold text-gray-900 text-center">E-postanı kontrol et</h1>
+        <p className="text-sm text-gray-500 mt-3 text-center">
+          <span className="font-semibold text-gray-700">{registeredEmail}</span> adresine bir doğrulama linki
+          gönderdik. Hesabını etkinleştirmek için linke tıkla. Gelen kutunda göremezsen spam klasörüne de bak.
+        </p>
+
+        <div className="mt-6">
+          <ResendVerificationButton email={registeredEmail} />
+        </div>
+
+        <Link
+          to="/login"
+          className="block w-full text-center rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 text-[15px] mt-6 transition-colors"
+        >
+          Giriş ekranına dön
+        </Link>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout>

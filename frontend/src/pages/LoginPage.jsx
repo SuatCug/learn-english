@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import AuthLayout from '@/components/auth/AuthLayout';
 import AuthBrand from '@/components/auth/AuthBrand';
 import PasswordField from '@/components/auth/PasswordField';
+import ResendVerificationButton from '@/components/auth/ResendVerificationButton';
 import { useLoginMutation } from '@/services/authApi';
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
@@ -16,16 +17,20 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  // Doğrulanmamış hesapla giriş denendiğinde "tekrar gönder" butonu gösterilir.
+  const [unverifiedEmail, setUnverifiedEmail] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setUnverifiedEmail(null);
     try {
       const data = await login({ email, password }).unwrap();
       dispatch(setCredentials(data.data));
       navigate('/');
     } catch (err) {
       setError(getErrorMessage(err));
+      if (err?.data?.code === 'EMAIL_NOT_VERIFIED') setUnverifiedEmail(email);
     }
   };
 
@@ -75,6 +80,8 @@ export default function LoginPage() {
         {error && (
           <p className="text-sm text-rose-500 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2">{error}</p>
         )}
+
+        {unverifiedEmail && <ResendVerificationButton email={unverifiedEmail} />}
 
         <button
           type="submit"

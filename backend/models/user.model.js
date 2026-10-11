@@ -55,6 +55,13 @@ const userSchema = new mongoose.Schema(
     badges: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Badge' }],
     // Premium/Öğretmen özellikleri (sınıf oluşturma vb.) şimdilik admin tarafından manuel set edilir.
     isPremium: { type: Boolean, default: false },
+    // Default bilerek verilmedi: bu alan eklenmeden önce kayıt olan kullanıcılarda alan hiç yoktur
+    // ve doğrulanmış sayılırlar. Sadece `false` olanlar giriş yapamaz.
+    emailVerified: { type: Boolean },
+    // Doğrulama linkindeki token'ın SHA-256 hash'i (ham token sadece mailde bulunur).
+    emailVerificationToken: { type: String, select: false },
+    emailVerificationExpires: { type: Date, select: false },
+    verificationEmailSentAt: { type: Date, select: false },
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );

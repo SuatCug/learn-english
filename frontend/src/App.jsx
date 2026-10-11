@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import ScrollToTop from '@/components/ScrollToTop';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
+import VerifyEmailPage from '@/pages/VerifyEmailPage';
 import HomePage from '@/pages/HomePage';
 import CategoryLevelsPage from '@/pages/CategoryLevelsPage';
 import LevelCategoriesPage from '@/pages/LevelCategoriesPage';
@@ -29,6 +30,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route
           path="/"
           element={
