@@ -1,4 +1,5 @@
 const { body } = require('express-validator');
+const { LEVEL_ORDER } = require('../utils/levelProgress.util');
 
 const progressRules = [
   body('topicId').isMongoId().withMessage('Geçerli bir topicId zorunludur.'),
@@ -20,4 +21,8 @@ const changePasswordRules = [
 
 const deleteAccountRules = [body('password').notEmpty().withMessage('Şifre zorunludur.')];
 
-module.exports = { progressRules, updateProfileRules, changePasswordRules, deleteAccountRules };
+const setLevelRules = [
+  body('level').isIn(LEVEL_ORDER).withMessage(`Seviye şunlardan biri olmalıdır: ${LEVEL_ORDER.join(', ')}.`),
+];
+
+module.exports = { progressRules, updateProfileRules, changePasswordRules, deleteAccountRules, setLevelRules };

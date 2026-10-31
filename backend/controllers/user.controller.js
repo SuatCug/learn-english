@@ -65,6 +65,18 @@ const updateProfile = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Profil güncellendi.', data: { user: user.toSafeJSON() } });
 });
 
+// İlk girişteki seviye seçimi ("Yeni başlıyorum" → A1, "Seviyemi biliyorum" → seçilen seviye).
+// Sadece seviyesi henüz belirlenmemiş kullanıcılar için; sonrasında seviye testle veya ilerledikçe değişir.
+const setLevel = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (user.level) throw new ApiError(409, 'Seviyen zaten belirlenmiş.');
+
+  user.level = req.body.level;
+  await user.save();
+
+  res.json({ success: true, message: 'Seviye kaydedildi.', data: { user: user.toSafeJSON() } });
+});
+
 const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -102,4 +114,4 @@ const deleteAccount = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Hesap silindi.' });
 });
 
-module.exports = { me, addProgress, updateProfile, changePassword, deleteAccount };
+module.exports = { me, addProgress, updateProfile, setLevel, changePassword, deleteAccount };

@@ -7,10 +7,12 @@ const {
   updateProfileRules,
   changePasswordRules,
   deleteAccountRules,
+  setLevelRules,
 } = require('../validations/user.validation');
 
 router.get('/me', authenticate, userController.me);
 router.patch('/me', authenticate, updateProfileRules, validate, userController.updateProfile);
+router.patch('/me/level', authenticate, setLevelRules, validate, userController.setLevel);
 router.patch('/me/password', authenticate, changePasswordRules, validate, userController.changePassword);
 router.delete('/me', authenticate, deleteAccountRules, validate, userController.deleteAccount);
 router.post('/progress', authenticate, progressRules, validate, userController.addProgress);
