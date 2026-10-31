@@ -61,6 +61,11 @@ const userSchema = new mongoose.Schema(
     // Doğrulama linkindeki token'ın SHA-256 hash'i (ham token sadece mailde bulunur).
     emailVerificationToken: { type: String, select: false },
     emailVerificationExpires: { type: Date, select: false },
+    // Mobil uygulamada girilen 6 haneli kodun SHA-256 hash'i; link ile aynı mailde gönderilir, daha kısa süre geçerlidir.
+    emailVerificationCode: { type: String, select: false },
+    emailVerificationCodeExpires: { type: Date, select: false },
+    // Kaba kuvvetle kod denemeyi engellemek için: sınır aşılınca kod geçersiz olur, yenisi istenmelidir.
+    emailVerificationAttempts: { type: Number, select: false },
     verificationEmailSentAt: { type: Date, select: false },
   },
   { timestamps: { createdAt: true, updatedAt: false } }

@@ -29,22 +29,24 @@ const sendMail = async ({ to, subject, html }) => {
 // CLIENT_URL virgülle ayrılmış birden fazla origin içerebilir; linkler için ilki kullanılır.
 const clientUrl = () => (process.env.CLIENT_URL || 'http://localhost:5173').split(',')[0].trim().replace(/\/$/, '');
 
-const sendVerificationEmail = (user, token) => {
+// Mobil uygulamada girilecek 6 haneli kod öne çıkarılır; web sitesinden kayıt olanlar için link de bulunur.
+const sendVerificationEmail = (user, { token, code }) => {
   const link = `${clientUrl()}/verify-email?token=${token}`;
   return sendMail({
     to: user.email,
-    subject: 'E-posta adresini doğrula',
+    subject: `Doğrulama kodun: ${code}`,
     html: `
-      <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#111827">
-        <h2 style="color:#059669">Merhaba ${escapeHtml(user.name)},</h2>
-        <p>Hesabını etkinleştirmek için aşağıdaki butona tıklayarak e-posta adresini doğrula.</p>
-        <p style="text-align:center;margin:32px 0">
-          <a href="${link}" style="background:#059669;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold">
-            E-postamı Doğrula
-          </a>
+      <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#1D1A2B">
+        <h2 style="color:#C8431C">Merhaba ${escapeHtml(user.name)},</h2>
+        <p>Hesabını etkinleştirmek için bu kodu uygulamaya gir:</p>
+        <p style="text-align:center;margin:28px 0">
+          <span style="display:inline-block;background:#FDF1EC;border:2px solid #C8431C;border-radius:14px;padding:14px 22px;font-size:32px;font-weight:bold;letter-spacing:10px;color:#1D1A2B">${code}</span>
         </p>
-        <p style="font-size:13px;color:#6b7280">Buton çalışmazsa bu linki tarayıcına yapıştır:<br>${link}</p>
-        <p style="font-size:13px;color:#6b7280">Link 24 saat geçerlidir. Bu kaydı sen yapmadıysan bu e-postayı yok sayabilirsin.</p>
+        <p style="font-size:13px;color:#5E5A70">Kod 30 dakika geçerlidir.</p>
+        <p style="font-size:13px;color:#5E5A70">Web sitesinden kayıt olduysan bu bağlantıya tıklayabilirsin (24 saat geçerli):<br>
+          <a href="${link}" style="color:#C8431C">${link}</a>
+        </p>
+        <p style="font-size:13px;color:#5E5A70">Bu kaydı sen yapmadıysan bu e-postayı yok sayabilirsin.</p>
       </div>
     `,
   });

@@ -11,8 +11,25 @@ const loginRules = [
   body('password').notEmpty().withMessage('Şifre zorunludur.'),
 ];
 
+// Web: { token } (linkteki 64 haneli hex). Mobil: { email, code } (6 haneli kod).
 const verifyEmailRules = [
-  body('token').isString().isHexadecimal().isLength({ min: 64, max: 64 }).withMessage('Doğrulama linki geçersiz.'),
+  body('token')
+    .optional()
+    .isString()
+    .isHexadecimal()
+    .isLength({ min: 64, max: 64 })
+    .withMessage('Doğrulama linki geçersiz.'),
+  body('email')
+    .if(body('token').not().exists())
+    .trim()
+    .isEmail()
+    .withMessage('Geçerli bir e-posta adresi giriniz.')
+    .normalizeEmail(),
+  body('code')
+    .if(body('token').not().exists())
+    .trim()
+    .matches(/^\d{6}$/)
+    .withMessage('Kod 6 haneli olmalıdır.'),
 ];
 
 const resendVerificationRules = [
