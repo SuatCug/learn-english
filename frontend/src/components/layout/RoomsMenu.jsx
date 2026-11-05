@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CreateRoomButton from './CreateRoomButton';
 import JoinRoomButton from './JoinRoomButton';
 import PlanModal from './PlanModal';
+import { Plus, KeyRound, GraduationCap, School } from 'lucide-react';
 
 function MenuCard({ icon, title, subtitle, onClick, iconBg, badge }) {
   return (
@@ -57,9 +58,9 @@ export default function RoomsMenu() {
       <button
         type="button"
         onClick={() => setMenuOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 text-emerald-700 text-sm font-medium px-4 py-1.5 hover:bg-emerald-50 transition-colors"
+        className="inline-flex items-center gap-2 rounded-md text-gray-300 text-sm font-medium px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors"
       >
-        <span aria-hidden="true">🏫</span> School Mode
+        <School size={17} strokeWidth={1.75} aria-hidden="true" /> School Mode
       </button>
 
       {menuOpen && (
@@ -67,16 +68,16 @@ export default function RoomsMenu() {
           <div className="fixed inset-0 z-[55]" onClick={() => setMenuOpen(false)} />
           <div className="absolute right-0 top-full mt-2 z-[56] w-64 rounded-xl border border-gray-100 bg-white shadow-lg p-2 flex flex-col">
             <MenuCard
-              icon="➕"
-              iconBg="bg-emerald-50"
+              icon={<Plus size={18} strokeWidth={2} />}
+              iconBg="bg-emerald-50 text-emerald-700"
               title="Create Room"
               subtitle={isPremium ? 'Start a new classroom' : 'See Premium plans'}
               badge={!isPremium ? 'PRO' : null}
               onClick={handleCreateRoomClick}
             />
             <MenuCard
-              icon="🔑"
-              iconBg="bg-gray-100"
+              icon={<KeyRound size={17} strokeWidth={1.75} />}
+              iconBg="bg-gray-100 text-gray-700"
               title="Join Room"
               subtitle="Enter a class code"
               onClick={() => {
@@ -85,8 +86,8 @@ export default function RoomsMenu() {
               }}
             />
             <MenuCard
-              icon="🎓"
-              iconBg="bg-sky-50"
+              icon={<GraduationCap size={18} strokeWidth={1.75} />}
+              iconBg="bg-sky-50 text-sky-700"
               title="My Class"
               subtitle="Rooms you teach or joined"
               onClick={() => {

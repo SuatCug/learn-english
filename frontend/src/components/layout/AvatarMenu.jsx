@@ -22,7 +22,7 @@ export default function AvatarMenu() {
       <button
         type="button"
         onClick={() => setMenuOpen((o) => !o)}
-        className="flex items-center gap-1 rounded-full hover:bg-gray-50 transition-colors p-1"
+        className="flex items-center gap-1 rounded-full hover:bg-gray-800 transition-colors p-1"
       >
         <span className="w-8 h-8 rounded-full bg-emerald-500 text-white text-sm font-semibold flex items-center justify-center">
           {initial}

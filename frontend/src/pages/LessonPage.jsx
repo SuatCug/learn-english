@@ -327,68 +327,6 @@ function ExerciseItem({ question, index, value, onChange, result, disabled, them
   );
 }
 
-// Ders içeriği ilk kez yüklenirken sayfayı boşaltmak yerine gerçek düzeni taklit eden bir
-// iskelet gösterilir; veri gelince alıştırma satırları kademeli (staggered) fade-in ile belirir.
-function LessonSkeleton() {
-  return (
-    <div className="card-enter">
-      <div className="flex flex-wrap gap-2 mb-6">
-        <div className="skeleton-box h-4 w-16 rounded" />
-        <div className="skeleton-box h-4 w-44 rounded" />
-        <div className="skeleton-box h-4 w-32 rounded" />
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="flex-1 min-w-0">
-          <div className="flex gap-3 border-b border-gray-200">
-            <div className="skeleton-box h-8 w-24 rounded-t" />
-            <div className="skeleton-box h-8 w-28 rounded-t opacity-60" />
-          </div>
-
-          <div className="rounded-b-xl rounded-tr-xl border border-t-0 border-gray-100 p-8">
-            <div className="flex items-center justify-between gap-4 mb-4">
-              <div className="skeleton-box h-7 w-1/2 rounded" />
-              <div className="skeleton-box h-8 w-28 rounded" />
-            </div>
-            <div className="skeleton-box h-4 w-24 rounded mb-6" />
-
-            <div className="space-y-4">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="card-enter rounded-xl border border-gray-100 p-4"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                >
-                  <div className="skeleton-box h-4 w-3/4 rounded mb-3" />
-                  <div className="flex flex-wrap gap-2">
-                    <div className="skeleton-box h-9 w-24 rounded" />
-                    <div className="skeleton-box h-9 w-24 rounded" />
-                    <div className="skeleton-box h-9 w-24 rounded" />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="skeleton-box h-10 w-40 rounded mx-auto mt-8" />
-          </div>
-        </div>
-
-        <aside className="lg:w-64 shrink-0">
-          <div className="skeleton-box h-4 w-32 rounded mb-4" />
-          <div className="space-y-3">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="flex items-center gap-3 rounded-lg border border-gray-100 p-3">
-                <div className="skeleton-box w-9 h-9 rounded-lg shrink-0" />
-                <div className="skeleton-box h-4 flex-1 rounded" />
-              </div>
-            ))}
-          </div>
-        </aside>
-      </div>
-    </div>
-  );
-}
-
 function LessonLoadError() {
   return (
     <div className="py-16 text-center">
@@ -661,15 +599,7 @@ export default function LessonPage() {
         </div>
       )}
 
-      {isLoading && (
-        <div className={`${DEFAULT_BANNER_CLASS} py-3`}>
-          <div className="mx-auto h-5 w-64 max-w-[80%] rounded bg-white/25 animate-pulse" />
-        </div>
-      )}
-
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full">
-        {isLoading && <LessonSkeleton />}
-
         {loadFailed && <LessonLoadError />}
 
         {!isLoading && topic && (

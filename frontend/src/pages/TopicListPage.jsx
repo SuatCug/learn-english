@@ -1,14 +1,13 @@
-import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import useInView from '@/hooks/useInView';
+import BrandMark from '@/components/BrandMark';
 import { useGetTopicsQuery, topicsApi } from '@/services/topicsApi';
 import { CATEGORIES, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from '@/lib/constants';
-import grammarIllustration from '@/assets/grammar-illustration.png';
-import vocabularyIllustration from '@/assets/vocabulary-illustration.png';
-import writingIllustration from '@/assets/writing-illustration.png';
-import readingIllustration from '@/assets/reading-illustration.png';
+import grammarIllustration from '@/assets/home-grammar.webp';
+import vocabularyIllustration from '@/assets/home-vocabulary.webp';
+import writingIllustration from '@/assets/home-writing.webp';
+import readingIllustration from '@/assets/home-reading.webp';
 
 const CATEGORY_ILLUSTRATIONS = {
   grammar: grammarIllustration,
@@ -26,16 +25,13 @@ const PALETTES = [
   'from-green-500 to-green-700',
 ];
 
-// İlk yüklemede gerçek kartların yerine gösterilen, aynı boyut/düzendeki gri placeholder.
-function SkeletonCard() {
+// Veri gelene kadar kartların yerini tutan sade, animasyonsuz kutu (sayfa zıplamasın diye aynı boyutta).
+function PlaceholderCard() {
   return (
-    <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-      <div className="skeleton-box h-44 w-full" />
-      <div className="h-7 w-full bg-gray-100" />
-      <div className="p-4 min-h-[4.5rem] flex flex-col items-center justify-center gap-2">
-        <div className="skeleton-box h-3.5 w-3/4 rounded" />
-        <div className="skeleton-box h-3.5 w-1/2 rounded" />
-      </div>
+    <div className="rounded-sm border border-[#f0f0f0] bg-white overflow-hidden">
+      <div className="h-44 w-full bg-gray-100" />
+      <div className="h-7 w-full bg-gray-50" />
+      <div className="p-4 min-h-[4.5rem]" />
     </div>
   );
 }
@@ -47,27 +43,16 @@ function TopicCard({
   categoryInfo,
   illustration,
   bannerClass,
-  navigating,
-  onNavigate,
   onPrefetch,
 }) {
-  const [ref, inView] = useInView();
-
   return (
-    <div
-      ref={ref}
-      style={{ transitionDelay: `${(index % 8) * 80}ms` }}
-      className={`transition-all duration-500 ease-out ${
-        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-      }`}
-    >
+    <div>
       <Link
         to={`/lesson/${topic._id}`}
-        onClick={() => onNavigate(topic._id)}
         onPointerEnter={() => onPrefetch(topic._id)}
         onPointerDown={() => onPrefetch(topic._id)}
         onFocus={() => onPrefetch(topic._id)}
-        className="relative block rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+        className="relative block rounded-sm border border-[#f0f0f0] bg-white overflow-hidden shadow-[0_1px_2px_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] hover:shadow-[0_8px_17px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.19)] transition-shadow duration-500 ease-in-out"
       >
         <div
           className={`relative h-44 flex items-center justify-center overflow-hidden ${
@@ -84,18 +69,12 @@ function TopicCard({
           </span>
         </div>
         <div className={`${bannerClass} px-3 py-1.5 flex items-center justify-center gap-1.5`}>
-          <span className="text-sm">🍃</span>
+          <BrandMark size={16} />
           <span className="text-white text-xs font-bold tracking-wide">learnenglish</span>
         </div>
         <div className="p-4 bg-white text-center min-h-[4.5rem] flex items-center justify-center">
           <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-2">{topic.title}</p>
         </div>
-
-        {navigating && (
-          <span className="absolute inset-0 flex items-center justify-center bg-white/65 backdrop-blur-[1px]">
-            <span className="w-8 h-8 rounded-full border-[3px] border-gray-300 border-t-emerald-600 animate-spin" />
-          </span>
-        )}
       </Link>
     </div>
   );
@@ -110,10 +89,6 @@ export default function TopicListPage() {
   const topics = data?.data?.topics ?? [];
   const illustration = CATEGORY_ILLUSTRATIONS[category];
   const bannerClass = CATEGORY_BANNER_CLASS[category] ?? DEFAULT_BANNER_CLASS;
-
-  // Bir karta tıklanınca sadece o kartın içinde spinner gösterilir; diğer kartlar ekranda kalır,
-  // sayfa tekrar skeleton'a dönmez (skeleton yalnızca ilk yüklemede).
-  const [navigatingId, setNavigatingId] = useState(null);
 
   // Kullanıcı karta dokunduğu/üstüne geldiği an dersin verisini (konu + sorular) önceden çeker;
   // böylece tıklayınca LessonPage cache'ten anında dolar, skeleton görünmeden ders ekranı açılır.
@@ -150,7 +125,7 @@ export default function TopicListPage() {
         {!isError && (isLoading || topics.length > 0) && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading
-              ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
+              ? Array.from({ length: 6 }).map((_, i) => <PlaceholderCard key={i} />)
               : topics.map((topic, index) => (
                   <TopicCard
                     key={topic._id}
@@ -160,8 +135,6 @@ export default function TopicListPage() {
                     categoryInfo={categoryInfo}
                     illustration={illustration}
                     bannerClass={bannerClass}
-                    navigating={navigatingId === topic._id}
-                    onNavigate={setNavigatingId}
                     onPrefetch={warmLesson}
                   />
                 ))}

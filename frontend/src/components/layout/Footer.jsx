@@ -71,7 +71,7 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-2 w-fit mx-auto lg:mx-0">
               <span className="text-2xl">🍃</span>
               <span className="text-lg font-bold text-white">
-                learn<span className="text-emerald-400">english</span>
+                learnenglish
               </span>
             </Link>
             <p className="text-sm text-gray-400 mt-3">

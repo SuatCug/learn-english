@@ -2,10 +2,10 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { CATEGORIES, LEVELS, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from '@/lib/constants';
-import grammarIllustration from '@/assets/grammar-illustration.png';
-import vocabularyIllustration from '@/assets/vocabulary-illustration.png';
-import writingIllustration from '@/assets/writing-illustration.png';
-import readingIllustration from '@/assets/reading-illustration.png';
+import grammarIllustration from '@/assets/home-grammar.webp';
+import vocabularyIllustration from '@/assets/home-vocabulary.webp';
+import writingIllustration from '@/assets/home-writing.webp';
+import readingIllustration from '@/assets/home-reading.webp';
 
 const CATEGORY_ILLUSTRATIONS = {
   grammar: grammarIllustration,
