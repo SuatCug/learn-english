@@ -95,7 +95,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setShowCodeScreen(true)}
-            className="w-full rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold py-2.5 text-[15px] transition-colors"
+            className="w-full rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold h-10 text-[15px] transition-colors"
           >
             Doğrulama kodunu gir
           </button>
@@ -104,7 +104,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 text-[15px] transition-colors"
+          className="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors"
         >
           {isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
         </button>

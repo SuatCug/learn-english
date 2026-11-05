@@ -40,7 +40,8 @@ export default function AuthLayout({ children }) {
         </div>
 
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8">
-          <div className="w-full max-w-[440px]">{children}</div>
+          {/* 400px: Google butonunun izin verilen en büyük genişliği; form elemanları onunla aynı genişlikte olsun. */}
+          <div className="w-full max-w-[400px]">{children}</div>
         </div>
       </div>
     </div>

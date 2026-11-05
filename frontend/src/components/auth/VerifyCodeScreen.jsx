@@ -128,7 +128,7 @@ export default function VerifyCodeScreen({ email, onBack }) {
         <button
           type="submit"
           disabled={isLoading}
-          className="mt-6 w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 text-[15px] transition-colors"
+          className="mt-6 w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors"
         >
           {isLoading ? 'Doğrulanıyor...' : 'Doğrula'}
         </button>
