@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '@/components/auth/AuthLayout';
 import AuthBrand from '@/components/auth/AuthBrand';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import PasswordField from '@/components/auth/PasswordField';
-import ResendVerificationButton from '@/components/auth/ResendVerificationButton';
+import VerifyCodeScreen from '@/components/auth/VerifyCodeScreen';
 import { useRegisterMutation } from '@/services/authApi';
 import { getErrorMessage } from '@/lib/getErrorMessage';
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [register, { isLoading }] = useRegisterMutation();
 
   const [name, setName] = useState('');
@@ -15,7 +17,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  // Kayıt başarılı olduğunda doğrulama maili gönderilen adres; dolu ise form yerine bilgi ekranı gösterilir.
+  // Kayıt başarılı olduğunda doğrulama kodu gönderilen adres; dolu ise form yerine kod giriş ekranı gösterilir.
   const [registeredEmail, setRegisteredEmail] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -42,24 +44,7 @@ export default function RegisterPage() {
   if (registeredEmail) {
     return (
       <AuthLayout>
-        <AuthBrand />
-
-        <h1 className="text-3xl font-bold text-gray-900 text-center">E-postanı kontrol et</h1>
-        <p className="text-sm text-gray-500 mt-3 text-center">
-          <span className="font-semibold text-gray-700">{registeredEmail}</span> adresine bir doğrulama linki
-          gönderdik. Hesabını etkinleştirmek için linke tıkla. Gelen kutunda göremezsen spam klasörüne de bak.
-        </p>
-
-        <div className="mt-6">
-          <ResendVerificationButton email={registeredEmail} />
-        </div>
-
-        <Link
-          to="/login"
-          className="block w-full text-center rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 text-[15px] mt-6 transition-colors"
-        >
-          Giriş ekranına dön
-        </Link>
+        <VerifyCodeScreen email={registeredEmail} onBack={() => navigate('/login')} />
       </AuthLayout>
     );
   }
@@ -84,7 +69,7 @@ export default function RegisterPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Adın Soyadın"
-            className="w-full rounded-lg border border-emerald-100 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
@@ -100,7 +85,7 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="ornek@eposta.com"
-            className="w-full rounded-lg border border-emerald-100 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
@@ -135,9 +120,11 @@ export default function RegisterPage() {
         </button>
       </form>
 
+      <GoogleSignInButton text="signup_with" />
+
       <p className="text-center text-sm text-gray-500 mt-6">
         Zaten hesabın var mı?{' '}
-        <Link to="/login" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+        <Link to="/login" className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold">
           Giriş Yap
         </Link>
       </p>

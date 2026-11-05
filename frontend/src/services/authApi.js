@@ -22,6 +22,14 @@ export const authApi = createApi({
     verifyEmail: builder.mutation({
       query: (token) => ({ url: '/auth/verify-email', method: 'POST', body: { token } }),
     }),
+    // Mailde gelen 6 haneli kodla doğrulama.
+    verifyEmailCode: builder.mutation({
+      query: ({ email, code }) => ({ url: '/auth/verify-email', method: 'POST', body: { email, code } }),
+    }),
+    // Google ile giriş: Google'dan gelen ID token (credential) backend'e gönderilir.
+    googleLogin: builder.mutation({
+      query: ({ credential }) => ({ url: '/auth/google', method: 'POST', body: { credential } }),
+    }),
     resendVerification: builder.mutation({
       query: (email) => ({ url: '/auth/resend-verification', method: 'POST', body: { email } }),
     }),
@@ -32,5 +40,7 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useVerifyEmailMutation,
+  useVerifyEmailCodeMutation,
+  useGoogleLoginMutation,
   useResendVerificationMutation,
 } = authApi;

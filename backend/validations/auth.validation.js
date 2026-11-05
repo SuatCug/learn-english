@@ -36,4 +36,7 @@ const resendVerificationRules = [
   body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail(),
 ];
 
-module.exports = { registerRules, loginRules, verifyEmailRules, resendVerificationRules };
+// Google Identity Services'ten gelen ID token (JWT).
+const googleLoginRules = [body('credential').isString().notEmpty().withMessage('Google kimlik bilgisi eksik.')];
+
+module.exports = { registerRules, loginRules, verifyEmailRules, resendVerificationRules, googleLoginRules };

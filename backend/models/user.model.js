@@ -47,7 +47,20 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
-    password: { type: String, required: true, minlength: 6, select: false },
+    // Google ile açılan hesaplarda şifre yoktur (kullanıcı sonradan profilinden şifre belirleyebilir).
+    password: {
+      type: String,
+      required() {
+        return !this.googleId;
+      },
+      minlength: 6,
+      select: false,
+    },
+    // Google hesabının değişmez kimliği (ID token'daki "sub"); Google ile giriş yapan hesaplarda dolu.
+    googleId: { type: String, unique: true, sparse: true, select: false },
+    // Şifresi olmayan (sadece Google ile açılmış) hesaplarda false. Alan hiç yoksa (eski kayıtlar)
+    // şifre var kabul edilir.
+    hasPassword: { type: Boolean },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     level: { type: String, enum: ['A1', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2'], default: null },
     placementTestCompleted: { type: Boolean, default: false },
@@ -73,7 +86,8 @@ const userSchema = new mongoose.Schema(
 
 userSchema.methods.toSafeJSON = function toSafeJSON() {
   const { _id, name, email, role, level, placementTestCompleted, progress, badges, isPremium, createdAt } = this;
-  return { id: _id, name, email, role, level, placementTestCompleted, progress, badges, isPremium, createdAt };
+  const hasPassword = this.hasPassword !== false;
+  return { id: _id, name, email, role, level, placementTestCompleted, progress, badges, isPremium, createdAt, hasPassword };
 };
 
 module.exports = mongoose.model('User', userSchema);

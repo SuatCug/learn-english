@@ -14,12 +14,13 @@ const updateProfileRules = [
   body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail(),
 ];
 
+// Mevcut şifre, şifresi olan hesaplar için controller'da zorunlu tutulur (Google ile açılmış hesapların şifresi yoktur).
 const changePasswordRules = [
-  body('currentPassword').notEmpty().withMessage('Mevcut şifre zorunludur.'),
+  body('currentPassword').optional().isString(),
   body('newPassword').isLength({ min: 6 }).withMessage('Yeni şifre en az 6 karakter olmalıdır.'),
 ];
 
-const deleteAccountRules = [body('password').notEmpty().withMessage('Şifre zorunludur.')];
+const deleteAccountRules = [body('password').optional().isString()];
 
 const setLevelRules = [
   body('level').isIn(LEVEL_ORDER).withMessage(`Seviye şunlardan biri olmalıdır: ${LEVEL_ORDER.join(', ')}.`),

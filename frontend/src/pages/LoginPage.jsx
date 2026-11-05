@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import AuthLayout from '@/components/auth/AuthLayout';
 import AuthBrand from '@/components/auth/AuthBrand';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import PasswordField from '@/components/auth/PasswordField';
-import ResendVerificationButton from '@/components/auth/ResendVerificationButton';
+import VerifyCodeScreen from '@/components/auth/VerifyCodeScreen';
 import { useLoginMutation } from '@/services/authApi';
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
@@ -17,8 +18,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  // Doğrulanmamış hesapla giriş denendiğinde "tekrar gönder" butonu gösterilir.
+  // Doğrulanmamış hesapla giriş denendiğinde kod ekranına geçiş butonu gösterilir.
   const [unverifiedEmail, setUnverifiedEmail] = useState(null);
+  const [showCodeScreen, setShowCodeScreen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +35,14 @@ export default function LoginPage() {
       if (err?.data?.code === 'EMAIL_NOT_VERIFIED') setUnverifiedEmail(email);
     }
   };
+
+  if (showCodeScreen && unverifiedEmail) {
+    return (
+      <AuthLayout>
+        <VerifyCodeScreen email={unverifiedEmail} onBack={() => setShowCodeScreen(false)} />
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout>
@@ -54,7 +64,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="ornek@eposta.com"
-            className="w-full rounded-lg border border-emerald-100 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
@@ -69,10 +79,10 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-between text-sm">
           <label className="flex items-center gap-2 text-gray-600">
-            <input type="checkbox" className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
+            <input type="checkbox" className="rounded border-gray-300 accent-gray-900 focus:ring-gray-900" />
             Beni hatırla
           </label>
-          <span className="text-emerald-600 hover:text-emerald-700 cursor-pointer font-medium">
+          <span className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer font-medium">
             Şifremi unuttum?
           </span>
         </div>
@@ -81,7 +91,15 @@ export default function LoginPage() {
           <p className="text-sm text-rose-500 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2">{error}</p>
         )}
 
-        {unverifiedEmail && <ResendVerificationButton email={unverifiedEmail} />}
+        {unverifiedEmail && (
+          <button
+            type="button"
+            onClick={() => setShowCodeScreen(true)}
+            className="w-full rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold py-2.5 text-[15px] transition-colors"
+          >
+            Doğrulama kodunu gir
+          </button>
+        )}
 
         <button
           type="submit"
@@ -92,9 +110,11 @@ export default function LoginPage() {
         </button>
       </form>
 
+      <GoogleSignInButton text="signin_with" />
+
       <p className="text-center text-sm text-gray-500 mt-6">
         Hesabın yok mu?{' '}
-        <Link to="/register" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+        <Link to="/register" className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold">
           Kayıt Ol
         </Link>
       </p>

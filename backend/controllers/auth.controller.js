@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
+const { OAuth2Client } = require('google-auth-library');
+const { normalizeEmail } = require('validator');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const { generateToken } = require('../utils/jwt.util');
@@ -82,6 +84,11 @@ const login = asyncHandler(async (req, res) => {
     throw new ApiError(401, 'E-posta veya şifre hatalı.');
   }
 
+  // Sadece Google ile açılmış hesapların şifresi yoktur.
+  if (!user.password) {
+    throw new ApiError(401, 'Bu hesap Google ile oluşturulmuş. Lütfen "Google ile giriş yap" butonunu kullan.');
+  }
+
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new ApiError(401, 'E-posta veya şifre hatalı.');
@@ -159,4 +166,72 @@ const resendVerification = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { register, login, verifyEmail, resendVerification };
+// Audience kontrolü verifyIdToken çağrısında GOOGLE_CLIENT_ID ile yapılır.
+const googleClient = new OAuth2Client();
+
+// Google ile giriş/kayıt: frontend'deki Google butonundan gelen ID token (credential) doğrulanır.
+// - Google hesabı daha önce bağlanmışsa (googleId) veya aynı e-postayla kayıt varsa o hesapla giriş yapılır.
+// - Hiç kayıt yoksa yeni hesap açılır. Google e-postayı doğruladığı için ayrıca kod istenmez.
+const googleLogin = asyncHandler(async (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    throw new ApiError(503, 'Google ile giriş şu anda kullanılamıyor.');
+  }
+
+  let payload;
+  try {
+    const ticket = await googleClient.verifyIdToken({ idToken: req.body.credential, audience: clientId });
+    payload = ticket.getPayload();
+  } catch {
+    throw new ApiError(401, 'Google ile giriş doğrulanamadı. Lütfen tekrar dene.');
+  }
+
+  if (!payload?.sub || !payload.email || !payload.email_verified) {
+    throw new ApiError(401, 'Google hesabının e-posta adresi doğrulanmamış.');
+  }
+
+  // Normal kayıtta e-postalar express-validator'ın normalizeEmail'i ile kaydediliyor; aynı hesabı
+  // bulabilmek için Google'dan gelen adres de aynı şekilde normalize edilir.
+  const email = normalizeEmail(payload.email) || payload.email.toLowerCase();
+
+  let user = await User.findOne({ googleId: payload.sub }).select('+googleId');
+  if (!user) user = await User.findOne({ email }).select('+googleId');
+
+  if (!user) {
+    user = await User.create({
+      name: payload.name || email.split('@')[0],
+      email,
+      googleId: payload.sub,
+      hasPassword: false,
+      emailVerified: true,
+    });
+  } else {
+    if (!user.googleId) user.googleId = payload.sub;
+
+    if (user.emailVerified === false) {
+      // Doğrulanmamış bir hesap bu e-postayla başkası tarafından açılmış olabilir; Google e-postanın
+      // gerçek sahibini kanıtladığı için o hesabın şifresi geçersiz kılınır (sahibi sonradan yeni şifre belirleyebilir).
+      user.password = undefined;
+      user.hasPassword = false;
+      user.emailVerified = true;
+      user.emailVerificationToken = undefined;
+      user.emailVerificationExpires = undefined;
+      user.emailVerificationCode = undefined;
+      user.emailVerificationCodeExpires = undefined;
+      user.emailVerificationAttempts = undefined;
+      user.verificationEmailSentAt = undefined;
+    }
+
+    if (user.isModified()) await user.save();
+  }
+
+  const token = generateToken({ id: user._id, role: user.role });
+
+  res.json({
+    success: true,
+    message: 'Giriş başarılı.',
+    data: { user: user.toSafeJSON(), token },
+  });
+});
+
+module.exports = { register, login, verifyEmail, resendVerification, googleLogin };

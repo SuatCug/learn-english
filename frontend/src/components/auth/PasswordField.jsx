@@ -18,7 +18,7 @@ export default function PasswordField({ id, label, value, onChange, placeholder,
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full rounded-lg border border-emerald-100 px-4 py-2.5 pr-11 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
         />
         <button
           type="button"

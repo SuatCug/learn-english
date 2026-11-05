@@ -111,6 +111,10 @@ function ProfileInfoForm() {
 }
 
 function ChangePasswordForm() {
+  const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state.auth);
+  // Google ile açılmış hesapların şifresi yoktur; ilk şifre mevcut şifre sorulmadan belirlenir.
+  const hasPassword = user?.hasPassword !== false;
   const [changePassword, { isLoading }] = useChangePasswordMutation();
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -134,7 +138,8 @@ function ChangePasswordForm() {
     }
 
     try {
-      await changePassword({ currentPassword, newPassword }).unwrap();
+      await changePassword(hasPassword ? { currentPassword, newPassword } : { newPassword }).unwrap();
+      if (!hasPassword) dispatch(setCredentials({ user: { ...user, hasPassword: true }, token }));
       setSuccess(true);
       setCurrentPassword('');
       setNewPassword('');
@@ -146,15 +151,25 @@ function ChangePasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-gray-100 p-6 space-y-4">
-      <SectionHeader icon={Lock} title="Change Password" subtitle="Choose a strong password to keep your account safe." />
-
-      <PasswordField
-        id="currentPassword"
-        label="Current Password"
-        value={currentPassword}
-        onChange={(e) => setCurrentPassword(e.target.value)}
-        autoComplete="current-password"
+      <SectionHeader
+        icon={Lock}
+        title={hasPassword ? 'Change Password' : 'Set a Password'}
+        subtitle={
+          hasPassword
+            ? 'Choose a strong password to keep your account safe.'
+            : 'You signed up with Google. Set a password to also sign in with your email.'
+        }
       />
+
+      {hasPassword && (
+        <PasswordField
+          id="currentPassword"
+          label="Current Password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          autoComplete="current-password"
+        />
+      )}
       <PasswordField
         id="newPassword"
         label="New Password"
@@ -175,7 +190,7 @@ function ChangePasswordForm() {
       {success && (
         <p className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2">
           <CheckCircle2 size={16} />
-          Password updated.
+          {hasPassword ? 'Password updated.' : 'Password set.'}
         </p>
       )}
 
@@ -195,20 +210,21 @@ function DeleteAccountForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [deleteAccount, { isLoading }] = useDeleteAccountMutation();
+  const hasPassword = useSelector((state) => state.auth.user?.hasPassword !== false);
 
   const [confirming, setConfirming] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmText, setConfirmText] = useState('');
   const [error, setError] = useState('');
 
-  const canSubmit = password && confirmText.trim().toUpperCase() === 'DELETE';
+  const canSubmit = (!hasPassword || password) && confirmText.trim().toUpperCase() === 'DELETE';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
-      await deleteAccount({ password }).unwrap();
+      await deleteAccount(hasPassword ? { password } : {}).unwrap();
       dispatch(logout());
       navigate('/login');
     } catch (err) {
@@ -246,13 +262,15 @@ function DeleteAccountForm() {
             Are you sure? This will permanently delete your account and everything in it.
           </p>
 
-          <PasswordField
-            id="deletePassword"
-            label="Confirm your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-          />
+          {hasPassword && (
+            <PasswordField
+              id="deletePassword"
+              label="Confirm your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+          )}
 
           <div>
             <label htmlFor="confirmDelete" className="block text-sm font-medium text-gray-700 mb-1.5">

@@ -81,10 +81,15 @@ const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   const user = await User.findById(req.user.id).select('+password');
-  const isMatch = await bcrypt.compare(currentPassword, user.password);
-  if (!isMatch) throw new ApiError(401, 'Mevcut şifre hatalı.');
+  // Google ile açılmış (şifresiz) hesaplar mevcut şifre olmadan ilk şifrelerini belirleyebilir.
+  if (user.password) {
+    if (!currentPassword) throw new ApiError(400, 'Mevcut şifre zorunludur.');
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) throw new ApiError(401, 'Mevcut şifre hatalı.');
+  }
 
   user.password = await bcrypt.hash(newPassword, 10);
+  user.hasPassword = true;
   await user.save();
 
   res.json({ success: true, message: 'Şifre güncellendi.' });
@@ -94,8 +99,12 @@ const deleteAccount = asyncHandler(async (req, res) => {
   const { password } = req.body;
 
   const user = await User.findById(req.user.id).select('+password');
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new ApiError(401, 'Şifre hatalı.');
+  // Şifresiz (Google ile açılmış) hesaplarda şifre sorulmaz; onay frontend'de "DELETE" yazılarak alınır.
+  if (user.password) {
+    if (!password) throw new ApiError(400, 'Şifre zorunludur.');
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new ApiError(401, 'Şifre hatalı.');
+  }
 
   // Kullanıcı öğretmen olarak sınıf sahibiyse, o sınıfları devralacak başka bir öğretmen
   // veya "sınıfı sil" özelliği henüz yok — bu yüzden hesap silinirken sahip olunan sınıflar

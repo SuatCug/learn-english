@@ -25,7 +25,7 @@ export default function ResendVerificationButton({ email }) {
         type="button"
         onClick={handleClick}
         disabled={isLoading}
-        className="text-sm text-emerald-600 hover:text-emerald-700 font-semibold disabled:opacity-60"
+        className="text-sm text-gray-900 hover:underline font-semibold disabled:opacity-60"
       >
         {isLoading ? 'Gönderiliyor...' : 'Doğrulama e-postasını tekrar gönder'}
       </button>

@@ -3,6 +3,21 @@
 
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Marka yeşili (#50af31) etrafında üretilmiş tonlar. Uygulama genelinde kullanılan
+     emerald-* sınıfları bu paleti kullanır; böylece tüm sitede tek bir yeşil olur.
+     500 = marka rengi; 600/700 butonlar ve linkler için (beyaz yazıyla yeterli kontrast). */
+  --color-emerald-50: #f2f9ef;
+  --color-emerald-100: #e0f2d9;
+  --color-emerald-200: #c2e5b5;
+  --color-emerald-300: #9cd388;
+  --color-emerald-400: #74c05a;
+  --color-emerald-500: #50af31;
+  --color-emerald-600: #43962a;
+  --color-emerald-700: #367823;
+  --color-emerald-800: #2d601f;
+  --color-emerald-900: #264f1c;
+  --color-emerald-950: #112b0b;
 }
 
 body {
