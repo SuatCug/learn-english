@@ -11,7 +11,7 @@
 //   keyPoint?: { title: string, lines: string[] },
 // }
 export const GRAMMAR_EXPLANATIONS = {
-  "A1::Present simple forms of 'to be': am/is/are": {
+  "A1::The verb 'to be': am, is, are": {
     heading: "Present Simple: 'to be' (am, is, are)",
     intro: "In English, the verb 'to be' (am, is, are) is used to describe or identify people, places, and things.",
     tables: [
@@ -44,7 +44,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::This, that, these, those': {
+  "A1::This, that, these, those": {
     heading: "This, That, These, Those",
     intro:
       "We use 'this' and 'that' with singular nouns, and 'these' and 'those' with plural nouns. 'This/these' are for things near us; 'that/those' are for things farther away.",
@@ -63,7 +63,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Possessive adjectives and subject pronouns (I/my, you/your, etc.)': {
+  "A1::Possessive adjectives: my, your, his, her...": {
     heading: 'Possessive Adjectives and Subject Pronouns',
     intro: "Subject pronouns replace the subject of a sentence; possessive adjectives show who something belongs to and go before a noun.",
     tables: [
@@ -86,7 +86,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::A/an, plurals: Singular and plural forms': {
+  "A1::Singular and plural nouns": {
     heading: "A / An and Plural Nouns",
     intro: "We use 'a' before a consonant sound and 'an' before a vowel sound.",
     tables: [
@@ -115,7 +115,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Adjectives: Old, interesting, expensive, etc.': {
+  "A1::Adjectives: old, interesting, expensive...": {
     heading: 'Adjectives',
     intro: "Adjectives describe nouns. In English they usually go before the noun, or after the verb 'be'.",
     tables: [
@@ -133,7 +133,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A1::Present simple: I do, I don't, Do I?": {
+  "A1::Present simple: Form and use": {
     heading: "Present Simple: Affirmative, Negative, Question",
     intro: 'We use the present simple for habits, routines, and facts.',
     tables: [
@@ -154,7 +154,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Questions: Word order and question words': {
+  "A1::Question words: what, where, who, when...": {
     heading: 'Question Words and Word Order',
     intro: "Question words ask for specific information and go at the start of the question.",
     tables: [
@@ -173,7 +173,7 @@ export const GRAMMAR_EXPLANATIONS = {
     notes: ["Word order: (question word) + auxiliary (do/does/is/are) + subject + verb."],
   },
 
-  'A1::Adverbs of frequency with present simple': {
+  "A1::Adverbs of frequency: always, usually, never...": {
     heading: 'Adverbs of Frequency',
     intro: 'Adverbs of frequency say how often something happens.',
     tables: [
@@ -195,7 +195,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Object pronouns vs subject pronouns: Me or I, she or her?': {
+  "A1::Object pronouns: me, you, him, her...": {
     heading: 'Subject Pronouns vs Object Pronouns',
     intro: 'Subject pronouns come before the verb; object pronouns come after the verb or a preposition.',
     tables: [
@@ -213,7 +213,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A1::Whose, possessive 's: Whose is this? It's Mike's": {
+  "A1::Possessive 's: Mike's car": {
     heading: "Whose and Possessive 's",
     intro: "We use 'whose' to ask who owns something, and 's to show possession.",
     tables: [
@@ -233,7 +233,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::At, in, on: Prepositions of time': {
+  "A1::Prepositions of time: at, in, on": {
     heading: 'Prepositions of Time: At, In, On',
     intro: 'We use different prepositions of time for clock times, longer periods, and days/dates.',
     tables: [
@@ -248,7 +248,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::At, in, on: Prepositions of place': {
+  "A1::Prepositions of place: at, in, on": {
     heading: 'Prepositions of Place: At, In, On',
     intro: 'We use different prepositions of place for points, enclosed spaces, and surfaces.',
     tables: [
@@ -263,7 +263,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A1::Can, can't: Ability, possibility, permission": {
+  "A1::Can / can't": {
     heading: "Can, Can't",
     intro: "We use 'can' for ability, permission, and possibility.",
     tables: [
@@ -283,7 +283,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A1::Present continuous: I'm doing, I'm not doing, Are you doing?": {
+  "A1::Present continuous": {
     heading: 'Present Continuous',
     intro: 'We use the present continuous for actions happening now or around now.',
     tables: [
@@ -302,7 +302,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Present simple or present continuous?': {
+  "A1::Present simple vs present continuous": {
     heading: 'Present Simple or Present Continuous?',
     intro: 'The present simple is for habits and facts; the present continuous is for actions happening now or temporary situations.',
     tables: [
@@ -320,7 +320,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A1::The imperative: Sit down! Don't talk!": {
+  "A1::Imperatives: Sit down! Don't talk!": {
     heading: 'The Imperative',
     intro: 'We use the imperative to give orders, instructions, and requests. It uses the base form of the verb with no subject.',
     tables: [
@@ -334,7 +334,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A1::Was/were: Past simple of 'be'": {
+  "A2::Was / were: Past simple of 'be'": {
     heading: "Past Simple of 'To Be': Was / Were",
     intro: "'Was' and 'were' are the past forms of 'be'.",
     tables: [
@@ -349,7 +349,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Past simple: Regular/irregular verbs': {
+  "A2::Past simple: Regular and irregular verbs": {
     heading: 'Past Simple: Regular and Irregular Verbs',
     intro: 'Regular verbs follow a spelling pattern; irregular verbs have their own past form to learn by heart.',
     tables: [
@@ -365,7 +365,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Past simple: Negatives and questions': {
+  "A2::Past simple: Negatives and questions": {
     heading: 'Past Simple: Negatives and Questions',
     intro: "We form past simple negatives and questions with 'did', and the main verb stays in the base form.",
     tables: [
@@ -384,7 +384,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Verbs + to + infinitive and verbs + -ing': {
+  "A2::Verb patterns: want to do, enjoy doing": {
     heading: 'Verb Patterns: To-Infinitive and -Ing',
     intro: 'Some verbs are followed by to + infinitive, and others by the -ing form.',
     tables: [
@@ -402,26 +402,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A1::Would you like...? I'd like...": {
-    heading: "Would You Like...? I'd Like...",
-    intro: "'Would you like...?' is a polite way to offer something; 'I'd like...' is a polite way to say what you want.",
-    tables: [
-      {
-        columns: ['Use', 'Example'],
-        rows: [
-          ['Offer', '**Would you like** some tea?'],
-          ['Request', "**I'd like** a coffee, please."],
-          ['Answer', "Yes, **I'd love to**. / No, thank you."],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["'I'd like' (= I would like) is more polite than 'I want'."],
-    },
-  },
-
-  'A1::Have got': {
+  "A1::Have got / has got": {
     heading: 'Have Got',
     intro: "'Have got' means the same as 'have' for possession, and is common in British English speech.",
     tables: [
@@ -436,7 +417,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::A, some, any: Countable and uncountable nouns': {
+  "A2::Countable and uncountable nouns": {
     heading: 'A, Some, Any',
     intro: "We use 'a/an' with singular countable nouns, 'some' in affirmative sentences, and 'any' in negatives and questions.",
     tables: [
@@ -451,7 +432,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::There is, there are / there was, there were': {
+  "A1::There is / there are": {
     heading: 'There Is / There Are, There Was / There Were',
     intro: "We use 'there is/are/was/were' to say that something exists.",
     tables: [
@@ -467,7 +448,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::There or It': {
+  "A1::There or it?": {
     heading: "There or It",
     intro: "We use 'there' to say something exists, and 'it' for weather, time, distance, and identifying things.",
     tables: [
@@ -481,7 +462,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Next to, under, between, in front of, behind, over, etc.': {
+  "A1::Next to, behind, under, between...": {
     heading: 'Prepositions of Place',
     intro: 'These prepositions describe where something is in relation to something else.',
     tables: [
@@ -499,7 +480,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Much, many, a lot of, a little, a few': {
+  "A2::Much, many, a lot of": {
     heading: 'Much, Many, A Lot Of, A Little, A Few',
     intro: 'These words say how much or how many of something there is.',
     tables: [
@@ -516,7 +497,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Comparative adjectives: Older than, more important than, etc.': {
+  "A2::Comparative adjectives: older than, more important than": {
     heading: 'Comparative Adjectives',
     intro: 'We use comparative adjectives to compare two people or things.',
     tables: [
@@ -536,7 +517,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Superlative adjectives: The oldest, the most important, etc.': {
+  "A2::Superlative adjectives: the oldest, the most important": {
     heading: 'Superlative Adjectives',
     intro: 'We use superlative adjectives to compare one thing with all the others in a group.',
     tables: [
@@ -552,7 +533,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A1::'Will' and 'shall': Future": {
+  "A2::Will: Predictions and decisions": {
     heading: "Will and Shall",
     intro: "We use 'will' for predictions, instant decisions, and promises; 'shall' is mainly used for offers and suggestions.",
     tables: [
@@ -572,7 +553,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Be going to: Plans and predictions': {
+  "A2::Be going to: Plans and predictions": {
     heading: 'Be Going To',
     intro: "We use 'be going to' for plans already decided, and for predictions based on what we can see now.",
     tables: [
@@ -590,7 +571,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A1::Adverbs of manner (slowly) or adjectives (slow)?': {
+  "A2::Adverbs of manner: slowly, carefully...": {
     heading: 'Adverbs of Manner or Adjectives?',
     intro: 'Adjectives describe nouns; adverbs of manner describe verbs and usually end in -ly.',
     tables: [
@@ -605,7 +586,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::A/an, the, no article: The use of articles in English': {
+  "A1::A / an, the or no article": {
     heading: 'Articles: A/An, The, or No Article',
     intro: "We use 'a/an' the first time we mention something, 'the' for something specific or already known, and no article for general plural or uncountable nouns.",
     tables: [
@@ -620,7 +601,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Conjunctions: And, but, or, so, because': {
+  "A1::And, but, or, because": {
     heading: 'Conjunctions: And, But, Or, So, Because',
     intro: 'Conjunctions join words, phrases, or clauses together.',
     tables: [
@@ -637,7 +618,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A1::Basic word order in English': {
+  "A1::Basic word order": {
     heading: 'Basic Word Order',
     intro: 'English sentences usually follow a fixed order: subject, then verb, then object.',
     tables: [
@@ -658,7 +639,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A1::The difference between 'this' and 'it'": {
+  "A1::This vs it: What's the difference?": {
     heading: "This or It",
     intro: "We use 'this' to introduce or point to something new or nearby, and 'it' to refer back to something already mentioned.",
     tables: [
@@ -672,7 +653,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Asking questions in English: Question forms': {
+  "A1::Basic question forms": {
     heading: 'Asking Questions: Question Forms',
     intro: 'Most English questions use an auxiliary verb (do/does/did, be, or a modal) before the subject.',
     tables: [
@@ -692,63 +673,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::Subject questions, questions with preposition': {
-    heading: 'Subject Questions and Questions with a Preposition',
-    intro: 'A subject question asks about the subject itself, so it uses no extra auxiliary. A question with a preposition usually puts the preposition at the end.',
-    tables: [
-      {
-        columns: ['Type', 'Example'],
-        rows: [
-          ['Subject question', '**Who called** you? (not: Who did call you?)'],
-          ['Object question', '**Who did** you **call**?'],
-          ['Question with preposition', "**Who** is she talking **to**?"],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["In a subject question, the question word replaces the subject, so the word order stays like a statement: **Who** broke the window? (subject) vs. **What** did he break? (object)."],
-    },
-  },
-
-  'A2::Present simple vs present continuous': {
-    heading: 'Present Simple vs Present Continuous',
-    intro: 'The present simple is for habits, routines, and permanent facts; the present continuous is for actions in progress now or temporary situations.',
-    tables: [
-      {
-        columns: ['Present simple', 'Present continuous'],
-        rows: [
-          ['I **work** in a bank. (routine)', 'I **am working** late today. (now / temporary)'],
-          ['She **lives** in Paris. (permanent)', "She **is living** with a friend this month. (temporary)"],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ['Stative verbs (know, believe, want, love, own) are not usually used in the continuous form.'],
-    },
-  },
-
-  'A2::Past simple: Form and use': {
-    heading: 'Past Simple: Form and Use',
-    intro: 'We use the past simple for completed actions at a specific time in the past.',
-    tables: [
-      {
-        columns: ['Type', 'Form', 'Example'],
-        rows: [
-          ['Affirmative', 'verb + **-ed** (or irregular form)', 'I **visited** Rome last year.'],
-          ['Negative', "**didn't** + base verb", "I **didn't visit** London."],
-          ['Question', '**Did** + subject + base verb?', '**Did** you **visit** Rome?'],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ['We often use the past simple with time expressions like yesterday, last week, in 2020, two days ago.'],
-    },
-  },
-
-  'A2::Past continuous and past simple': {
+  "A2::Past simple vs past continuous": {
     heading: 'Past Continuous and Past Simple',
     intro: 'We often use the past continuous for a longer action in progress, interrupted by a shorter action in the past simple.',
     tables: [
@@ -767,7 +692,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A2::Expressing purpose with 'to' and 'for'": {
+  "B1::Expressing purpose: to, for, so that": {
     heading: "Expressing Purpose: To and For",
     intro: "We use 'to' + infinitive or 'for' + noun to explain why we do something.",
     tables: [
@@ -785,7 +710,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::However, although, because, so, and time connectors': {
+  "A2::Although, however, so": {
     heading: 'Connectors: However, Although, Because, So',
     intro: 'Connectors join ideas to show contrast, reason, or result.',
     tables: [
@@ -801,22 +726,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A2::'Will' vs 'be going to': Future forms": {
-    heading: "Will vs Be Going To",
-    intro: "'Will' is for decisions made now and predictions in general; 'be going to' is for plans already decided and predictions based on evidence.",
-    tables: [
-      {
-        columns: ['Form', 'Use', 'Example'],
-        rows: [
-          ['will', 'instant decision, general prediction', "I'm tired — I **will** go to bed."],
-          ['be going to', 'plan / decided in advance', 'I **am going to** visit my parents this weekend.'],
-          ['be going to', 'prediction based on evidence now', "Look at the sky — it**'s going to** rain."],
-        ],
-      },
-    ],
-  },
-
-  'A2::Present continuous for future arrangements': {
+  "A2::Present continuous for future arrangements": {
     heading: 'Present Continuous for Future Arrangements',
     intro: 'We use the present continuous to talk about fixed arrangements in the future — plans already organized with a time and place.',
     tables: [
@@ -830,7 +740,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Defining relative clauses: Who, which, that, where': {
+  "A2::Relative clauses: who, which, that, where": {
     heading: 'Defining Relative Clauses',
     intro: 'A defining relative clause gives essential information about a noun, telling us exactly which person or thing we mean.',
     tables: [
@@ -849,7 +759,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::Present perfect: Form and use': {
+  "A2::Present perfect": {
     heading: 'Present Perfect: Form and Use',
     intro: 'The present perfect connects the past to the present — for experiences, changes, and unfinished time periods.',
     tables: [
@@ -868,7 +778,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::Present perfect or past simple?': {
+  "A2::Present perfect vs past simple": {
     heading: 'Present Perfect or Past Simple?',
     intro: 'The past simple is for finished actions at a definite past time; the present perfect is for past actions without a stated time, or that connect to now.',
     tables: [
@@ -882,7 +792,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Something, anything, nothing, etc.': {
+  "A2::Something, anything, nothing, everything": {
     heading: 'Something, Anything, Nothing, Everything',
     intro: 'These indefinite pronouns refer to things (or people/places with -one/-body/-where) without saying exactly what/who/where.',
     tables: [
@@ -898,7 +808,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Comparative and superlative adjectives and adverbs': {
+  "A2::Comparative and superlative adverbs": {
     heading: 'Comparative and Superlative Adjectives and Adverbs',
     intro: 'We use comparatives to compare two things and superlatives to compare one thing with a whole group.',
     tables: [
@@ -915,7 +825,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Too, too much, too many, enough': {
+  "A2::Too, too much, too many, enough": {
     heading: 'Too, Too Much, Too Many, Enough',
     intro: "'Too' means more than necessary (a problem); 'enough' means the right amount.",
     tables: [
@@ -931,7 +841,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Much, many, little, few, some, any: Quantifiers': {
+  "A2::A few, a little": {
     heading: 'Quantifiers: Much, Many, Little, Few, Some, Any',
     intro: 'Quantifiers show approximate amounts or numbers.',
     tables: [
@@ -947,22 +857,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Most, most of, the most': {
-    heading: "Most, Most Of, The Most",
-    intro: "'Most' is used generally, 'most of' is used with a specific group, and 'the most' is the superlative form.",
-    tables: [
-      {
-        columns: ['Form', 'Use', 'Example'],
-        rows: [
-          ['most + noun', 'general statement', '**Most** people like music.'],
-          ['most of + the/my/these...', 'a specific, defined group', '**Most of** my friends live abroad.'],
-          ['the most + adjective', 'superlative', 'This is **the most** expensive hotel.'],
-        ],
-      },
-    ],
-  },
-
-  'A2::Infinitives and gerunds: Verb patterns': {
+  "B1::Verb patterns": {
     heading: 'Infinitives and Gerunds',
     intro: 'Some verbs are followed by the to-infinitive, some by the -ing form (gerund), and some by either.',
     tables: [
@@ -977,22 +872,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A2::How to use the verb 'go' in English": {
-    heading: "The Verb 'Go'",
-    intro: "'Go' is used with a variety of prepositions and patterns to talk about movement and activities.",
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['go + to + place', 'I **go to** school by bus.'],
-          ['go + -ing (activity)', 'We **go swimming** every Friday.'],
-          ['go + adjective (change of state)', 'The milk has **gone bad**.'],
-        ],
-      },
-    ],
-  },
-
-  "A2::Have to, don't have to, must, mustn't": {
+  "A2::Have to / don't have to": {
     heading: "Have To, Don't Have To, Must, Mustn't",
     intro: "'Have to' and 'must' express obligation; 'don't have to' means it's not necessary, and 'mustn't' means it's forbidden.",
     tables: [
@@ -1007,7 +887,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A2::Should, shouldn't": {
+  "A2::Should / shouldn't: Advice": {
     heading: "Should, Shouldn't",
     intro: "We use 'should' to give advice or say what we think is right.",
     tables: [
@@ -1022,7 +902,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::First conditional and future time clauses': {
+  "A2::First conditional": {
     heading: 'First Conditional and Future Time Clauses',
     intro: 'The first conditional talks about real, possible future situations and their results.',
     tables: [
@@ -1037,7 +917,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Subject and object pronouns, possessive pronouns and adjectives': {
+  "A1::Whose? and possessive pronouns: mine, yours...": {
     heading: 'Pronouns and Possessives',
     intro: 'These forms show who is doing an action, who receives it, and who owns something.',
     tables: [
@@ -1059,25 +939,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::Second conditional': {
-    heading: 'Second Conditional',
-    intro: 'The second conditional talks about unreal or unlikely present/future situations and their imagined results.',
-    tables: [
-      {
-        columns: ['Clause', 'Form', 'Example'],
-        rows: [
-          ['If-clause', 'past simple', '**If** I **won** the lottery,'],
-          ['Result clause', 'would + base verb', "I **would travel** the world."],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["With 'be', we often use 'were' for all subjects: If I **were** you, I would rest."],
-    },
-  },
-
-  "A2::Present and past simple passive: 'be' + past participle": {
+  "B1::Present simple passive": {
     heading: 'Passive Voice: Present and Past Simple',
     intro: 'We use the passive when the action is more important than who did it, or the doer is unknown.',
     tables: [
@@ -1095,7 +957,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A2::Used to, didn't use to: Past habits and states": {
+  "A2::Used to / didn't use to": {
     heading: 'Used To',
     intro: "'Used to' describes past habits or states that are no longer true.",
     tables: [
@@ -1114,7 +976,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::Might, might not: Possibility': {
+  "A2::Might / might not: Possibility": {
     heading: 'Might, Might Not',
     intro: "'Might' expresses possibility — something that could happen but isn't certain.",
     tables: [
@@ -1128,7 +990,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Prepositions of movement: Along, across, over, etc.': {
+  "A2::Prepositions of movement: along, across, over...": {
     heading: 'Prepositions of Movement',
     intro: 'These prepositions describe the direction or path of movement.',
     tables: [
@@ -1145,7 +1007,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::So, neither: So am I, neither do I, etc.': {
+  "B1::So, neither, either: So do I, neither do I": {
     heading: 'So and Neither',
     intro: "We use 'so' to agree with a positive statement and 'neither' to agree with a negative one.",
     tables: [
@@ -1159,25 +1021,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Review of all pre-intermediate verb tenses (CEFR A2)': {
-    heading: 'Review of Pre-Intermediate Verb Tenses',
-    intro: 'This is a quick overview of the main tenses studied up to A2 level.',
-    tables: [
-      {
-        columns: ['Tense', 'Form', 'Example'],
-        rows: [
-          ['Present simple', 'verb / verb+s', 'I **work**. She **works**.'],
-          ['Present continuous', 'am/is/are + -ing', 'I **am working**.'],
-          ['Past simple', 'verb+ed / irregular', 'I **worked**. I **went**.'],
-          ['Past continuous', 'was/were + -ing', 'I **was working**.'],
-          ['Present perfect', 'have/has + past participle', 'I **have worked**.'],
-          ['Future (will / going to)', 'will + verb / am going to + verb', "I **will work**. I**'m going to** work."],
-        ],
-      },
-    ],
-  },
-
-  'A2::Past perfect': {
+  "B1::Past perfect": {
     heading: 'Past Perfect',
     intro: 'The past perfect describes an action that happened before another action or time in the past.',
     tables: [
@@ -1192,7 +1036,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Reported speech / Indirect speech': {
+  "B2::Reported speech: Advanced": {
     heading: 'Reported Speech',
     intro: "When we report what someone said, we usually move the tense one step back into the past.",
     tables: [
@@ -1207,52 +1051,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Verbs with two objects': {
-    heading: 'Verbs with Two Objects',
-    intro: "Some verbs (give, send, show, buy, tell) can take an indirect object (person) and a direct object (thing).",
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['verb + person + thing', 'I **gave her** a present.'],
-          ['verb + thing + to/for + person', 'I **gave** a present **to her**.'],
-        ],
-      },
-    ],
-  },
-
-  "A2::The different uses of the verb 'get'": {
-    heading: "The Verb 'Get'",
-    intro: "'Get' is very common in English and has many meanings depending on context.",
-    tables: [
-      {
-        columns: ['Meaning', 'Example'],
-        rows: [
-          ['receive', 'I **got** a letter today.'],
-          ['become', "It's **getting** dark."],
-          ['arrive', 'What time did you **get** home?'],
-          ['buy', "Can you **get** some milk?"],
-          ['understand', "I don't **get** the joke."],
-        ],
-      },
-    ],
-  },
-
-  "A2::Do vs Make: What's the difference?": {
-    heading: 'Do vs Make',
-    intro: "'Do' is often used for general activities and work; 'make' is often used for creating or producing something.",
-    tables: [
-      {
-        columns: ['Verb', 'Common collocations'],
-        rows: [
-          ['do', "do homework, do the housework, do a favor, do exercise"],
-          ['make', "make a cake, make a decision, make a mistake, make friends"],
-        ],
-      },
-    ],
-  },
-
-  'A2::Stative vs dynamic verbs (or non-action vs action verbs)': {
+  "B1::Stative vs dynamic verbs": {
     heading: 'Stative and Dynamic Verbs',
     intro: 'Dynamic verbs describe actions and can be used in the continuous form; stative verbs describe states and are usually not.',
     tables: [
@@ -1266,7 +1065,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Phrasal verbs: Transitive / intransitive, separable / inseparable': {
+  "B1::Phrasal verbs: Separable and inseparable": {
     heading: 'Phrasal Verbs: Types',
     intro: 'Phrasal verbs can take an object (transitive) or not (intransitive), and some can be split (separable) while others cannot.',
     tables: [
@@ -1285,38 +1084,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'A2::No longer, any longer, anymore': {
-    heading: 'No Longer, Any Longer, Anymore',
-    intro: 'These expressions show that a situation has changed and is no longer true.',
-    tables: [
-      {
-        columns: ['Expression', 'Position', 'Example'],
-        rows: [
-          ['no longer', 'before the verb (formal)', 'She **no longer** works here.'],
-          ['not... any longer', 'end of a negative sentence', "She doesn't work here **any longer**."],
-          ['not... anymore', 'end of a negative sentence', "She doesn't work here **anymore**."],
-        ],
-      },
-    ],
-  },
-
-  'A2::On time vs In time, At the end vs In the end': {
-    heading: 'On Time vs In Time, At the End vs In the End',
-    intro: 'These similar expressions have different meanings.',
-    tables: [
-      {
-        columns: ['Expression', 'Meaning', 'Example'],
-        rows: [
-          ['on time', 'punctual, not late', 'The train arrived **on time**.'],
-          ['in time', 'before the last moment / with enough time', 'We got there just **in time** for the film.'],
-          ['at the end', 'the physical/final point of something', 'There is a quiz **at the end** of the chapter.'],
-          ['in the end', 'finally, after a process (= eventually)', "**In the end**, we decided to stay home."],
-        ],
-      },
-    ],
-  },
-
-  "A2::May and might: What's the difference?": {
+  "B1::May, might, could: Possibility": {
     heading: 'May vs Might',
     intro: "'May' and 'might' both express possibility; 'may' can also be used for formal permission.",
     tables: [
@@ -1330,57 +1098,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'A2::Auxiliary verbs: do, be and have': {
-    heading: 'Auxiliary Verbs: Do, Be, Have',
-    intro: 'Auxiliary (helping) verbs combine with a main verb to form questions, negatives, and different tenses.',
-    tables: [
-      {
-        columns: ['Auxiliary', 'Used for', 'Example'],
-        rows: [
-          ['do/does/did', 'present/past simple questions & negatives', "**Do** you **like** tea? I **don't like** it."],
-          ['am/is/are/was/were', 'continuous tenses, passive', 'She **is working**. It **was built** in 1990.'],
-          ['have/has/had', 'perfect tenses', 'I **have finished**. She **had left**.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Present simple or present continuous': {
-    heading: 'Present Simple or Present Continuous',
-    intro: 'The present simple describes routines and permanent situations; the present continuous describes actions now or temporary situations.',
-    tables: [
-      {
-        columns: ['Use', 'Present simple', 'Present continuous'],
-        rows: [
-          ['Routine', 'I **play** football on Sundays.', '—'],
-          ['Now', '—', 'I **am playing** football now.'],
-          ['Permanent situation', 'She **lives** in Madrid.', '—'],
-          ['Temporary situation', '—', "She**'s living** in Madrid for a few months."],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ['Stative verbs (know, believe, want, love) are not normally used in the continuous form.'],
-    },
-  },
-
-  'B1::Future forms: Will, be going to, present continuous': {
-    heading: 'Future Forms: Will, Be Going To, Present Continuous',
-    intro: 'English has several ways to talk about the future, depending on how certain or planned the action is.',
-    tables: [
-      {
-        columns: ['Form', 'Use', 'Example'],
-        rows: [
-          ['will', 'prediction, instant decision', 'It **will** be sunny tomorrow.'],
-          ['be going to', 'plan, prediction from evidence', "I**'m going to** call her later."],
-          ['present continuous', 'fixed arrangement', "We**'re having** dinner with them on Friday."],
-        ],
-      },
-    ],
-  },
-
-  'B1::Past simple or present perfect?': {
+  "B2::Present perfect vs past simple: Advanced": {
     heading: 'Past Simple or Present Perfect?',
     intro: 'The past simple is for finished actions at a definite past time; the present perfect is for past actions without a stated time or that connect to now.',
     tables: [
@@ -1398,7 +1116,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'B1::Present perfect simple and present perfect continuous': {
+  "B1::Present perfect simple vs continuous": {
     heading: 'Present Perfect Simple and Continuous',
     intro: 'The present perfect simple focuses on the result or number of times; the present perfect continuous focuses on the duration of an activity.',
     tables: [
@@ -1416,39 +1134,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'B1::During, for, while': {
-    heading: 'During, For, While',
-    intro: 'These words all relate to time but are used with different structures.',
-    tables: [
-      {
-        columns: ['Word', 'Used with', 'Example'],
-        rows: [
-          ['during', 'a noun (a period of time)', 'It rained **during** the night.'],
-          ['for', 'a length of time', 'I waited **for** two hours.'],
-          ['while', 'a clause (subject + verb)', 'I fell asleep **while** I was reading.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Comparative and superlative adjectives and adverbs': {
-    heading: 'Comparative and Superlative Adjectives and Adverbs',
-    intro: 'We use comparatives to compare two things and superlatives to compare one thing with a whole group.',
-    tables: [
-      {
-        columns: ['Form', 'Rule', 'Example'],
-        rows: [
-          ['Comparative (short)', '+ **er** + than', 'faster **than**'],
-          ['Comparative (long)', '**more** + adjective + than', 'more interesting **than**'],
-          ['Superlative (short)', 'the + **est**', 'the fastest'],
-          ['Superlative (long)', 'the **most** + adjective', 'the most interesting'],
-          ['Adverbs', '**more/most** + adverb (usually)', 'She runs **more quickly than** me.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::A(n), the, no article': {
+  "B2::Articles: Advanced uses": {
     heading: 'Articles: A/An, The, or No Article',
     intro: "We use 'a/an' for something non-specific, 'the' for something specific or already known, and no article for general plural/uncountable nouns.",
     tables: [
@@ -1463,24 +1149,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Another, other, others, the other, the others': {
-    heading: 'Another, Other, Others, The Other, The Others',
-    intro: "These words all mean 'additional' or 'different', but each is used in a different way.",
-    tables: [
-      {
-        columns: ['Word', 'Use', 'Example'],
-        rows: [
-          ['another', 'one more (singular, indefinite)', 'Can I have **another** coffee?'],
-          ['other', 'indefinite, + plural noun', 'I have **other** plans.'],
-          ['others', 'indefinite, plural pronoun (no noun)', 'Some like tea, **others** like coffee.'],
-          ['the other', 'the remaining one (definite, singular)', "One shoe is here; where's **the other**?"],
-          ['the others', 'the remaining ones (definite, plural)', 'Two students left; **the others** stayed.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Can, could, be able to: Ability and possibility': {
+  "A2::Could: Ability and possibility": {
     heading: 'Can, Could, Be Able To',
     intro: "These express ability, in the present, past, or other tenses.",
     tables: [
@@ -1495,7 +1164,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Have to, must, should: Obligation, prohibition, necessity, advice': {
+  "B1::Must, have to, should: Obligation and advice": {
     heading: 'Have To, Must, Should',
     intro: 'These modal expressions show different levels of obligation, prohibition, and advice.',
     tables: [
@@ -1511,7 +1180,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Reflexive pronouns: Myself, yourself, etc.': {
+  "A2::Reflexive pronouns: myself, yourself...": {
     heading: 'Reflexive Pronouns',
     intro: 'We use reflexive pronouns when the subject and the object of a verb are the same person or thing.',
     tables: [
@@ -1528,21 +1197,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::-Ed/-ing adjectives: Adjectives from verbs': {
-    heading: '-Ed and -Ing Adjectives',
-    intro: "'-ed' adjectives describe how a person feels; '-ing' adjectives describe the thing or person that causes the feeling.",
-    tables: [
-      {
-        columns: ['Type', 'Describes', 'Example'],
-        rows: [
-          ['-ed', 'the person who feels something', 'I was **bored** by the film.'],
-          ['-ing', 'the thing/person causing the feeling', 'The film was **boring**.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Past simple, past continuous, past perfect': {
+  "B1::Past simple, past continuous, past perfect": {
     heading: 'Past Simple, Past Continuous, Past Perfect',
     intro: 'These three past tenses combine to show the order and nature of past events.',
     tables: [
@@ -1557,7 +1212,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Review of all intermediate verb tenses (CEFR B1)': {
+  "B1::Review of all verb tenses": {
     heading: 'Review of Intermediate Verb Tenses',
     intro: 'This is a quick overview of the main tenses studied up to B1 level.',
     tables: [
@@ -1576,7 +1231,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Usually, used to, be used to, get used to': {
+  "B1::Used to, be used to, get used to": {
     heading: 'Usually, Used To, Be Used To, Get Used To',
     intro: "These similar-looking expressions have different meanings: frequency, past habit, and familiarity.",
     tables: [
@@ -1592,7 +1247,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Passive verb forms': {
+  "B2::Advanced passive structures": {
     heading: 'Passive Verb Forms',
     intro: 'The passive is formed with the verb "be" + past participle, and changes across all tenses.',
     tables: [
@@ -1608,7 +1263,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Active and passive voice': {
+  "B1::Active vs passive": {
     heading: 'Active and Passive Voice',
     intro: 'The active voice focuses on who does the action; the passive voice focuses on the action or the receiver of it.',
     tables: [
@@ -1623,7 +1278,7 @@ export const GRAMMAR_EXPLANATIONS = {
     notes: ['We use the passive when the action is more important than who did it, or when the agent is unknown or obvious.'],
   },
 
-  "B1::Modal verbs of deduction: Must, may, might, could, can't": {
+  "B1::Must / can't: Deduction": {
     heading: 'Modal Verbs of Deduction',
     intro: 'We use these modal verbs to say how certain we are about something, based on evidence.',
     tables: [
@@ -1638,22 +1293,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::First conditional, future time clauses': {
-    heading: 'First Conditional and Future Time Clauses',
-    intro: 'The first conditional talks about real, possible future situations and their results.',
-    tables: [
-      {
-        columns: ['Clause', 'Tense', 'Example'],
-        rows: [
-          ['If-clause', 'present simple', '**If** it **rains**,'],
-          ['Result clause', 'will + base verb', "we **will stay** at home."],
-          ['Time clause', 'present simple after when/as soon as', "I'**ll call** you **when I arrive**."],
-        ],
-      },
-    ],
-  },
-
-  'B1::Second conditional: Unreal situations': {
+  "B1::Second conditional": {
     heading: 'Second Conditional',
     intro: 'The second conditional talks about unreal or unlikely present/future situations and their imagined results.',
     tables: [
@@ -1671,21 +1311,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'B1::First and second conditionals': {
-    heading: 'First and Second Conditionals Compared',
-    intro: 'The first conditional is for real, possible situations; the second is for unreal or unlikely ones.',
-    tables: [
-      {
-        columns: ['Conditional', 'Use', 'Example'],
-        rows: [
-          ['First', 'real / possible future', '**If** it **rains**, I **will stay** home.'],
-          ['Second', 'unreal / unlikely present-future', '**If** I **won** the lottery, I **would travel**.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Third conditional: Past unreal situations': {
+  "B1::Third conditional: Introduction": {
     heading: 'Third Conditional',
     intro: 'The third conditional talks about an imaginary result in the past — the real situation was actually different.',
     tables: [
@@ -1703,7 +1329,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'B1::Indirect speech / Reported speech': {
+  "B1::Reported speech: Statements": {
     heading: 'Indirect Speech',
     intro: 'When we report what someone said, we usually move the tense one step back into the past.',
     tables: [
@@ -1718,7 +1344,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Gerund or infinitive: Do, to do, doing': {
+  "B1::Gerunds vs infinitives": {
     heading: 'Gerund or Infinitive',
     intro: 'Some verbs change meaning depending on whether they are followed by the gerund (-ing) or the to-infinitive.',
     tables: [
@@ -1734,7 +1360,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Much, many, a lot, little, few, some, any, no: Quantifiers': {
+  "B2::Determiners and quantifiers": {
     heading: 'Quantifiers',
     intro: 'Quantifiers show approximate amounts or numbers of countable and uncountable nouns.',
     tables: [
@@ -1751,7 +1377,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::All, both: Quantifiers': {
+  "A2::Each, every, all": {
     heading: 'All, Both',
     intro: "'All' refers to a whole group (three or more); 'both' refers to two things together.",
     tables: [
@@ -1765,7 +1391,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Both, either, neither: Quantifiers': {
+  "A2::Both, either, neither": {
     heading: 'Both, Either, Neither',
     intro: "These quantifiers refer to two things: 'both' means the two together, 'either' means one of two, and 'neither' means not one nor the other.",
     tables: [
@@ -1780,7 +1406,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Any, no, none: Quantifiers': {
+  "A2::Some, any, no": {
     heading: 'Any, No, None',
     intro: "'Any' is used in negatives/questions with a noun, 'no' has a negative meaning with a noun, and 'none' is used alone.",
     tables: [
@@ -1795,24 +1421,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::So, such, such a, so much, so many': {
-    heading: 'So, Such, Such A, So Much, So Many',
-    intro: "'So' is used before an adjective or adverb; 'such' is used before a noun (with or without an adjective).",
-    tables: [
-      {
-        columns: ['Word', 'Used with', 'Example'],
-        rows: [
-          ['so', 'adjective / adverb (no noun)', 'The film was **so** boring.'],
-          ['such a', 'singular countable noun (+ adjective)', "She's **such a** kind person."],
-          ['such', 'plural / uncountable noun (+ adjective)', 'They are **such** good friends.'],
-          ['so much', 'uncountable noun', 'There is **so much** traffic.'],
-          ['so many', 'plural countable noun', 'There are **so many** people.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Defining and non-defining relative clauses': {
+  "B1::Defining relative clauses": {
     heading: 'Defining and Non-Defining Relative Clauses',
     intro: 'A defining clause gives essential information (no commas); a non-defining clause gives extra, non-essential information (with commas).',
     tables: [
@@ -1830,7 +1439,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "B1::Question tags: Aren't you? don't you?": {
+  "B1::Question tags": {
     heading: 'Question Tags',
     intro: 'A question tag is a short question added to the end of a statement, often to check information.',
     tables: [
@@ -1848,7 +1457,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  'B1::Clauses of contrast, purpose and reason': {
+  "B1::Despite, in spite of, therefore, however": {
     heading: 'Clauses of Contrast, Purpose and Reason',
     intro: 'These connectors join two ideas by showing contrast, purpose, or reason.',
     tables: [
@@ -1863,7 +1472,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Verb + preposition: Dependent prepositions': {
+  "B2::Advanced prepositions": {
     heading: 'Verb + Preposition',
     intro: 'Many verbs are always followed by the same preposition — these combinations need to be learned together.',
     tables: [
@@ -1880,38 +1489,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::Adjective + preposition: Dependent prepositions': {
-    heading: 'Adjective + Preposition',
-    intro: 'Many adjectives are always followed by the same preposition — these combinations need to be learned together.',
-    tables: [
-      {
-        columns: ['Adjective + preposition', 'Example'],
-        rows: [
-          ['afraid of', 'She is **afraid of** spiders.'],
-          ['good at', 'He is **good at** maths.'],
-          ['interested in', "I'm **interested in** history."],
-          ['married to', 'She is **married to** a doctor.'],
-          ['proud of', 'We are **proud of** you.'],
-        ],
-      },
-    ],
-  },
-
-  "B1::Had better... It's time...": {
-    heading: "Had Better and It's Time",
-    intro: "'Had better' gives strong advice with a warning; 'it's time' says something should happen now.",
-    tables: [
-      {
-        columns: ['Expression', 'Use', 'Example'],
-        rows: [
-          ['had better + base verb', 'strong advice, warning of a consequence', "You **had better** hurry, or you'll miss the bus."],
-          ["it's time + past simple", 'something should happen now', "It**'s time** you **went** to bed."],
-        ],
-      },
-    ],
-  },
-
-  "B1::For, since, from: What's the difference?": {
+  "A2::Present perfect with for and since": {
     heading: 'For, Since, From',
     intro: 'These words are all connected to time but used differently.',
     tables: [
@@ -1926,25 +1504,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "B1::Compound adjectives with numbers: 'a two-day trip'": {
-    heading: 'Compound Adjectives with Numbers',
-    intro: 'We can combine a number and a noun to make a hyphenated adjective before another noun.',
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['number + noun (hyphenated)', 'a **two-day** trip, a **five-year-old** child'],
-          ['number + unit as adjective', 'a **ten-minute** walk, a **three-hour** flight'],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ['The noun inside the compound adjective stays singular: a **two-day** trip, not a two-days trip.'],
-    },
-  },
-
-  'B1::B1 Phrasal verbs 1: Exercises and explanation': {
+  "B2::Complex phrasal verbs": {
     heading: 'B1 Phrasal Verbs 1',
     intro: 'Common phrasal verbs used in everyday situations.',
     tables: [
@@ -1966,639 +1526,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B1::B1 Phrasal verbs 2: Exercises and explanation': {
-    heading: 'B1 Phrasal Verbs 2',
-    intro: 'More common phrasal verbs used in everyday situations.',
-    tables: [
-      {
-        columns: ['Phrasal verb', 'Meaning', 'Example'],
-        rows: [
-          ['set up', 'establish', 'They plan to **set up** a business.'],
-          ['find out', 'discover', 'I need to **find out** what happened.'],
-          ['work out', 'turn out well', 'Everything **worked out** in the end.'],
-          ['take off', 'depart (aircraft)', 'The plane will **take off** soon.'],
-          ['put up with', 'tolerate', "I can't **put up with** this noise."],
-          ['look forward to', 'anticipate happily', "I'm **looking forward to** the concert."],
-          ['hold on', 'wait', '**Hold on** a moment.'],
-          ['get along with', 'have a good relationship', 'She **gets along with** everyone.'],
-          ['come up with', 'think of (an idea)', 'He **came up with** a great idea.'],
-          ['cut down on', 'reduce', "I'm trying to **cut down on** sugar."],
-        ],
-      },
-    ],
-  },
-
-  'B1::B1 Phrasal verbs 3: Exercises and explanation': {
-    heading: 'B1 Phrasal Verbs 3',
-    intro: 'More common phrasal verbs used in everyday situations.',
-    tables: [
-      {
-        columns: ['Phrasal verb', 'Meaning', 'Example'],
-        rows: [
-          ['bring up', 'raise (a child)', "My parents **brought** me **up** to be honest."],
-          ['deal with', 'handle', "I don't know how to **deal with** this."],
-          ['figure out', 'understand, solve', 'I finally **figured out** the solution.'],
-          ['get away with', 'avoid punishment', 'He always **gets away with** lying.'],
-          ['go through', 'experience something difficult', "She's **going through** a difficult time."],
-          ['hang out', 'spend time casually', 'We usually **hang out** at the mall.'],
-          ['make up', 'reconcile', 'They **made up** after their argument.'],
-          ['point out', 'indicate', 'The teacher **pointed out** my mistakes.'],
-          ['take after', 'resemble', 'She **takes after** her mother.'],
-          ['turn down', 'reject', 'He **turned down** the job offer.'],
-        ],
-      },
-    ],
-  },
-
-  'B1::Would rather & Would sooner': {
-    heading: 'Would Rather and Would Sooner',
-    intro: "'Would rather' and 'would sooner' express preference — what someone would prefer to do.",
-    tables: [
-      {
-        columns: ['Expression', 'Use', 'Example'],
-        rows: [
-          ['would rather + base verb', 'preference (same subject)', "I**'d rather stay** home tonight."],
-          ['would rather + subject + past simple', "preference about someone else's action", "I**'d rather** you **called** me tomorrow."],
-          ['would sooner + base verb', 'same as would rather, less common', "I**'d sooner walk** than take the bus."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Questions: Different types': {
-    heading: 'Question Types',
-    intro: 'English uses several question structures, from simple yes/no questions to polite indirect questions.',
-    tables: [
-      {
-        columns: ['Type', 'Example'],
-        rows: [
-          ['Yes/No question', '**Do** you like coffee?'],
-          ['Wh- question', '**Where** do you live?'],
-          ['Subject question', '**Who** called you?'],
-          ['Question tag', "You're coming, **aren't you**?"],
-          ['Indirect question', 'Could you tell me **where the station is**?'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Indirect questions': {
-    heading: 'Indirect Questions',
-    intro: 'Indirect questions are a more polite way to ask something, often starting with a phrase like "Could you tell me...?".',
-    tables: [
-      {
-        columns: ['Direct question', 'Indirect question'],
-        rows: [
-          ['**Where** is the station?', 'Could you tell me **where the station is**?'],
-          ['**What** time is it?', 'Do you know **what time it is**?'],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["In indirect questions, the word order changes to subject + verb, and we don't use do/does/did."],
-    },
-  },
-
-  'B1+::Auxiliary verbs: Different uses': {
-    heading: 'Auxiliary Verbs: Different Uses',
-    intro: 'Auxiliary verbs (do, be, have) combine with a main verb for questions, negatives, tenses, and even emphasis.',
-    tables: [
-      {
-        columns: ['Auxiliary', 'Use', 'Example'],
-        rows: [
-          ['do / does / did', 'questions, negatives, emphasis', 'I **do** like it! (emphasis)'],
-          ['be', 'continuous tenses, passive', '**She is** working. It **was** built.'],
-          ['have', 'perfect tenses', 'I **have** finished.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::The ... the ... comparatives': {
-    heading: 'The ... The ... Comparatives',
-    intro: "This structure shows that two things change together — as one increases or decreases, so does the other.",
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['the + comparative, the + comparative', '**The more** you practice, **the better** you get.'],
-          ['the + comparative, the + comparative', "**The sooner** we leave, **the earlier** we'll arrive."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Present perfect simple or continuous': {
-    heading: 'Present Perfect Simple or Continuous',
-    intro: 'The simple form emphasizes the result of an action; the continuous form emphasizes the activity and its duration.',
-    tables: [
-      {
-        columns: ['Present perfect simple', 'Present perfect continuous'],
-        rows: [
-          ["I**'ve painted** the fence. (it's finished)", "I**'ve been painting** the fence all day. (may not be finished)"],
-          ['Focus: the completed result', 'Focus: the ongoing activity / duration'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Adjectives without noun': {
-    heading: 'Adjectives Without a Noun',
-    intro: "'The' + adjective can refer to a whole group of people, used without a noun.",
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['the + adjective (a group of people)', '**the rich**, **the elderly**, **the unemployed**'],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["This structure always takes a plural verb: **The rich are** getting richer."],
-    },
-  },
-
-  'B1+::Adjective order': {
-    heading: 'Adjective Order',
-    intro: 'When we use more than one adjective before a noun, they usually follow a fixed order.',
-    tables: [
-      {
-        columns: ['Order', 'Category', 'Examples'],
-        rows: [
-          ['1', 'Opinion', 'beautiful, lovely'],
-          ['2', 'Size', 'big, small'],
-          ['3', 'Age', 'old, young'],
-          ['4', 'Shape', 'round, square'],
-          ['5', 'Color', 'red, blue'],
-          ['6', 'Origin', 'Italian, French'],
-          ['7', 'Material', 'wooden, cotton'],
-        ],
-      },
-    ],
-    notes: ['Example: a **lovely small old round wooden** table.'],
-  },
-
-  'B1+::So, such (a), so much, so many': {
-    heading: 'So, Such (A), So Much, So Many',
-    intro: "'So' goes before an adjective or adverb; 'such (a)' goes before a noun.",
-    tables: [
-      {
-        columns: ['Word', 'Used with', 'Example'],
-        rows: [
-          ['so', 'adjective / adverb', 'The film was **so** boring.'],
-          ['such a', 'singular countable noun', "She's **such a** kind person."],
-          ['so much / so many', 'uncountable / plural countable noun', 'There is **so much** traffic. There are **so many** cars.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Narrative tenses: All past tenses': {
-    heading: 'Narrative Tenses',
-    intro: 'When telling a story, we combine several past tenses to show the order and background of events.',
-    tables: [
-      {
-        columns: ['Tense', 'Use', 'Example'],
-        rows: [
-          ['Past simple', 'main events in the story', 'She **opened** the door.'],
-          ['Past continuous', 'background action', 'The rain **was falling**.'],
-          ['Past perfect', 'an earlier event', 'She **had left** before I arrived.'],
-          ['Past perfect continuous', 'a longer earlier action', 'She **had been waiting** for an hour.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Position of adverbs and adverb phrases': {
-    heading: 'Position of Adverbs',
-    intro: 'Different types of adverbs usually go in different positions in a sentence.',
-    tables: [
-      {
-        columns: ['Type', 'Position', 'Example'],
-        rows: [
-          ['Frequency', "before the main verb, after 'be'", 'I **always** arrive on time.'],
-          ['Manner', 'usually end of clause', 'She sang **beautifully**.'],
-          ['Time / place', 'usually end of clause', 'We arrived **yesterday**.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Future continuous and future perfect': {
-    heading: 'Future Continuous and Future Perfect',
-    intro: 'The future continuous describes an action in progress at a future time; the future perfect describes an action completed before a future time.',
-    tables: [
-      {
-        columns: ['Tense', 'Form', 'Example'],
-        rows: [
-          ['Future continuous', 'will be + -ing', 'This time tomorrow, I **will be flying** to Rome.'],
-          ['Future perfect', 'will have + past participle', 'By next year, I **will have finished** my degree.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Review of all upper-intermediate verb tenses (CEFR B2.1)': {
-    heading: 'Review of Upper-Intermediate Verb Tenses',
-    intro: 'This is a quick overview of the tenses studied up to B1+ / B2.1 level.',
-    tables: [
-      {
-        columns: ['Tense', 'Form', 'Example'],
-        rows: [
-          ['Present perfect continuous', "have/has been + -ing", "I**'ve been studying** for hours."],
-          ['Past perfect (simple/continuous)', "had (+been) + verb(-ing)", "I **had finished**. I **had been waiting**."],
-          ['Future continuous', 'will be + -ing', 'I **will be traveling** next week.'],
-          ['Future perfect', 'will have + past participle', 'I **will have finished** by Friday.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Zero and first conditional and future time clauses': {
-    heading: 'Zero and First Conditional',
-    intro: 'The zero conditional describes general truths and facts; the first conditional describes real, possible future situations.',
-    tables: [
-      {
-        columns: ['Conditional', 'Use', 'Example'],
-        rows: [
-          ['Zero', 'general truths, facts', '**If** you **heat** water, it **boils**.'],
-          ['First', 'real future possibility', '**If** it **rains**, we **will stay** home.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Second and third conditionals: Unreal conditionals': {
-    heading: 'Second and Third Conditionals',
-    intro: 'The second conditional imagines an unreal present or future; the third conditional imagines an unreal past.',
-    tables: [
-      {
-        columns: ['Conditional', 'Use', 'Example'],
-        rows: [
-          ['Second', 'unreal present / future', '**If** I **had** more time, I **would learn** Japanese.'],
-          ['Third', 'unreal past', '**If** I **had known**, I **would have helped**.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Wishes and regrets: I wish/if only': {
-    heading: 'Wishes and Regrets',
-    intro: "We use 'wish' and 'if only' to talk about things we would like to be different, in the present or the past.",
-    tables: [
-      {
-        columns: ['Structure', 'Use', 'Example'],
-        rows: [
-          ['wish/if only + past simple', 'wish about the present', 'I **wish** I **had** more time.'],
-          ['wish/if only + past perfect', 'regret about the past', 'I **wish** I **had studied** harder.'],
-          ["wish + would", "annoyance about someone else's behaviour", "I **wish** you**'d stop** interrupting."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Participles as adjectives: -ed/-ing adjectives': {
-    heading: 'Participles as Adjectives',
-    intro: "Present participles (-ing) and past participles (-ed) can both work as adjectives, with different meanings.",
-    tables: [
-      {
-        columns: ['Form', 'Describes', 'Example'],
-        rows: [
-          ['-ing (present participle)', 'the cause of a feeling', 'The news was **surprising**.'],
-          ['-ed (past participle)', 'the person who feels it', 'I was **surprised** by the news.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Used to, be used to, get used to': {
-    heading: 'Used To, Be Used To, Get Used To',
-    intro: "These similar-looking expressions have different meanings: past habit, and familiarity with a situation.",
-    tables: [
-      {
-        columns: ['Expression', 'Meaning', 'Example'],
-        rows: [
-          ['used to + infinitive', 'a past habit, not true now', 'I **used to** smoke.'],
-          ['be used to + -ing', 'accustomed to something', "I**'m used to** working nights."],
-          ['get used to + -ing', 'becoming accustomed', "I**'m getting used to** the new schedule."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Would and used to: Past habits and repeated actions': {
-    heading: 'Would and Used To',
-    intro: "Both describe past habits, but only 'used to' can describe past states.",
-    tables: [
-      {
-        columns: ['Word', 'Use', 'Example'],
-        rows: [
-          ['used to', 'past habits AND past states', 'I **used to** live in Paris. I **used to** play tennis.'],
-          ['would', 'past habits only (no states)', 'Every summer, we **would visit** our grandparents.'],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["'Would' cannot describe a past state — say **used to live**, not would live."],
-    },
-  },
-
-  'B1+::Gerund or infinitive: Verb patterns': {
-    heading: 'Gerund or Infinitive: Verb Patterns',
-    intro: 'Some verbs change meaning depending on whether they are followed by the gerund (-ing) or the to-infinitive.',
-    tables: [
-      {
-        columns: ['Verb + form', 'Meaning', 'Example'],
-        rows: [
-          ['try + to-infinitive', 'make an effort', 'I **tried to open** the jar.'],
-          ['try + -ing', 'experiment with something', 'I **tried opening** the window for fresh air.'],
-          ['forget + to-infinitive', 'forget an obligation', 'I **forgot to call** her.'],
-          ['forget + -ing', 'forget a memory (often negative)', "I'll never **forget meeting** him."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Past modal verbs of deduction': {
-    heading: 'Past Modal Verbs of Deduction',
-    intro: 'We use modal + have + past participle to guess about something that happened in the past.',
-    tables: [
-      {
-        columns: ['Modal', 'Certainty', 'Example'],
-        rows: [
-          ['must have + past participle', 'almost certain (positive)', 'She **must have left** already.'],
-          ["can't have + past participle", 'almost certain (negative)', "He **can't have forgotten**."],
-          ['might/could have + past participle', 'possible', 'They **might have missed** the train.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Likely, unlikely, bound, definitely, probably: Probability': {
-    heading: 'Expressing Probability',
-    intro: 'These words and expressions show how certain or uncertain we are about something.',
-    tables: [
-      {
-        columns: ['Expression', 'Meaning', 'Example'],
-        rows: [
-          ['be likely to', 'probable', "It**'s likely to** rain later."],
-          ['be unlikely to', 'improbable', "She**'s unlikely to** come."],
-          ['be bound to', 'almost certain', "He**'s bound to** be late again."],
-          ['definitely', 'certain (adverb)', "I**'ll definitely** call you."],
-          ['probably', 'likely (adverb)', "She**'ll probably** agree."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Would rather, would prefer: Expressing preference': {
-    heading: 'Would Rather, Would Prefer',
-    intro: 'These structures express what someone prefers to do.',
-    tables: [
-      {
-        columns: ['Expression', 'Structure', 'Example'],
-        rows: [
-          ['would rather', '+ base verb (same subject)', "I**'d rather stay** in."],
-          ['would prefer', '+ to-infinitive', "I**'d prefer to stay** in."],
-          ['would rather', '+ subject + past simple (different subject)', "I**'d rather** you **didn't** smoke here."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Verbs of the senses: look, sound, feel, etc.': {
-    heading: 'Verbs of the Senses',
-    intro: "Verbs like look, sound, feel, taste, and smell are followed by an adjective, or by 'like' + a noun.",
-    tables: [
-      {
-        columns: ['Verb', 'Pattern', 'Example'],
-        rows: [
-          ['look / sound / feel', '+ adjective', 'You **look tired**. That **sounds great**.'],
-          ['look / sound / feel like', '+ noun', 'It **sounds like** a good idea.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::The passive voice: All tenses': {
-    heading: 'The Passive Voice: All Tenses',
-    intro: 'The passive is formed with the correct tense of "be" + past participle, and it can be used in almost every tense.',
-    tables: [
-      {
-        columns: ['Tense', 'Passive form', 'Example'],
-        rows: [
-          ['Present continuous', 'am/is/are being + past participle', 'The room **is being cleaned**.'],
-          ['Present perfect', 'have/has been + past participle', 'The letter **has been sent**.'],
-          ['Modal', 'modal + be + past participle', 'The work **must be finished** today.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::The passive with reporting verbs: It is said that ...': {
-    heading: 'Passive with Reporting Verbs',
-    intro: "We use this passive structure to report general opinions or beliefs without saying who holds them.",
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['It is + past participle + that...', '**It is said that** he is very rich.'],
-          ['Subject + is + past participle + to-infinitive', 'He **is said to be** very rich.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Have something done': {
-    heading: 'Have Something Done',
-    intro: "We use 'have/get something done' when someone else does a service for us.",
-    tables: [
-      {
-        columns: ['Structure', 'Meaning', 'Example'],
-        rows: [
-          ['have + object + past participle', 'arrange for someone else to do something', 'I **had my hair cut** yesterday.'],
-          ['get + object + past participle', 'same meaning, more informal', 'I **got my car fixed**.'],
-        ],
-      },
-    ],
-  },
-
-  "B1+::Reporting verbs: Admit doing, refuse to do, etc.": {
-    heading: 'Reporting Verbs',
-    intro: 'Different reporting verbs are followed by different patterns — some by -ing, some by to-infinitive.',
-    tables: [
-      {
-        columns: ['Verb', 'Pattern', 'Example'],
-        rows: [
-          ['admit', '+ -ing', 'He **admitted stealing** the money.'],
-          ['refuse', '+ to-infinitive', 'She **refused to answer**.'],
-          ['suggest', '+ -ing', 'I **suggested going** to the cinema.'],
-          ['promise', '+ to-infinitive', 'He **promised to help**.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Clauses of contrast and purpose': {
-    heading: 'Clauses of Contrast and Purpose',
-    intro: 'These connectors join two ideas by showing contrast or purpose.',
-    tables: [
-      {
-        columns: ['Type', 'Connector', 'Example'],
-        rows: [
-          ['Contrast', 'whereas, while, despite, in spite of', '**Despite** the rain, we went out.'],
-          ['Purpose', 'so as to, in order not to', 'She left early **so as to** avoid traffic.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Whatever, whenever, wherever, whoever, however': {
-    heading: 'Whatever, Whenever, Wherever, Whoever, However',
-    intro: "These '-ever' words mean 'it doesn't matter what/when/where/who/how'.",
-    tables: [
-      {
-        columns: ['Word', 'Meaning', 'Example'],
-        rows: [
-          ['whatever', 'no matter what', '**Whatever** happens, stay calm.'],
-          ['whenever', 'no matter when', 'Come **whenever** you like.'],
-          ['wherever', 'no matter where', 'Sit **wherever** you want.'],
-          ['whoever', 'no matter who', '**Whoever** wins, we celebrate.'],
-          ['however', 'no matter how', '**However** hard it is, keep trying.'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Quantifiers: All, most, both, either, neither, any, no, none': {
-    heading: 'Quantifiers Review',
-    intro: 'A quick reference for the most common English quantifiers.',
-    tables: [
-      {
-        columns: ['Word', 'Use', 'Example'],
-        rows: [
-          ['all / most', 'the whole group / almost all of it', '**All** the seats were full. **Most** people agreed.'],
-          ['both / either / neither', 'two things: together / one of / not one of', '**Both** are correct. Take **either** one. **Neither** is correct.'],
-          ['any / no / none', 'questions & negatives / with a noun / alone', "There isn't **any** left. There is **no** milk. — **None**."],
-        ],
-      },
-    ],
-  },
-
-  "B1+::Already, still, yet: What's the difference?": {
-    heading: 'Already, Still, Yet',
-    intro: "'Already' shows something happened sooner than expected; 'still' shows continuation; 'yet' is used in negatives and questions about something expected.",
-    tables: [
-      {
-        columns: ['Word', 'Use', 'Example'],
-        rows: [
-          ['already', 'affirmative — sooner than expected', "I**'ve already finished**."],
-          ['still', 'continuing (affirmative or negative)', "She **still** works there. He **still** hasn't called."],
-          ['yet', 'negatives & questions — up to now', "I **haven't finished yet**. Have you finished **yet**?"],
-        ],
-      },
-    ],
-  },
-
-  "B1+::Needn't, don't need to, didn't need to, needn't have": {
-    heading: "Needn't and Don't Need To",
-    intro: 'These expressions show that something is/was not necessary.',
-    tables: [
-      {
-        columns: ['Expression', 'Meaning', 'Example'],
-        rows: [
-          ["don't need to / needn't", 'no obligation (now or in general)', "You **don't need to** bring anything."],
-          ["didn't need to", "it wasn't necessary (may or may not have happened)", "I **didn't need to** go, so I stayed home."],
-          ["needn't have + past participle", "it wasn't necessary, but it was done anyway", "You **needn't have brought** a gift."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Pretty, rather, quite, fairly: Adverbs of degree': {
-    heading: 'Adverbs of Degree',
-    intro: 'These adverbs modify adjectives and adverbs, showing different strengths of meaning.',
-    tables: [
-      {
-        columns: ['Adverb', 'Strength', 'Example'],
-        rows: [
-          ['fairly', 'moderate', 'The test was **fairly** easy.'],
-          ['quite', 'moderate to strong', 'The film was **quite** good.'],
-          ['rather', 'strong, often about something negative', "It's **rather** cold today."],
-          ['pretty', 'strong (informal)', "I'm **pretty** sure she's right."],
-        ],
-      },
-    ],
-  },
-
-  'B1+::When I do vs When I have done: Future time clauses': {
-    heading: 'Future Time Clauses',
-    intro: "In future time clauses (after when, after, as soon as, etc.) we use the present simple or present perfect, never 'will'.",
-    tables: [
-      {
-        columns: ['Clause', 'Tense', 'Example'],
-        rows: [
-          ['when I do (general / simultaneous)', 'present simple', "I**'ll call** you **when I arrive**."],
-          ['when I have done (completed first)', 'present perfect', "I**'ll call** you **when I have finished**."],
-        ],
-      },
-    ],
-  },
-
-  "B1+::Do or Make: Which is it?": {
-    heading: 'Do or Make',
-    intro: "'Do' is often used for general activities and work; 'make' is often used for creating or producing something.",
-    tables: [
-      {
-        columns: ['Verb', 'Common collocations'],
-        rows: [
-          ['do', 'do homework, do the housework, do a favor, do business'],
-          ['make', 'make a cake, make a decision, make a mistake, make an effort'],
-        ],
-      },
-    ],
-  },
-
-  'B1+::Double negatives in English': {
-    heading: 'Double Negatives',
-    intro: 'Standard English avoids using two negative words together in the same clause.',
-    tables: [
-      {
-        columns: ['Incorrect', 'Correct'],
-        rows: [
-          ["I don't have no money.", 'I **don\'t have any** money. / I **have no** money.'],
-          ["She didn't say nothing.", "She **didn't say anything**. / She **said nothing**."],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ["Use 'any/anything' with a negative verb, or 'no/nothing' with a positive verb — never both together."],
-    },
-  },
-
-  'B2::Have: Auxiliary or main verb': {
-    heading: 'Have: Auxiliary or Main Verb',
-    intro: "'Have' can be an auxiliary verb (in perfect tenses) or a main verb (meaning possess or experience).",
-    tables: [
-      {
-        columns: ['Use', 'Example'],
-        rows: [
-          ['Auxiliary (perfect tenses)', '**I have** finished. **Have** you **seen** it?'],
-          ['Main verb (possession / action)', '**I have** a car. **I have** breakfast at 8.'],
-        ],
-      },
-    ],
-    keyPoint: {
-      title: 'Key Point',
-      lines: ['As a main verb, "have" usually uses do/does/did for questions and negatives: **Do** you **have** a car?'],
-    },
-  },
-
-  'B2::Clauses of contrast, purpose, reason and result': {
+  "B2::Adverbial clauses": {
     heading: 'Clauses of Contrast, Purpose, Reason and Result',
     intro: 'These connectors link two ideas together in different logical ways.',
     tables: [
@@ -2614,50 +1542,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Generic or common-gender pronouns': {
-    heading: 'Generic Pronouns',
-    intro: "We use generic pronouns to refer to a person without specifying their gender.",
-    tables: [
-      {
-        columns: ['Pronoun', 'Use', 'Example'],
-        rows: [
-          ['they / them / their', 'a person of unspecified gender', 'Someone left **their** bag here.'],
-          ['one', 'formal generic subject', '**One** should always be polite.'],
-          ['you (generic)', 'informal generic subject', "**You** never know what will happen."],
-        ],
-      },
-    ],
-  },
-
-  'B2::Reflexive and reciprocal pronouns': {
-    heading: 'Reflexive and Reciprocal Pronouns',
-    intro: 'Reflexive pronouns show the subject and object are the same; reciprocal pronouns show an action shared between people.',
-    tables: [
-      {
-        columns: ['Type', 'Pronoun', 'Example'],
-        rows: [
-          ['Reflexive', 'myself, yourself, himself...', 'He hurt **himself**.'],
-          ['Reciprocal', 'each other, one another', 'They love **each other**.'],
-        ],
-      },
-    ],
-  },
-
-  "B2::'There' and 'it': Preparatory subjects": {
-    heading: "There and It as Preparatory Subjects",
-    intro: "'There' introduces the existence of something; 'it' introduces an infinitive or clause as the real subject.",
-    tables: [
-      {
-        columns: ['Word', 'Use', 'Example'],
-        rows: [
-          ['there', 'introduces existence', '**There** seems to be a problem.'],
-          ['it', 'preparatory subject for an infinitive/clause', '**It** is important to arrive early.'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Narrative tenses, used to, would': {
+  "B2::Narrative tenses": {
     heading: 'Narrative Tenses, Used To, Would',
     intro: 'Storytelling combines several past tenses along with used to/would for repeated actions.',
     tables: [
@@ -2673,24 +1558,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Get: Different meanings': {
-    heading: "The Verb 'Get': Different Meanings",
-    intro: "'Get' is one of the most flexible verbs in English, with many different meanings.",
-    tables: [
-      {
-        columns: ['Meaning', 'Example'],
-        rows: [
-          ['become', 'It **got** cold.'],
-          ['receive', 'I **got** a message.'],
-          ['arrive', 'We **got** home late.'],
-          ['understand', 'I **get** it now.'],
-          ['have something done', 'I **got** my hair cut.'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Discourse markers: Linking words': {
+  "B2::Linking devices and discourse markers": {
     heading: 'Discourse Markers',
     intro: 'Discourse markers connect ideas across sentences and show the relationship between them.',
     tables: [
@@ -2706,7 +1574,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Speculation and deduction: Modal verbs and expressions': {
+  "B2::Speculation and deduction": {
     heading: 'Speculation and Deduction',
     intro: 'We use modal verbs and expressions to show how certain we are about something.',
     tables: [
@@ -2722,7 +1590,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Inversion with negative adverbials: Adding emphasis': {
+  "B2::Inversion: Never have I...": {
     heading: 'Inversion with Negative Adverbials',
     intro: 'When a negative adverbial expression starts a sentence, the subject and auxiliary verb invert, like in a question.',
     tables: [
@@ -2737,7 +1605,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Distancing: Expressions and passive of reporting verbs': {
+  "B2::Passive reporting structures: It is said that...": {
     heading: 'Distancing Expressions',
     intro: 'These structures let a speaker report something without saying exactly who said it, creating distance from the claim.',
     tables: [
@@ -2751,23 +1619,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "B2::Wish, rather, if only, it's time: Unreal uses of past tenses": {
-    heading: 'Unreal Uses of Past Tenses',
-    intro: "These expressions use a past tense to talk about the present or future, not the past.",
-    tables: [
-      {
-        columns: ['Expression', 'Tense used', 'Example'],
-        rows: [
-          ['wish / if only', 'past simple (present wish)', 'I **wish** I **knew** the answer.'],
-          ['wish / if only', 'past perfect (past regret)', 'I **wish** I **had known**.'],
-          ['would rather', "past simple (about someone else)", "I**'d rather** you **left** now."],
-          ["it's time", 'past simple', "It**'s time** we **went** home."],
-        ],
-      },
-    ],
-  },
-
-  'B2::Verb + object + infinitive/gerund: Verb patterns': {
+  "B2::Advanced verb patterns": {
     heading: 'Verb + Object + Infinitive/Gerund',
     intro: 'Some verbs take an object followed by an infinitive, a base verb, or an -ing form.',
     tables: [
@@ -2782,7 +1634,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Unless, even if, provided, as long as, etc.: Other expressions in conditionals': {
+  "B1::Unless, as long as, provided that": {
     heading: 'Other Conditional Expressions',
     intro: "Besides 'if', several other expressions can introduce a condition.",
     tables: [
@@ -2798,7 +1650,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "B2::All conditionals: Mixed conditionals, alternatives to 'if', inversion": {
+  "B2::Advanced conditional structures": {
     heading: "Advanced Conditionals",
     intro: "Beyond the standard conditionals, English allows mixed time frames and alternatives to 'if'.",
     tables: [
@@ -2813,7 +1665,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "B2::Mixed conditionals: If I were you, I wouldn't have done it": {
+  "B2::Mixed conditionals": {
     heading: 'Mixed Conditionals',
     intro: 'Mixed conditionals combine different time frames in the if-clause and the result clause.',
     tables: [
@@ -2827,7 +1679,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Modal verbs: Permission, obligation, prohibition, necessity': {
+  "B2::Advanced modal expressions": {
     heading: 'Modal Verbs: Permission, Obligation, Prohibition, Necessity',
     intro: 'Modal verbs express different levels of permission, obligation, and necessity.',
     tables: [
@@ -2843,21 +1695,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Verbs of the senses': {
-    heading: 'Verbs of the Senses',
-    intro: "Verbs like see and hear can take an object plus the base verb (a whole action) or the -ing form (an action in progress).",
-    tables: [
-      {
-        columns: ['Pattern', 'Meaning', 'Example'],
-        rows: [
-          ['see/hear + object + base verb', 'the whole action was witnessed', 'I **saw him fall**.'],
-          ['see/hear + object + -ing', 'part of an action in progress', 'I **saw him falling** (as it happened).'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Gerunds and infinitives: Complex forms': {
+  "B2::Perfect gerunds and infinitives": {
     heading: 'Complex Gerund and Infinitive Forms',
     intro: 'Gerunds and infinitives also have perfect and passive forms for more advanced meanings.',
     tables: [
@@ -2872,38 +1710,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Future forms: Expressing future time': {
-    heading: 'Future Forms',
-    intro: 'English has several future forms, chosen depending on plans, predictions, arrangements, or schedules.',
-    tables: [
-      {
-        columns: ['Form', 'Use', 'Example'],
-        rows: [
-          ['will', 'prediction, decision', 'It **will rain**.'],
-          ['be going to', 'plan, evidence', "It**'s going to** rain."],
-          ['present continuous', 'fixed arrangement', "I**'m meeting** her tomorrow."],
-          ['present simple', 'timetable', 'The train **leaves** at 6.'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Other ways to express future: Be about to, be due to, etc.': {
-    heading: 'Other Ways to Express the Future',
-    intro: 'These expressions describe the future with different degrees of imminence or schedule.',
-    tables: [
-      {
-        columns: ['Expression', 'Meaning', 'Example'],
-        rows: [
-          ['be about to', 'very near future', 'The film **is about to** start.'],
-          ['be due to', 'scheduled', 'The plane **is due to** land at 10.'],
-          ['be on the point of + -ing', 'immediate future', 'She **was on the point of** leaving.'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Future in the past': {
+  "B2::Future in the past": {
     heading: 'Future in the Past',
     intro: 'We use these forms to talk about something that was future from a point in the past.',
     tables: [
@@ -2917,7 +1724,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Ellipsis and substitution: Omitting or replacing words': {
+  "B2::Ellipsis and substitution": {
     heading: 'Ellipsis and Substitution',
     intro: 'Ellipsis omits words that are understood from context; substitution replaces them with a shorter word.',
     tables: [
@@ -2931,22 +1738,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Compound nouns and possessive forms': {
-    heading: 'Compound Nouns and Possessive Forms',
-    intro: 'English combines nouns and possessive structures in several ways.',
-    tables: [
-      {
-        columns: ['Type', 'Example'],
-        rows: [
-          ['Compound noun (noun + noun)', 'a **bus stop**, a **coffee cup**'],
-          ["Possessive 's (people)", "**Tom's** car"],
-          ['Of-possessive (things)', 'the roof **of the house**'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Cleft sentences: Adding emphasis': {
+  "B2::Cleft sentences": {
     heading: 'Cleft Sentences',
     intro: 'Cleft sentences split a sentence into two parts to emphasize a particular piece of information.',
     tables: [
@@ -2960,7 +1752,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Relative clauses: Defining and non-defining': {
+  "B2::Relative clauses: Advanced": {
     heading: 'Relative Clauses',
     intro: 'Defining clauses give essential information; non-defining clauses (with commas) add extra information.',
     tables: [
@@ -2975,7 +1767,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Participle clauses': {
+  "B2::Participle clauses": {
     heading: 'Participle Clauses',
     intro: 'Participle clauses shorten a sentence by replacing a clause with a participle form.',
     tables: [
@@ -2990,66 +1782,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  'B2::Passive verbs with two objects': {
-    heading: 'Passive with Two Objects',
-    intro: "Verbs with two objects (give, send, offer) can form the passive in two ways.",
-    tables: [
-      {
-        columns: ['Active', 'Passive'],
-        rows: [
-          ['They gave **her** a prize.', '**She was given** a prize. / A prize **was given to her**.'],
-        ],
-      },
-    ],
-  },
-
-  "B2::Possessive 's with time expressions: Two hours' walk": {
-    heading: "Possessive 's with Time Expressions",
-    intro: "We can use 's (or just an apostrophe for plurals) with time expressions to describe a duration.",
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ["plural time noun + '", "a **two hours'** walk, **ten minutes'** break"],
-          ["singular time noun + 's", "a **day's** work"],
-        ],
-      },
-    ],
-  },
-
-  'B2::Compound adjectives in English': {
-    heading: 'Compound Adjectives',
-    intro: 'Compound adjectives combine two or more words, usually hyphenated, into a single describing word.',
-    tables: [
-      {
-        columns: ['Pattern', 'Example'],
-        rows: [
-          ['adjective + noun-ed', 'a **kind-hearted** person'],
-          ['noun + past participle', 'a **sun-dried** tomato'],
-          ['adverb + past participle', 'a **well-known** author'],
-        ],
-      },
-    ],
-  },
-
-  'B2::50 common Noun + Preposition collocations': {
-    heading: 'Noun + Preposition Collocations',
-    intro: 'Many nouns are always followed by the same preposition — these need to be learned as fixed pairs.',
-    tables: [
-      {
-        columns: ['Noun + preposition', 'Example'],
-        rows: [
-          ['reason for', 'the **reason for** his absence'],
-          ['solution to', 'a **solution to** the problem'],
-          ['increase in', 'an **increase in** prices'],
-          ['interest in', 'an **interest in** art'],
-          ['relationship with', 'a good **relationship with** her boss'],
-        ],
-      },
-    ],
-  },
-
-  'B2::Comparative structures: Modifying comparatives': {
+  "B2::Advanced adjective and adverb structures": {
     heading: 'Modifying Comparatives',
     intro: 'We can make a comparative stronger or weaker by adding a modifying word before it.',
     tables: [
@@ -3064,257 +1797,4 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "B2::Reduced infinitives: Omitting the infinitive phrase after 'to'": {
-    heading: 'Reduced Infinitives',
-    intro: "To avoid repeating a whole infinitive phrase, we can leave just 'to' standing for it.",
-    tables: [
-      {
-        columns: ['Full form', 'Reduced form'],
-        rows: [
-          ["I don't want to go, but I have **to go**.", "I don't want to go, but I have **to**."],
-          ['She asked me to help, so I decided **to help her**.', 'She asked me to help, so I decided **to**.'],
-        ],
-      },
-    ],
-  },
-
-  'C1::Advanced present simple and present continuous': {
-    heading: 'Advanced Present Simple and Present Continuous',
-    intro: 'At advanced level, these tenses take on some special uses beyond routines and current actions.',
-    tables: [
-      {
-        columns: ['Use', 'Example'],
-        rows: [
-          ['Present simple for scheduled future events', 'The conference **starts** at 9am sharp.'],
-          ["Present continuous for an irritating habit (+ always)", "He**'s always** interrupting me."],
-          ['Present simple in live commentary / narration', 'He **passes** the ball to Smith, who **shoots**...'],
-        ],
-      },
-    ],
-  },
-
-  'C1::Advanced past simple, past continuous & past perfect': {
-    heading: 'Advanced Uses of Past Tenses',
-    intro: 'Past tenses are also used for politeness and for describing unreal or hypothetical situations.',
-    tables: [
-      {
-        columns: ['Tense', 'Advanced use', 'Example'],
-        rows: [
-          ['Past simple', 'a polite, tentative tone', 'I **wondered** if you could help.'],
-          ['Past continuous', 'a polite, indirect request', 'I **was hoping** you could help me.'],
-          ['Past perfect', "the 'unreal past' in wishes/conditionals", 'If only I **had known**.'],
-        ],
-      },
-    ],
-  },
-
-  'C1::Advanced modal verbs: will, would and should': {
-    heading: 'Advanced Modal Verbs: Will, Would, Should',
-    intro: 'Beyond their basic meanings, these modals can express characteristic behaviour, politeness, and formal conditions.',
-    tables: [
-      {
-        columns: ['Modal', 'Advanced use', 'Example'],
-        rows: [
-          ['will', 'characteristic behaviour / insistence', 'He **will** keep interrupting people.'],
-          ['would', 'typical past behaviour / hypothetical politeness', 'She **would** always help others. **Would** you mind?'],
-          ['should', "expectation / formal condition (= if)", 'The parcel **should** arrive tomorrow. **Should** you need anything...'],
-        ],
-      },
-    ],
-  },
-
-  'C1::Advanced modal verbs: can / be able to, may / might': {
-    heading: 'Advanced Modal Verbs: Can, May, Might',
-    intro: 'These modals can express general truths, criticism, strong possibility, and suggestion.',
-    tables: [
-      {
-        columns: ['Modal', 'Advanced use', 'Example'],
-        rows: [
-          ['can', 'general truths / criticism of behaviour', 'Smoking **can** cause serious illness. You **can** be so rude sometimes!'],
-          ['may well', 'fairly strong possibility', 'She **may well** be right.'],
-          ['might as well', 'suggestion when there is no better option', 'We **might as well** leave now.'],
-        ],
-      },
-    ],
-  },
-
-  'C1::The subjunctive in English: Present and past': {
-    heading: 'The Subjunctive',
-    intro: 'The subjunctive uses the base form of the verb (present subjunctive) or "were" (past subjunctive) in specific formal or hypothetical contexts.',
-    tables: [
-      {
-        columns: ['Type', 'Use', 'Example'],
-        rows: [
-          ['Present subjunctive', 'after verbs like suggest, insist, demand', 'I suggest that he **be** informed.'],
-          ['Past subjunctive', "in unreal conditions/wishes with 'be'", "If I **were** rich, I'd travel more."],
-        ],
-      },
-    ],
-  },
-
-  'C1::The perfect tenses: Forms and uses': {
-    heading: 'The Perfect Tenses',
-    intro: 'The three perfect tenses all connect one point in time to an earlier action.',
-    tables: [
-      {
-        columns: ['Tense', 'Form', 'Example'],
-        rows: [
-          ['Present perfect', 'have/has + past participle', 'I **have visited** ten countries.'],
-          ['Past perfect', 'had + past participle', 'I **had visited** Rome before I moved there.'],
-          ['Future perfect', 'will have + past participle', 'By 2030, I **will have retired**.'],
-        ],
-      },
-    ],
-  },
-
-  'C1::Advanced participle clauses': {
-    heading: 'Advanced Participle Clauses',
-    intro: 'Participle clauses can replace whole clauses of reason, time, or sequence in more formal writing.',
-    tables: [
-      {
-        columns: ['Type', 'Example'],
-        rows: [
-          ['Reason (active)', '**Not knowing** what to say, she stayed silent.'],
-          ['Reason (passive)', '**Being asked** to leave, he felt embarrassed.'],
-          ['Time / sequence', '**Having finished** the report, she submitted it.'],
-        ],
-      },
-    ],
-  },
-
-  'C1::Advanced word order': {
-    heading: 'Advanced Word Order',
-    intro: 'Fronting and inversion move words to the front of a sentence for emphasis, common in formal or literary English.',
-    tables: [
-      {
-        columns: ['Structure', 'Example'],
-        rows: [
-          ['Fronting for emphasis', '**Never before** had I seen such beauty.'],
-          ['Inversion after a negative adverbial', '**Rarely does** he complain.'],
-          ['Fronted time adverbial', '**Only then did** I understand.'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Nuanced Modality': {
-    heading: 'Nuanced Modality',
-    intro: 'Advanced modal expressions convey subtle shades of certainty, unrealized possibility, and past preference.',
-    tables: [
-      {
-        columns: ['Expression', 'Nuance', 'Example'],
-        rows: [
-          ['could have + past participle', 'an unrealized past possibility', 'She **could have** won, but she gave up.'],
-          ['was/were to + infinitive', 'a formal destiny or arrangement', "He **was to** become one of the era's great writers."],
-          ['would rather/sooner have + past participle', 'a past preference that was not fulfilled', "I**'d rather have** stayed home."],
-        ],
-      },
-    ],
-  },
-
-  'C2::Advanced Inversion and Fronting': {
-    heading: 'Advanced Inversion and Fronting',
-    intro: 'Literary and formal English often moves emphasized elements to the front of the sentence, triggering inversion.',
-    tables: [
-      {
-        columns: ['Device', 'Example'],
-        rows: [
-          ['Negative inversion', '**Under no circumstances should** you sign this.'],
-          ['Fronting for focus', '**Gone are** the days of cheap travel.'],
-          ['Conditional inversion', '**Had I known**, I would have acted differently.'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Ellipsis and Substitution': {
-    heading: 'Ellipsis and Substitution',
-    intro: 'Advanced writing avoids repetition by omitting understood words (ellipsis) or replacing them with a short substitute.',
-    tables: [
-      {
-        columns: ['Technique', 'Example'],
-        rows: [
-          ['Ellipsis of a repeated verb', "She wanted to go, but he didn't (want to)."],
-          ["Substitution with 'so' / 'not'", 'Will it rain? I hope **so** / I hope **not**.'],
-          ['Ellipsis in comparisons', 'He earns more than she (earns).'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Discourse Markers and Cohesion': {
-    heading: 'Discourse Markers and Cohesion',
-    intro: 'Advanced discourse markers create precise logical links between ideas in formal writing and speech.',
-    tables: [
-      {
-        columns: ['Marker', 'Function', 'Example'],
-        rows: [
-          ['notwithstanding', 'formal contrast', 'The results, **notwithstanding** their flaws, were significant.'],
-          ['that said', 'concession', "It's expensive. **That said**, it's worth it."],
-          ['by the same token', 'parallel reasoning', '**By the same token**, we should reconsider the policy.'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Advanced Conditionals and Hypotheticals': {
-    heading: 'Advanced Conditionals and Hypotheticals',
-    intro: 'At this level, conditionals can be inverted, implied without "if", or introduced with "suppose".',
-    tables: [
-      {
-        columns: ['Structure', 'Example'],
-        rows: [
-          ['Inverted mixed conditional', '**Had she studied** law, she **would be** a judge now.'],
-          ['Implied conditional (no if)', 'With more funding, the project **would succeed**.'],
-          ["Hypothetical with 'suppose'", '**Suppose** you **had told** her — what then?'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Nominalization': {
-    heading: 'Nominalization',
-    intro: 'Nominalization turns verbs or adjectives into nouns, a technique common in academic and formal writing to sound more objective.',
-    tables: [
-      {
-        columns: ['Verb / adjective', 'Nominalized form', 'Example'],
-        rows: [
-          ['decide', 'decision', 'They reached a **decision**. (rather than: They decided)'],
-          ['apply', 'application', 'The **application** of this rule is complex.'],
-          ['responsible', 'responsibility', 'She took **responsibility** for the error.'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Idiomatic and Figurative Language': {
-    heading: 'Idiomatic and Figurative Language',
-    intro: 'Idioms carry a meaning that is different from the literal meaning of their words.',
-    tables: [
-      {
-        columns: ['Expression', 'Meaning', 'Example'],
-        rows: [
-          ['a blessing in disguise', 'something good that seemed bad at first', 'Losing that job was **a blessing in disguise**.'],
-          ['bite the bullet', 'to face something difficult', 'We just have to **bite the bullet** and start.'],
-          ['once in a blue moon', 'very rarely', 'He visits **once in a blue moon**.'],
-        ],
-      },
-    ],
-  },
-
-  'C2::Register and Formality Shifts': {
-    heading: 'Register and Formality Shifts',
-    intro: 'Skilled writers and speakers adjust vocabulary and structure to match a formal or informal context.',
-    tables: [
-      {
-        columns: ['Informal', 'Formal'],
-        rows: [
-          ['find out', 'ascertain'],
-          ['a lot of', 'numerous / a great deal of'],
-          ['get', 'obtain / receive'],
-          ["can't stand", 'cannot tolerate'],
-        ],
-      },
-    ],
-  },
 };

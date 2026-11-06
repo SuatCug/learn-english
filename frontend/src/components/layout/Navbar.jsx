@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge, Book, File, NotebookPen, Menu, X, Search, School } from 'lucide-react';
+import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School } from 'lucide-react';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
 import { useGetTopicsQuery } from '@/services/topicsApi';
 import RoomsMenu from './RoomsMenu';
@@ -13,20 +13,24 @@ const CATEGORY_COLORS = {
   vocabulary: '#ff6699',
   reading: '#ed1c24',
   writing: '#a84d98',
+  listening: '#f7741d',
 };
 
 // Her kategorinin kendi hazır Lucide ikonu var; içine seviye kodu yazılır.
-// Grammar: dalgalı rozet, Vocabulary: kitap, Reading: sayfa, Writing: kalemli defter.
+// Grammar: dalgalı rozet, Vocabulary: kitap, Reading: sayfa, Writing: kalemli defter, Listening: kulaklık.
 const CATEGORY_LEVEL_ICONS = {
   grammar: Badge,
   vocabulary: Book,
   reading: File,
   writing: NotebookPen,
+  listening: Headphones,
 };
 
 // Kalemli defterde kalem sağ üstte; kod defterin alttaki boş kısmına kaydırılır.
 const CODE_OFFSET = {
   writing: 'translate-x-[1px] translate-y-[7px]',
+  // Kulaklıkta boşluk, bandın altında iki kulaklık arasında.
+  listening: 'translate-y-[4px]',
 };
 
 function LevelBadge({ code, color, slug }) {
@@ -133,7 +137,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center justify-center gap-6 lg:gap-8 justify-self-center">
+        <nav className="hidden md:flex items-center justify-center gap-4 lg:gap-6 xl:gap-8 justify-self-center">
           {CATEGORIES.map((category) => (
             <CategoryMenu key={category.slug} label={category.label} slug={category.slug} />
           ))}

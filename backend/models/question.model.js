@@ -14,7 +14,7 @@ const questionSchema = new mongoose.Schema(
     correctAnswer: { type: mongoose.Schema.Types.Mixed, default: undefined },
     matchingPairs: { type: [matchingPairSchema], default: undefined },
     explanation: { type: String, default: '' },
-    level: { type: String, enum: ['A1', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2'], required: true },
+    level: { type: String, enum: ['A1', 'A2', 'B1', 'B2'], required: true },
     isPlacementQuestion: { type: Boolean, default: false },
     exerciseGroup: { type: Number, default: 1, min: 1 },
     // Placement test alanları: section soruyu Reading/Grammar/Vocabulary'ye ayırır,

@@ -4,17 +4,9 @@ import Footer from '@/components/layout/Footer';
 import BrandMark from '@/components/BrandMark';
 import { useGetTopicsQuery, topicsApi } from '@/services/topicsApi';
 import { CATEGORIES, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from '@/lib/constants';
-import grammarIllustration from '@/assets/home-grammar.webp';
-import vocabularyIllustration from '@/assets/home-vocabulary.webp';
-import writingIllustration from '@/assets/home-writing.webp';
-import readingIllustration from '@/assets/home-reading.webp';
-
-const CATEGORY_ILLUSTRATIONS = {
-  grammar: grammarIllustration,
-  vocabulary: vocabularyIllustration,
-  writing: writingIllustration,
-  reading: readingIllustration,
-};
+import { cloudinaryUrl } from '@/lib/cloudinary';
+import FadeImage from '@/components/FadeImage';
+import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrations';
 
 const PALETTES = [
   'from-emerald-500 to-emerald-700',
@@ -28,8 +20,8 @@ const PALETTES = [
 // Veri gelene kadar kartların yerini tutan sade, animasyonsuz kutu (sayfa zıplamasın diye aynı boyutta).
 function PlaceholderCard() {
   return (
-    <div className="rounded-sm border border-[#f0f0f0] bg-white overflow-hidden">
-      <div className="h-44 w-full bg-gray-100" />
+    <div className="rounded-xl border border-[#f0f0f0] bg-white overflow-hidden">
+      <div className={`${CARD_IMAGE_BOX} w-full bg-gray-100`} />
       <div className="h-7 w-full bg-gray-50" />
       <div className="p-4 min-h-[4.5rem]" />
     </div>
@@ -45,6 +37,8 @@ function TopicCard({
   bannerClass,
   onPrefetch,
 }) {
+  const topicImage = cloudinaryUrl(topic.image);
+
   return (
     <div>
       <Link
@@ -52,14 +46,22 @@ function TopicCard({
         onPointerEnter={() => onPrefetch(topic._id)}
         onPointerDown={() => onPrefetch(topic._id)}
         onFocus={() => onPrefetch(topic._id)}
-        className="relative block rounded-sm border border-[#f0f0f0] bg-white overflow-hidden shadow-[0_1px_2px_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] hover:shadow-[0_8px_17px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.19)] transition-shadow duration-500 ease-in-out"
+        className="relative block rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-[0_1px_2px_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] hover:shadow-[0_8px_17px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.19)] transition-shadow duration-500 ease-in-out"
       >
         <div
-          className={`relative h-44 flex items-center justify-center overflow-hidden ${
-            illustration ? '' : `bg-gradient-to-br ${PALETTES[index % PALETTES.length]}`
+          className={`relative ${CARD_IMAGE_BOX} flex items-center justify-center overflow-hidden ${
+            topicImage || illustration ? 'bg-gray-100' : `bg-gradient-to-br ${PALETTES[index % PALETTES.length]}`
           }`}
         >
-          {illustration ? (
+          {topicImage ? (
+            <FadeImage
+              src={topicImage}
+              width={1200}
+              height={630}
+              priority={index < 6}
+              className="w-full h-full object-cover"
+            />
+          ) : illustration ? (
             <img src={illustration} alt="" className="w-full h-full object-cover" />
           ) : (
             <span className="text-5xl">{categoryInfo?.icon}</span>

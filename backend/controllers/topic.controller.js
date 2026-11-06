@@ -15,7 +15,8 @@ const list = asyncHandler(async (req, res) => {
   if (level) filter.level = level;
   if (search) filter.title = { $regex: escapeRegex(search.trim()), $options: 'i' };
 
-  const topics = await Topic.find(filter).sort({ createdAt: 1 });
+  // insertMany tüm konulara aynı createdAt'i verebilir; _id ekleme sırasını (= müfredat sırası) korur.
+  const topics = await Topic.find(filter).sort({ createdAt: 1, _id: 1 });
   res.json({ success: true, data: { topics } });
 });
 

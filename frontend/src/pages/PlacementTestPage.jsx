@@ -207,7 +207,7 @@ function IntroScreen({ onStart, isLoading, user }) {
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Find out your English level</h1>
         <p className="text-sm text-gray-600 leading-relaxed mb-6">
           This placement test is designed in line with the CEFR (Common European Framework of Reference for
-          Languages) — the same international standard used to describe the A1–C2 levels throughout this site. It
+          Languages) — the same international standard used to describe the A1–B2 levels throughout this site. It
           combines a Reading, a Grammar, a Vocabulary, and a Writing section, moving from easier to more difficult
           questions within each part, and your result is used to recommend the right lessons for you.
         </p>

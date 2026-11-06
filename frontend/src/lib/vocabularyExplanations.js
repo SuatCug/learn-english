@@ -11,7 +11,7 @@
 //   tips?: string[],
 // }
 export const VOCABULARY_EXPLANATIONS = {
-  'A1::Common Things': {
+  "A1::Common Things": {
     heading: 'Common Things',
     intro: 'Everyday objects you use or see all the time.',
     groups: [
@@ -31,28 +31,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Learn each noun together with a common verb (use a phone, carry a bag) to remember it better.'],
   },
 
-  'A1::Basic Vocabulary: Family': {
-    heading: 'Family Members',
-    intro: 'The people in your immediate family.',
-    groups: [
-      {
-        words: [
-          { emoji: '👩', word: 'mother', meaning: 'your female parent', example: 'My **mother** is a teacher.' },
-          { emoji: '👨', word: 'father', meaning: 'your male parent', example: 'My **father** works in a bank.' },
-          { emoji: '👧', word: 'sister', meaning: 'a female sibling', example: 'I have one **sister**.' },
-          { emoji: '👦', word: 'brother', meaning: 'a male sibling', example: 'My **brother** is older than me.' },
-          { emoji: '👵', word: 'grandmother', meaning: "your mother's or father's mother", example: 'I visit my **grandmother** every Sunday.' },
-          { emoji: '👴', word: 'grandfather', meaning: "your mother's or father's father", example: 'My **grandfather** tells great stories.' },
-          { emoji: '👩‍🦱', word: 'aunt', meaning: "your parent's sister", example: 'My **aunt** lives in Spain.' },
-          { emoji: '🧑', word: 'uncle', meaning: "your parent's brother", example: 'My **uncle** has two dogs.' },
-          { emoji: '🧒', word: 'cousin', meaning: "your aunt's or uncle's child", example: 'My **cousin** and I are the same age.' },
-        ],
-      },
-    ],
-    tips: ["Use possessive adjectives (my, his, her) with family words: my mother, her brother."],
-  },
-
-  'A1::Parts of the Body': {
+  "A1::Parts of the Body": {
     heading: 'Parts of the Body',
     intro: 'The main parts of the human body.',
     groups: [
@@ -73,7 +52,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["Use 'has got' with body parts for physical descriptions: She's got green eyes."],
   },
 
-  'A1::Shops and Shopping': {
+  "A1::Shops and Shopping": {
     heading: 'Shops and Shopping',
     intro: 'Common shops and words you need when shopping.',
     groups: [
@@ -93,7 +72,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["Shop names often end in \"-'s\": a butcher's, a chemist's — meaning 'the shop of the butcher/chemist'."],
   },
 
-  'A1::Countries and Nationalities': {
+  "A1::Countries and Nationalities": {
     heading: 'Countries and Nationalities',
     intro: 'Some common countries and their nationality adjectives.',
     groups: [
@@ -113,7 +92,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Nationality adjectives are always capitalized in English: French, not french.'],
   },
 
-  'A1::Food and Meals': {
+  "A1::Food and Meals": {
     heading: 'Food and Meals',
     intro: 'Words for meals and basic food.',
     groups: [
@@ -133,7 +112,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["'Bread', 'rice', and 'fruit' are usually uncountable — say 'some bread', not 'a bread'."],
   },
 
-  'A1::Daily Routines': {
+  "A1::Daily Routines": {
     heading: 'Daily Routine Verbs',
     intro: 'The verbs and phrases we use to talk about a typical day.',
     groups: [
@@ -152,7 +131,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Remember the -s ending for he/she/it: she wakes up, he gets dressed.'],
   },
 
-  'A1::Opposite Adjectives': {
+  "A1::Opposite Adjectives": {
     heading: 'Opposite Adjectives',
     intro: 'Adjective pairs with opposite meanings.',
     groups: [
@@ -172,7 +151,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Learn adjectives in opposite pairs — it helps you remember both words at the same time.'],
   },
 
-  'A1::Family and Relatives': {
+  "A1::Family and Relatives": {
     heading: 'Family and Relatives',
     intro: 'Words for extended family and relationships by marriage.',
     groups: [
@@ -191,7 +170,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["Add '-in-law' to a family word to describe relatives by marriage: mother-in-law, brother-in-law."],
   },
 
-  'A1::Common Verbs and Verb Phrases': {
+  "A1::Common Verbs and Verb Phrases": {
     heading: 'Common Verbs',
     intro: 'Some of the most frequent verbs in English, used in everyday phrases.',
     groups: [
@@ -211,7 +190,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Learn the fixed phrases these verbs form: make a decision, do homework, take a photo.'],
   },
 
-  'A1::Days, Months, Seasons and Dates': {
+  "A1::Days, Months and Seasons": {
     heading: 'Days, Months, Seasons and Dates',
     intro: 'The words we use to talk about the calendar, and the prepositions that go with them.',
     groups: [
@@ -237,7 +216,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Learn the 7 days (Monday–Sunday) and 12 months (January–December) as full lists, then practice with the right preposition.'],
   },
 
-  'A1::Clothes': {
+  "A1::Clothes": {
     heading: 'Clothes',
     intro: 'Common items of clothing.',
     groups: [
@@ -256,7 +235,7 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["'Trousers', 'shoes', 'socks', and 'glasses' are always plural: My trousers are new, not 'is new'."],
   },
 
-  'A1::The House: Rooms, Parts, and Things': {
+  "A1::The House: Rooms and Things": {
     heading: 'The House: Rooms and Parts',
     intro: 'The main rooms and parts of a house.',
     groups: [
@@ -275,7 +254,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A1::Places in a Town': {
+  "A1::Places in a Town": {
     heading: 'Places in a Town',
     intro: 'Common buildings and places you find in a town.',
     groups: [
@@ -294,7 +273,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A1::At the Restaurant': {
+  "A1::At the Restaurant": {
     heading: 'At the Restaurant',
     intro: 'Useful words for eating out.',
     groups: [
@@ -312,7 +291,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A1::Eating and Drinking Utensils': {
+  "A1::Eating and Drinking Utensils": {
     heading: 'Eating and Drinking Utensils',
     intro: 'The items we use to eat and drink at the table.',
     groups: [
@@ -331,7 +310,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A1::Movement Verbs': {
+  "A1::Movement Verbs": {
     heading: 'Movement Verbs',
     intro: 'Verbs that describe how we move.',
     groups: [
@@ -350,7 +329,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A1::Time Words': {
+  "A1::Time Words": {
     heading: 'Time Words',
     intro: 'Common words for talking about when things happen.',
     groups: [
@@ -369,7 +348,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A1::Basic Phrasal Verbs': {
+  "A1::Basic Phrasal Verbs": {
     heading: 'Basic Phrasal Verbs',
     intro: 'Simple two-word verbs used very often in everyday English.',
     groups: [
@@ -388,7 +367,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Technology': {
+  "A2::Technology": {
     heading: 'Technology',
     intro: 'Everyday words for devices and the internet.',
     groups: [
@@ -407,46 +386,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Everyday Problems and Solutions': {
-    heading: 'Everyday Problems and Solutions',
-    intro: 'Common small problems, and the language for fixing them.',
-    groups: [
-      {
-        words: [
-          { emoji: '🔧', word: 'broken', meaning: 'not working / damaged', example: 'My phone is **broken**.' },
-          { emoji: '🗺️', word: 'lost', meaning: 'not knowing where you are', example: 'We got **lost** in the city.' },
-          { emoji: '⏰', word: 'late', meaning: 'after the expected time', example: "Sorry I'm **late**." },
-          { emoji: '🚫', word: 'out of order', meaning: 'not working (a machine)', example: 'The lift is **out of order**.' },
-          { emoji: '🚧', word: 'stuck', meaning: 'unable to move or continue', example: 'We were **stuck** in traffic.' },
-          { emoji: '🤦', word: 'forget', meaning: 'to fail to remember', example: 'I always **forget** my umbrella.' },
-          { emoji: '🛠️', word: 'fix', meaning: 'to repair something', example: 'Can you **fix** my bike?' },
-          { emoji: '✅', word: 'solve', meaning: 'to find an answer to a problem', example: 'We need to **solve** this problem quickly.' },
-        ],
-      },
-    ],
-  },
-
-  'A2::Words with Prepositions': {
-    heading: 'Words with Prepositions',
-    intro: 'Verbs and adjectives that are always followed by the same preposition.',
-    groups: [
-      {
-        words: [
-          { word: 'depend on', meaning: 'to rely on', example: 'It **depends on** the weather.' },
-          { word: 'listen to', meaning: 'to pay attention to sound', example: 'I **listen to** music every day.' },
-          { word: 'arrive at/in', meaning: 'to reach a place', example: 'We **arrived at** the station.' },
-          { word: 'good at', meaning: 'skilled in', example: 'She is **good at** maths.' },
-          { word: 'afraid of', meaning: 'scared of', example: 'He is **afraid of** spiders.' },
-          { word: 'interested in', meaning: 'curious about', example: "I'm **interested in** history." },
-          { word: 'married to', meaning: 'a spouse of', example: 'She is **married to** a doctor.' },
-          { word: 'wait for', meaning: 'to stay until something happens', example: 'We **waited for** the bus.' },
-        ],
-      },
-    ],
-    tips: ['These preposition combinations are fixed — learn them as a pair, not as two separate words.'],
-  },
-
-  "A2::Describing People's Appearance": {
+  "A2::Describing People": {
     heading: "Describing People's Appearance",
     intro: 'Words for describing how someone looks.',
     groups: [
@@ -465,7 +405,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::Describing People's Personality": {
+  "B1::Personality Adjectives": {
     heading: "Describing People's Personality",
     intro: 'Adjectives for describing what someone is like.',
     groups: [
@@ -484,7 +424,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Shops and Shopping': {
+  "B1::Shopping and Consumerism": {
     heading: 'Shops and Shopping',
     intro: 'More useful vocabulary for shopping trips and returns.',
     groups: [
@@ -502,45 +442,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Housework': {
-    heading: 'Housework',
-    intro: 'Common household chores.',
-    groups: [
-      {
-        words: [
-          { emoji: '🧹', word: 'clean', meaning: 'to remove dirt', example: 'I **clean** my room every Saturday.' },
-          { emoji: '🍽️', word: 'wash the dishes', meaning: 'to clean plates and cups after eating', example: "It's your turn to **wash the dishes**." },
-          { emoji: '🧺', word: 'do the laundry', meaning: 'to wash clothes', example: 'I **do the laundry** on Sundays.' },
-          { emoji: '🧹', word: 'vacuum', meaning: 'to clean floors with a vacuum cleaner', example: 'Can you **vacuum** the living room?' },
-          { emoji: '🧼', word: 'tidy up', meaning: 'to put things in order', example: 'Please **tidy up** your desk.' },
-          { emoji: '👔', word: 'iron', meaning: 'to make clothes smooth with heat', example: 'I need to **iron** my shirt.' },
-          { emoji: '🗑️', word: 'take out the rubbish', meaning: 'to remove the trash', example: 'Can you **take out the rubbish**?' },
-          { emoji: '🛏️', word: 'make the bed', meaning: 'to tidy your bed after sleeping', example: 'I always **make the bed** in the morning.' },
-        ],
-      },
-    ],
-  },
-
-  'A2::Clothes': {
-    heading: 'Clothes and Accessories',
-    intro: 'More clothing items and accessories, beyond the basics.',
-    groups: [
-      {
-        words: [
-          { emoji: '🧣', word: 'scarf', meaning: 'worn around the neck', example: 'She wore a warm **scarf**.' },
-          { emoji: '🧤', word: 'gloves', meaning: 'worn on the hands', example: "Put on your **gloves** — it's freezing." },
-          { emoji: '👔', word: 'tie', meaning: 'worn around the neck with a shirt, formal', example: 'He wore a suit and **tie**.' },
-          { emoji: '👢', word: 'boots', meaning: 'shoes that cover the ankle', example: 'I need new **boots** for winter.' },
-          { emoji: '🩱', word: 'swimsuit', meaning: 'worn for swimming', example: "Don't forget your **swimsuit**." },
-          { emoji: '👘', word: 'uniform', meaning: 'special clothes worn for school or work', example: 'Students wear a **uniform** at this school.' },
-          { emoji: '🎽', word: 'tracksuit', meaning: 'worn for sport or exercise', example: 'He wears a **tracksuit** to the gym.' },
-          { emoji: '👛', word: 'belt', meaning: 'worn around the waist', example: 'His trousers need a **belt**.' },
-        ],
-      },
-    ],
-  },
-
-  'A2::Containers and Quantities': {
+  "A2::Containers and Quantities": {
     heading: 'Containers and Quantities',
     intro: 'How we describe quantities of food and other items.',
     groups: [
@@ -559,7 +461,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::The Countryside': {
+  "A2::Nature and Landscape": {
     heading: 'The Countryside',
     intro: 'Vocabulary for describing rural areas.',
     groups: [
@@ -577,7 +479,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Holidays': {
+  "A2::Holidays and Travel": {
     heading: 'Holidays',
     intro: 'Vocabulary for talking about trips and vacations.',
     groups: [
@@ -595,42 +497,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Giving Directions': {
-    heading: 'Giving Directions',
-    intro: 'Phrases used to explain how to get somewhere.',
-    groups: [
-      {
-        words: [
-          { emoji: '⬅️', word: 'turn left/right', meaning: 'change direction', example: '**Turn left** at the bank.' },
-          { emoji: '⬆️', word: 'go straight on', meaning: 'continue in the same direction', example: '**Go straight on** for 200 metres.' },
-          { emoji: '🚸', word: 'cross the road', meaning: 'to walk to the other side of a road', example: '**Cross the road** at the traffic lights.' },
-          { emoji: '📍', word: 'on the corner', meaning: 'where two streets meet', example: 'The café is **on the corner**.' },
-          { emoji: '👉', word: 'next to', meaning: 'beside', example: 'The bank is **next to** the post office.' },
-          { emoji: '↔️', word: 'opposite', meaning: 'facing, on the other side', example: 'The park is **opposite** the school.' },
-          { emoji: '🔄', word: 'roundabout', meaning: 'a circular road junction', example: 'Take the second exit at the **roundabout**.' },
-          { emoji: '🚦', word: 'traffic lights', meaning: 'lights that control traffic', example: 'Turn right at the **traffic lights**.' },
-        ],
-      },
-    ],
-  },
-
-  'A2::Say, Tell, Speak, Talk, etc.': {
-    heading: 'Say, Tell, Speak, Talk',
-    intro: 'These four verbs all relate to communication, but each is used differently.',
-    groups: [
-      {
-        words: [
-          { word: 'say', meaning: '+ something (no personal object)', example: 'She **said** she was tired.' },
-          { word: 'tell', meaning: '+ someone (needs a personal object)', example: 'She **told** me she was tired.' },
-          { word: 'speak', meaning: 'formal — to use a language or address someone', example: 'Do you **speak** English?' },
-          { word: 'talk', meaning: 'an informal conversation', example: 'We **talked** for hours.' },
-        ],
-      },
-    ],
-    tips: ["'Tell' always needs a person as its object (tell me), while 'say' does not (say something)."],
-  },
-
-  'A2::Hobbies and Free Time': {
+  "A2::Free Time Activities": {
     heading: 'Hobbies and Free Time',
     intro: 'Common activities people do in their free time.',
     groups: [
@@ -648,25 +515,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::In a Hotel': {
-    heading: 'In a Hotel',
-    intro: 'Useful words for a hotel stay.',
-    groups: [
-      {
-        words: [
-          { emoji: '🛎️', word: 'check in', meaning: 'to register on arrival', example: 'We **checked in** at 3pm.' },
-          { emoji: '🚪', word: 'check out', meaning: 'to leave and pay before departure', example: '**Check-out** is at 11am.' },
-          { emoji: '🛎️', word: 'reception', meaning: 'the front desk of a hotel', example: 'Ask at **reception** for towels.' },
-          { emoji: '🍽️', word: 'room service', meaning: 'food delivered to your hotel room', example: 'We ordered breakfast from **room service**.' },
-          { emoji: '🗝️', word: 'key card', meaning: 'a card used to open your hotel room', example: 'I lost my **key card**.' },
-          { emoji: '📅', word: 'reservation', meaning: 'a booking made in advance', example: 'I have a **reservation** for two nights.' },
-          { emoji: '🛏️', word: 'double room', meaning: 'a room with a bed for two people', example: 'We booked a **double room**.' },
-        ],
-      },
-    ],
-  },
-
-  'A2::The Weather': {
+  "A2::The Weather": {
     heading: 'The Weather',
     intro: 'Words for describing different kinds of weather.',
     groups: [
@@ -685,7 +534,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Common Phrasal Verbs': {
+  "B1::Common Phrasal Verbs": {
     heading: 'Common Phrasal Verbs',
     intro: 'Everyday two- and three-word verbs.',
     groups: [
@@ -704,63 +553,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'A2::Towns and Cities': {
-    heading: 'Towns and Cities',
-    intro: 'Vocabulary for describing urban areas.',
-    groups: [
-      {
-        words: [
-          { emoji: '👥', word: 'crowded', meaning: 'full of people', example: 'The market was very **crowded**.' },
-          { emoji: '🏘️', word: 'suburb', meaning: 'a residential area outside the city centre', example: 'We live in a quiet **suburb**.' },
-          { emoji: '🏙️', word: 'city centre', meaning: 'the main area of a city (AmE: downtown)', example: 'The shops are in the **city centre**.' },
-          { emoji: '🏢', word: 'skyscraper', meaning: 'a very tall building', example: 'New York has many **skyscrapers**.' },
-          { emoji: '🚗', word: 'traffic jam', meaning: 'a long line of slow-moving traffic', example: 'We were stuck in a **traffic jam**.' },
-          { emoji: '🚌', word: 'public transport', meaning: 'buses, trains, etc. for everyone', example: 'I use **public transport** to get to work.' },
-          { emoji: '🚶', word: 'pedestrian', meaning: 'a person walking', example: 'This street is for **pedestrians** only.' },
-          { emoji: '🏡', word: 'neighbourhood', meaning: 'the area around where you live', example: "It's a friendly **neighbourhood**." },
-        ],
-      },
-    ],
-  },
-
-  'B1::The Body: Parts and Actions': {
-    heading: 'The Body: Actions',
-    intro: 'Verbs that describe things we do with our bodies.',
-    groups: [
-      {
-        words: [
-          { emoji: '👍', word: 'nod', meaning: 'to move your head up and down (yes)', example: 'She **nodded** in agreement.' },
-          { emoji: '🤷', word: 'shrug', meaning: "to raise your shoulders (I don't know)", example: 'He just **shrugged** and walked away.' },
-          { emoji: '👋', word: 'wave', meaning: 'to move your hand to say hello or goodbye', example: 'She **waved** at me from across the street.' },
-          { emoji: '😉', word: 'blink', meaning: 'to close and open your eyes quickly', example: 'He **blinked** in surprise.' },
-          { emoji: '🥱', word: 'yawn', meaning: 'to open your mouth wide when tired', example: 'I **yawned** during the meeting.' },
-          { emoji: '🙆', word: 'stretch', meaning: 'to extend your arms, legs, or body', example: 'I **stretch** every morning.' },
-          { emoji: '💨', word: 'breathe', meaning: 'to take air in and out', example: '**Breathe** deeply and relax.' },
-          { emoji: '💦', word: 'sweat', meaning: 'to produce liquid on your skin from heat or exercise', example: 'I was **sweating** after the run.' },
-        ],
-      },
-    ],
-  },
-
-  'B1::More Daily Routines': {
-    heading: 'More Daily Routine Verbs',
-    intro: 'Verbs for describing a busier, more varied daily schedule.',
-    groups: [
-      {
-        words: [
-          { emoji: '🚋', word: 'commute', meaning: 'to travel to work regularly', example: 'She **commutes** by train every day.' },
-          { emoji: '🛍️', word: 'run errands', meaning: 'to do small tasks like shopping or the post office', example: 'I need to **run errands** this afternoon.' },
-          { emoji: '🛀', word: 'unwind', meaning: 'to relax after a stressful day', example: 'I like to **unwind** with a book.' },
-          { emoji: '📺', word: 'catch up on', meaning: 'to do something you fell behind on', example: 'I need to **catch up on** some sleep.' },
-          { emoji: '🔀', word: 'multitask', meaning: 'to do several things at once', example: 'She can **multitask** really well.' },
-          { emoji: '⏳', word: 'procrastinate', meaning: 'to delay doing something', example: 'Stop **procrastinating** and start studying!' },
-          { emoji: '☕', word: 'take a break', meaning: 'to stop for a short rest', example: "Let's **take a break** for coffee." },
-        ],
-      },
-    ],
-  },
-
-  'B1::Sport': {
+  "B1::Sport and Competition": {
     heading: 'Sport',
     intro: 'Common words used to talk about sports and competitions.',
     groups: [
@@ -779,25 +572,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Free Time Activities': {
-    heading: 'Free Time Activities',
-    intro: 'More ways people spend their leisure time.',
-    groups: [
-      {
-        words: [
-          { emoji: '🎤', word: 'go to concerts', meaning: 'to attend live music events', example: 'We **go to concerts** every summer.' },
-          { emoji: '🍽️', word: 'eat out', meaning: 'to have a meal at a restaurant', example: 'We **eat out** most Fridays.' },
-          { emoji: '📺', word: 'binge-watch', meaning: 'to watch many episodes in a row', example: 'I **binge-watched** the whole series.' },
-          { emoji: '🧩', word: 'do puzzles', meaning: 'to solve puzzles as a hobby', example: 'She loves **doing puzzles** on rainy days.' },
-          { emoji: '🥳', word: 'socialize', meaning: 'to spend time with other people', example: 'He likes to **socialize** at weekends.' },
-          { emoji: '🏋️', word: 'work out', meaning: 'to exercise', example: 'I **work out** at the gym.' },
-          { emoji: '🔨', word: 'DIY', meaning: '"do it yourself" — home improvement projects', example: 'He spent the weekend doing **DIY**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1::Houses and Buildings': {
+  "B1::Houses and Homes": {
     heading: 'Houses and Buildings',
     intro: 'Types of housing and words related to buying or renting.',
     groups: [
@@ -816,7 +591,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Transport': {
+  "A2::Transport": {
     heading: 'Transport',
     intro: 'Vocabulary for talking about travel and getting around.',
     groups: [
@@ -834,7 +609,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Hotels and Accommodation': {
+  "B1::Travel and Tourism": {
     heading: 'Hotels and Accommodation',
     intro: 'More detailed vocabulary about staying in a hotel.',
     groups: [
@@ -853,7 +628,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Food and Cooking': {
+  "B1::Food and Cooking": {
     heading: 'Food and Cooking',
     intro: 'Basic cooking verbs and words.',
     groups: [
@@ -872,7 +647,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Work': {
+  "B1::Work and Careers": {
     heading: 'Work',
     intro: 'Common vocabulary for talking about jobs and the workplace.',
     groups: [
@@ -891,7 +666,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Money': {
+  "B1::Money and Banking": {
     heading: 'Money',
     intro: 'Vocabulary for talking about personal finance.',
     groups: [
@@ -910,7 +685,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Education': {
+  "B1::Education": {
     heading: 'Education',
     intro: 'Vocabulary for schools, universities, and studying.',
     groups: [
@@ -929,7 +704,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Relationships': {
+  "B1::Relationships": {
     heading: 'Relationships',
     intro: 'Vocabulary for talking about friendships and romantic relationships.',
     groups: [
@@ -948,7 +723,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::News and Media': {
+  "B1::Media and News": {
     heading: 'News and Media',
     intro: 'Vocabulary for talking about newspapers, TV news, and journalism.',
     groups: [
@@ -967,7 +742,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Animals and Their Bodies and Sounds': {
+  "A2::Animals": {
     heading: 'Animals: Bodies and Sounds',
     intro: 'Body parts specific to animals, and the sounds they make.',
     groups: [
@@ -993,7 +768,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Types of Movies and TV Shows': {
+  "B1::Entertainment": {
     heading: 'Types of Movies and TV Shows',
     intro: 'Vocabulary for talking about films and television genres.',
     groups: [
@@ -1012,45 +787,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1::Phone Talk': {
-    heading: 'Phone Talk',
-    intro: 'Phrases used for making and receiving phone calls.',
-    groups: [
-      {
-        words: [
-          { emoji: '📵', word: 'hang up', meaning: 'to end a phone call', example: 'She **hung up** without saying goodbye.' },
-          { emoji: '✋', word: 'hold on', meaning: 'to wait for a moment', example: "**Hold on**, I'll check for you." },
-          { emoji: '☎️', word: 'put through', meaning: 'to connect a caller to someone', example: "I'll **put you through** to the manager." },
-          { emoji: '📞', word: 'engaged / busy', meaning: 'the line is already in use', example: 'The line was **engaged**.' },
-          { emoji: '📩', word: 'voicemail', meaning: 'a recorded message left on a phone', example: 'He left me a **voicemail**.' },
-          { emoji: '🔢', word: 'dial', meaning: 'to enter a phone number', example: '**Dial** the number and press call.' },
-          { emoji: '💬', word: 'text', meaning: 'to send a written message', example: "I'll **text** you later." },
-          { emoji: '📵', word: 'missed call', meaning: 'a call you did not answer', example: 'You have three **missed calls**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1::Age and Life Stages': {
-    heading: 'Age and Life Stages',
-    intro: 'Words for describing different stages of life.',
-    groups: [
-      {
-        words: [
-          { emoji: '👶', word: 'infant', meaning: 'a very young baby', example: 'The **infant** slept peacefully.' },
-          { emoji: '🧒', word: 'toddler', meaning: 'a young child who has just learned to walk', example: 'The **toddler** loves playing with blocks.' },
-          { emoji: '🧑‍🎓', word: 'teenager', meaning: 'a person aged 13 to 19', example: 'My daughter is a **teenager** now.' },
-          { emoji: '🧑', word: 'adult', meaning: 'a fully grown person', example: 'This film is for **adults** only.' },
-          { emoji: '🧔', word: 'middle-aged', meaning: 'roughly between 45 and 65 years old', example: 'He is a **middle-aged** man.' },
-          { emoji: '👴', word: 'elderly', meaning: 'old (a polite word for old people)', example: 'She takes care of her **elderly** parents.' },
-          { emoji: '🏖️', word: 'retire', meaning: 'to stop working, usually due to age', example: 'My father **retired** last year.' },
-          { emoji: '👨‍👩‍👧‍👦', word: 'generation', meaning: 'people born and living around the same time', example: 'Three **generations** live in that house.' },
-        ],
-      },
-    ],
-  },
-
-  'B1::Pollution and How to Stop It': {
+  "B1::The Environment": {
     heading: 'Pollution and How to Stop It',
     intro: 'Vocabulary for talking about environmental problems and solutions.',
     groups: [
@@ -1069,404 +806,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B1+::The Weather and Natural Disasters': {
-    heading: 'The Weather and Natural Disasters',
-    intro: 'Vocabulary for extreme weather and natural disaster events.',
-    groups: [
-      {
-        words: [
-          { emoji: '🥵', word: 'heatwave', meaning: 'a long period of very hot weather', example: 'The **heatwave** lasted two weeks.' },
-          { emoji: '🏜️', word: 'drought', meaning: 'a long period without rain', example: 'The **drought** damaged the crops.' },
-          { emoji: '🌊', word: 'flood', meaning: 'water covering land that is usually dry', example: 'The **flood** destroyed many homes.' },
-          { emoji: '🌍', word: 'earthquake', meaning: 'a sudden shaking of the ground', example: 'The **earthquake** caused a lot of damage.' },
-          { emoji: '🌀', word: 'hurricane', meaning: 'a violent tropical storm', example: 'The **hurricane** hit the coast.' },
-          { emoji: '⛈️', word: 'thunderstorm', meaning: 'a storm with thunder and lightning', example: 'We had a **thunderstorm** last night.' },
-          { emoji: '🔥', word: 'wildfire', meaning: 'an uncontrolled fire in forests or grassland', example: 'The **wildfire** spread quickly.' },
-          { emoji: '🌨️', word: 'blizzard', meaning: 'a severe snowstorm with strong wind', example: 'The **blizzard** closed all the roads.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Health Problems and Injuries': {
-    heading: 'Health Problems and Injuries',
-    intro: 'Vocabulary for describing minor injuries and illnesses.',
-    groups: [
-      {
-        words: [
-          { emoji: '🦵', word: 'sprain', meaning: 'to injure a joint by twisting it', example: 'She **sprained** her ankle playing tennis.' },
-          { emoji: '🟣', word: 'bruise', meaning: 'a dark mark on the skin from an injury', example: 'He has a big **bruise** on his leg.' },
-          { emoji: '🩹', word: 'cut', meaning: 'a wound where the skin is broken', example: 'She has a **cut** on her finger.' },
-          { emoji: '🤒', word: 'fever', meaning: 'a higher than normal body temperature', example: 'He has a high **fever**.' },
-          { emoji: '🔴', word: 'rash', meaning: 'red spots on the skin', example: 'The cream gave her a **rash**.' },
-          { emoji: '🎈', word: 'swollen', meaning: 'bigger than normal because of injury or illness', example: 'His ankle is **swollen**.' },
-          { emoji: '🦴', word: 'broken bone', meaning: 'a bone that has cracked', example: 'He has a **broken bone** in his arm.' },
-          { emoji: '🤧', word: 'allergic reaction', meaning: "the body's negative response to a substance", example: 'She had an **allergic reaction** to peanuts.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Air Travel': {
-    heading: 'Air Travel',
-    intro: 'Vocabulary for the airport and flying.',
-    groups: [
-      {
-        words: [
-          { emoji: '🛄', word: 'check-in', meaning: 'the process before a flight where you get your boarding pass', example: '**Check-in** opens two hours before the flight.' },
-          { emoji: '🎫', word: 'boarding pass', meaning: 'a document that lets you board a plane', example: 'Please have your **boarding pass** ready.' },
-          { emoji: '🛂', word: 'security', meaning: 'checks made before flying', example: 'The queue at **security** was long.' },
-          { emoji: '🛋️', word: 'departure lounge', meaning: 'the waiting area before boarding', example: 'We waited in the **departure lounge**.' },
-          { emoji: '🧳', word: 'luggage', meaning: 'bags and suitcases you take on a trip', example: 'My **luggage** was lost.' },
-          { emoji: '⏳', word: 'layover', meaning: 'a stop between two flights', example: 'We had a 3-hour **layover** in Paris.' },
-          { emoji: '🛃', word: 'customs', meaning: 'where officials check goods entering a country', example: 'We went through **customs** quickly.' },
-          { emoji: '✈️', word: 'turbulence', meaning: 'rough, shaking movement during a flight', example: 'The plane hit some **turbulence**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Crime and Punishment': {
-    heading: 'Crime and Punishment',
-    intro: 'Vocabulary for the legal process and punishments.',
-    groups: [
-      {
-        words: [
-          { emoji: '🚓', word: 'arrest', meaning: 'to take someone into police custody', example: 'The police **arrested** the suspect.' },
-          { emoji: '⚖️', word: 'trial', meaning: 'a legal process to decide guilt', example: 'The **trial** lasted three weeks.' },
-          { emoji: '📜', word: 'verdict', meaning: 'the decision of a court', example: 'The jury reached a **verdict**.' },
-          { emoji: '⛓️', word: 'sentence', meaning: 'the punishment given by a court', example: 'He received a five-year **sentence**.' },
-          { emoji: '🏢', word: 'prison', meaning: 'a place where criminals are kept', example: 'He spent two years in **prison**.' },
-          { emoji: '💰', word: 'fine', meaning: 'money paid as a punishment', example: 'She had to pay a **fine** for speeding.' },
-          { emoji: '🔍', word: 'evidence', meaning: 'facts that prove something', example: 'There was no **evidence** against him.' },
-          { emoji: '🧑‍⚖️', word: 'witness', meaning: 'a person who saw a crime happen', example: 'The **witness** described the thief.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Types of Crime and Offenders': {
-    heading: 'Types of Crime and Offenders',
-    intro: 'Vocabulary for common crimes and the people who commit them.',
-    groups: [
-      {
-        words: [
-          { emoji: '🏠', word: 'burglary', meaning: 'entering a building illegally to steal', example: 'There was a **burglary** on our street.' },
-          { emoji: '👜', word: 'theft', meaning: 'the act of stealing', example: 'Bike **theft** is common here.' },
-          { emoji: '💳', word: 'fraud', meaning: 'deceiving someone for money', example: 'He was found guilty of **fraud**.' },
-          { emoji: '🎨', word: 'vandalism', meaning: 'deliberately damaging property', example: 'The wall was covered in **vandalism**.' },
-          { emoji: '🛍️', word: 'shoplifting', meaning: 'stealing from a shop', example: 'She was caught **shoplifting**.' },
-          { emoji: '🦹', word: 'burglar', meaning: 'a person who breaks in to steal', example: 'The **burglar** entered through the window.' },
-          { emoji: '🥷', word: 'thief', meaning: 'a person who steals', example: 'The **thief** ran away with her bag.' },
-          { emoji: '🕴️', word: 'fraudster', meaning: 'a person who commits fraud', example: 'The **fraudster** tricked many people.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Clothes': {
-    heading: 'Clothes: Fabrics and Style',
-    intro: 'Vocabulary for describing the fabric, pattern, and fit of clothes.',
-    groups: [
-      {
-        words: [
-          { word: 'cotton', meaning: 'a natural, light fabric', example: 'This shirt is made of **cotton**.' },
-          { word: 'wool', meaning: 'a warm fabric made from sheep', example: 'She wore a **wool** sweater.' },
-          { word: 'striped', meaning: 'having lines or stripes', example: 'He wore a **striped** shirt.' },
-          { word: 'checked', meaning: 'having a pattern of squares', example: 'She likes **checked** skirts.' },
-          { word: 'tailored', meaning: 'made or adjusted to fit well', example: 'He wore a perfectly **tailored** suit.' },
-          { word: 'loose-fitting', meaning: 'not tight, roomy', example: 'I prefer **loose-fitting** clothes.' },
-          { word: 'formal wear', meaning: 'clothes for special or formal occasions', example: 'The event requires **formal wear**.' },
-          { word: 'casual wear', meaning: 'informal, everyday clothes', example: '**Casual wear** is fine for the party.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Technology': {
-    heading: 'Technology',
-    intro: 'More advanced vocabulary for devices, software, and online safety.',
-    groups: [
-      {
-        words: [
-          { emoji: '⬆️', word: 'upgrade', meaning: 'to improve a device or software', example: 'I need to **upgrade** my phone.' },
-          { emoji: '🦠', word: 'malware', meaning: 'harmful software', example: 'The computer was infected with **malware**.' },
-          { emoji: '💾', word: 'backup', meaning: 'a copy of data kept safe', example: 'Always keep a **backup** of your files.' },
-          { emoji: '☁️', word: 'cloud storage', meaning: 'storing data online', example: 'I save my photos to **cloud storage**.' },
-          { emoji: '⚠️', word: 'glitch', meaning: 'a small technical fault', example: 'There was a **glitch** in the app.' },
-          { emoji: '🔄', word: 'update', meaning: 'a new version of software', example: 'Install the latest **update**.' },
-          { emoji: '🕵️', word: 'hack', meaning: 'to gain unauthorized access to data', example: 'The website was **hacked**.' },
-          { emoji: '🔐', word: 'encrypt', meaning: 'to protect data by coding it', example: 'The messages are **encrypted**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Personality': {
-    heading: 'Personality',
-    intro: 'More nuanced adjectives for describing character.',
-    groups: [
-      {
-        words: [
-          { emoji: '🚀', word: 'ambitious', meaning: 'wanting to achieve success', example: 'She is very **ambitious** in her career.' },
-          { emoji: '😌', word: 'easy-going', meaning: 'relaxed, not easily worried', example: "He's an **easy-going** person." },
-          { emoji: '😤', word: 'arrogant', meaning: 'having too much confidence, unpleasantly proud', example: 'He can be quite **arrogant** sometimes.' },
-          { emoji: '🥺', word: 'sensitive', meaning: 'easily affected emotionally', example: "She's very **sensitive** to criticism." },
-          { emoji: '🤝', word: 'reliable', meaning: 'able to be trusted or depended on', example: 'He is a **reliable** colleague.' },
-          { emoji: '⚡', word: 'impulsive', meaning: 'acting without thinking first', example: 'She made an **impulsive** decision.' },
-          { emoji: '🧠', word: 'open-minded', meaning: 'willing to consider new ideas', example: "He is very **open-minded**." },
-          { emoji: '💬', word: 'assertive', meaning: 'confident and direct', example: 'You need to be more **assertive** at work.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Business': {
-    heading: 'Business',
-    intro: 'Vocabulary for talking about companies and the business world.',
-    groups: [
-      {
-        words: [
-          { emoji: '💼', word: 'entrepreneur', meaning: 'a person who starts a business', example: 'She is a successful **entrepreneur**.' },
-          { emoji: '💰', word: 'revenue', meaning: 'the money a business earns', example: "The company's **revenue** grew last year." },
-          { emoji: '🤝', word: 'merger', meaning: 'two companies joining into one', example: 'The **merger** created a huge company.' },
-          { emoji: '📈', word: 'shareholder', meaning: 'a person who owns shares in a company', example: 'The **shareholders** approved the deal.' },
-          { emoji: '🗣️', word: 'negotiate', meaning: 'to discuss in order to reach an agreement', example: 'They **negotiated** a better price.' },
-          { emoji: '🚀', word: 'launch', meaning: 'to introduce a new product', example: 'They **launched** a new app.' },
-          { emoji: '🏁', word: 'competitor', meaning: 'a rival business', example: 'Our main **competitor** lowered its prices.' },
-          { emoji: '📊', word: 'profit margin', meaning: 'the percentage of profit made', example: 'They increased their **profit margin**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Houses and Home Words': {
-    heading: 'Houses and Home Words',
-    intro: 'Vocabulary for describing a home and moving house.',
-    groups: [
-      {
-        words: [
-          { emoji: '🛠️', word: 'renovate', meaning: 'to repair and improve a building', example: 'They **renovated** the old kitchen.' },
-          { emoji: '📐', word: 'spacious', meaning: 'having a lot of space', example: 'The flat is very **spacious**.' },
-          { emoji: '🕯️', word: 'cosy', meaning: 'warm and comfortable', example: 'The living room feels really **cosy**.' },
-          { emoji: '📦', word: 'storage', meaning: 'space for keeping things', example: 'We need more **storage** in the garage.' },
-          { emoji: '🖼️', word: 'décor', meaning: 'the style of furniture and decoration in a room', example: 'I love the **décor** in this café.' },
-          { emoji: '🛋️', word: 'furnished', meaning: 'with furniture already included', example: 'We rented a **furnished** apartment.' },
-          { emoji: '🔨', word: 'fixer-upper', meaning: 'a house that needs a lot of repair', example: 'They bought a **fixer-upper** cheaply.' },
-          { emoji: '📦', word: 'move in', meaning: 'to start living in a new home', example: 'We **move in** next week.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Fears and Phobias': {
-    heading: 'Fears and Phobias',
-    intro: 'Vocabulary for talking about fears and anxiety.',
-    groups: [
-      {
-        words: [
-          { emoji: '😱', word: 'phobia', meaning: 'an extreme, irrational fear', example: 'She has a **phobia** of heights.' },
-          { emoji: '🚪', word: 'claustrophobia', meaning: 'fear of small, enclosed spaces', example: 'He avoids lifts because of his **claustrophobia**.' },
-          { emoji: '🕷️', word: 'arachnophobia', meaning: 'fear of spiders', example: 'My sister has **arachnophobia**.' },
-          { emoji: '😨', word: 'terrified', meaning: 'extremely afraid', example: 'She was **terrified** of the dark as a child.' },
-          { emoji: '😰', word: 'anxiety', meaning: 'a feeling of worry or nervousness', example: 'He suffers from **anxiety** before exams.' },
-          { emoji: '💥', word: 'panic attack', meaning: 'a sudden, intense feeling of fear', example: 'She had a **panic attack** on the plane.' },
-          { emoji: '💪', word: 'overcome a fear', meaning: 'to succeed in controlling a fear', example: 'He finally **overcame his fear** of flying.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::The Animal World': {
-    heading: 'The Animal World',
-    intro: 'Vocabulary for talking about wildlife and nature.',
-    groups: [
-      {
-        words: [
-          { emoji: '🦁', word: 'predator', meaning: 'an animal that hunts other animals', example: 'The lion is a top **predator**.' },
-          { emoji: '🦌', word: 'prey', meaning: 'an animal hunted by another', example: 'The deer was easy **prey**.' },
-          { emoji: '🌳', word: 'habitat', meaning: 'the natural environment of an animal', example: 'The rainforest is their natural **habitat**.' },
-          { emoji: '🐼', word: 'endangered', meaning: 'at risk of extinction', example: 'Pandas are an **endangered** species.' },
-          { emoji: '🐘', word: 'mammal', meaning: 'a warm-blooded animal that feeds milk to its young', example: 'Whales are **mammals**, not fish.' },
-          { emoji: '🦖', word: 'extinct', meaning: 'no longer existing', example: 'Dinosaurs became **extinct** millions of years ago.' },
-          { emoji: '🦎', word: 'camouflage', meaning: 'coloring that helps an animal hide', example: 'The chameleon uses **camouflage** to hide.' },
-          { emoji: '🦢', word: 'migrate', meaning: 'to move to another area, often seasonally', example: 'Birds **migrate** south in winter.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Describing Books': {
-    heading: 'Describing Books',
-    intro: 'Vocabulary for talking about the elements of a novel or story.',
-    groups: [
-      {
-        words: [
-          { emoji: '📖', word: 'plot', meaning: 'the sequence of events in a story', example: 'The **plot** was full of surprises.' },
-          { emoji: '🦸', word: 'protagonist', meaning: 'the main character of a story', example: 'The **protagonist** faces many challenges.' },
-          { emoji: '🏞️', word: 'setting', meaning: 'where and when a story takes place', example: 'The **setting** is a small village in the 1800s.' },
-          { emoji: '📚', word: 'page-turner', meaning: "a very exciting book that's hard to put down", example: 'This novel is a real **page-turner**.' },
-          { emoji: '😲', word: 'gripping', meaning: 'exciting and holding your attention', example: 'The story was **gripping** from the start.' },
-          { emoji: '❓', word: 'cliffhanger', meaning: 'an exciting, unresolved ending to a chapter', example: 'The chapter ended on a **cliffhanger**.' },
-          { emoji: '🔀', word: 'twist', meaning: 'an unexpected change in the plot', example: 'The ending has a great **twist**.' },
-          { emoji: '🏆', word: 'bestseller', meaning: 'a very popular, best-selling book', example: 'Her new novel became a **bestseller**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Word Pairs': {
-    heading: 'Word Pairs',
-    intro: "Fixed expressions made of two words joined by 'and' or 'or', always used in the same order.",
-    groups: [
-      {
-        words: [
-          { word: 'salt and pepper', meaning: 'a common seasoning pair', example: 'Pass the **salt and pepper**, please.' },
-          { word: 'sooner or later', meaning: 'eventually', example: "**Sooner or later**, he'll have to apologize." },
-          { word: 'back and forth', meaning: 'moving repeatedly between two places', example: 'She walked **back and forth** nervously.' },
-          { word: 'give and take', meaning: 'compromise between people', example: 'A good relationship needs **give and take**.' },
-          { word: 'black and white', meaning: 'clearly one way or the other', example: "The issue isn't **black and white**." },
-          { word: 'safe and sound', meaning: 'unharmed, safe', example: 'They arrived home **safe and sound**.' },
-          { word: 'now and then', meaning: 'occasionally', example: 'We meet up **now and then**.' },
-        ],
-      },
-    ],
-    tips: ["Word pairs (also called 'binomials') are fixed — the word order never changes: salt and pepper, not pepper and salt."],
-  },
-
-  'B1+::Travel': {
-    heading: 'Travel',
-    intro: 'Vocabulary for planning and going on trips.',
-    groups: [
-      {
-        words: [
-          { emoji: '🗺️', word: 'itinerary', meaning: 'a planned route or schedule for a trip', example: 'Our **itinerary** includes three cities.' },
-          { emoji: '🎒', word: 'backpacking', meaning: 'traveling cheaply with a backpack', example: 'They went **backpacking** around Asia.' },
-          { emoji: '😴', word: 'jet lag', meaning: 'tiredness after a long flight across time zones', example: 'I have terrible **jet lag**.' },
-          { emoji: '💱', word: 'currency exchange', meaning: 'changing one currency for another', example: 'We need to find a **currency exchange**.' },
-          { emoji: '📄', word: 'visa', meaning: 'official permission to enter a country', example: 'You need a **visa** to visit.' },
-          { emoji: '🚌', word: 'guided tour', meaning: 'a tour led by a guide', example: 'We joined a **guided tour** of the museum.' },
-          { emoji: '🏨', word: 'accommodation', meaning: 'a place to stay', example: 'We booked our **accommodation** in advance.' },
-          { emoji: '🧭', word: 'off the beaten track', meaning: 'not a popular tourist destination', example: 'We love finding places **off the beaten track**.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Everyday Problems': {
-    heading: 'Everyday Problems',
-    intro: 'More advanced vocabulary for describing everyday difficulties.',
-    groups: [
-      {
-        words: [
-          { emoji: '⏰', word: 'run late', meaning: 'to be behind schedule', example: 'Sorry, I **ran late** because of traffic.' },
-          { emoji: '📅', word: 'miss a deadline', meaning: 'to fail to finish on time', example: 'We **missed the deadline** for the project.' },
-          { emoji: '🔍', word: 'misplace', meaning: 'to lose something temporarily', example: 'I **misplaced** my glasses again.' },
-          { emoji: '⚙️', word: 'malfunction', meaning: 'to stop working correctly', example: 'The printer **malfunctioned** during the meeting.' },
-          { emoji: '😩', word: 'inconvenience', meaning: 'a problem that causes difficulty', example: 'The delay caused a lot of **inconvenience**.' },
-          { emoji: '💪', word: 'cope with', meaning: 'to deal successfully with a difficulty', example: 'She copes well **with** stress.' },
-          { emoji: '🚧', word: 'run into difficulties', meaning: 'to encounter problems', example: 'We **ran into difficulties** with the plan.' },
-          { emoji: '🛠️', word: 'sort out', meaning: 'to solve or organize a problem', example: 'I need to **sort out** this issue today.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::Social Media Actions': {
-    heading: 'Social Media Actions',
-    intro: 'Verbs used for talking about social media use.',
-    groups: [
-      {
-        words: [
-          { emoji: '📤', word: 'post', meaning: 'to publish content online', example: 'She **posted** a photo of her trip.' },
-          { emoji: '❤️', word: 'like', meaning: 'to show approval of a post', example: 'He **liked** my comment.' },
-          { emoji: '🔁', word: 'share', meaning: "to send someone else's post to others", example: 'I **shared** the article with my friends.' },
-          { emoji: '💬', word: 'comment', meaning: 'to write a response to a post', example: 'She **commented** on my photo.' },
-          { emoji: '➕', word: 'follow', meaning: "to subscribe to someone's updates", example: 'I **follow** a lot of travel accounts.' },
-          { emoji: '🏷️', word: 'tag', meaning: "to link someone's name to a post or photo", example: 'He **tagged** me in the picture.' },
-          { emoji: '📈', word: 'go viral', meaning: 'to spread very quickly online', example: 'The video **went viral** overnight.' },
-          { emoji: '🚫', word: 'block', meaning: 'to stop someone from contacting you online', example: 'She **blocked** the spam account.' },
-        ],
-      },
-    ],
-  },
-
-  'B1+::B1+ Phrasal Verbs I': {
-    heading: 'B1+ Phrasal Verbs I',
-    intro: 'Common phrasal verbs at this level.',
-    groups: [
-      {
-        words: [
-          { emoji: '🔍', word: 'come across', meaning: 'to find by chance', example: 'I **came across** an old photo.' },
-          { emoji: '💘', word: 'fall for', meaning: 'to fall in love with', example: 'He **fell for** her immediately.' },
-          { emoji: '📞', word: 'get through', meaning: 'to succeed in contacting someone', example: 'I finally **got through** to the office.' },
-          { emoji: '⏳', word: 'hold up', meaning: 'to delay', example: 'Sorry, I was **held up** at work.' },
-          { emoji: '🔎', word: 'look into', meaning: 'to investigate', example: 'We will **look into** the issue.' },
-          { emoji: '💪', word: 'pull through', meaning: 'to survive a difficult situation', example: 'The patient **pulled through** after surgery.' },
-          { emoji: '🎨', word: 'take up', meaning: 'to start a new hobby or activity', example: 'She **took up** painting last year.' },
-          { emoji: '📉', word: 'wear off', meaning: 'to gradually disappear', example: 'The pain will **wear off** soon.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::Food and Food Products': {
-    heading: 'Food and Food Products',
-    intro: 'Vocabulary for talking about how food is made and its qualities.',
-    groups: [
-      {
-        words: [
-          { emoji: '🥫', word: 'processed food', meaning: 'food that has been industrially prepared', example: 'Try to avoid too much **processed food**.' },
-          { emoji: '🌱', word: 'organic', meaning: 'grown without artificial chemicals', example: 'She only buys **organic** vegetables.' },
-          { emoji: '🧪', word: 'additive', meaning: 'a substance added to food', example: 'This juice has no **additives**.' },
-          { emoji: '🧊', word: 'preservative', meaning: 'a substance that stops food going bad', example: 'The bread contains **preservatives**.' },
-          { emoji: '🍚', word: 'staple food', meaning: 'a basic food eaten regularly', example: 'Rice is a **staple food** in Asia.' },
-          { emoji: '🧀', word: 'dairy product', meaning: 'food made from milk', example: 'Cheese and yoghurt are **dairy products**.' },
-          { emoji: '🥗', word: 'nutritious', meaning: 'good for your health', example: 'Salads are **nutritious**.' },
-          { emoji: '⏳', word: 'perishable', meaning: 'likely to go bad quickly', example: 'Milk is a **perishable** item.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::The Human Voice and Other Sounds': {
-    heading: 'The Human Voice and Other Sounds',
-    intro: 'Verbs and nouns for describing different kinds of sounds.',
-    groups: [
-      {
-        words: [
-          { emoji: '🤫', word: 'whisper', meaning: 'to speak very quietly', example: 'She **whispered** the secret to me.' },
-          { emoji: '😶', word: 'mumble', meaning: 'to speak unclearly and quietly', example: 'He **mumbled** an apology.' },
-          { emoji: '😱', word: 'shriek', meaning: 'to make a high, loud sound of fear or excitement', example: 'She **shrieked** when she saw the spider.' },
-          { emoji: '🗣️', word: 'murmur', meaning: 'a low, continuous sound of talking', example: 'There was a **murmur** in the crowd.' },
-          { emoji: '🚪', word: 'creak', meaning: 'a sharp, unpleasant sound, e.g. from a door', example: 'The old door **creaked** open.' },
-          { emoji: '🐝', word: 'buzz', meaning: 'a continuous low sound, like an insect', example: 'I could hear the **buzz** of the fly.' },
-          { emoji: '🔊', word: 'echo', meaning: 'a sound that repeats or bounces back', example: 'His voice **echoed** in the empty hall.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::Socializing and Social Events': {
-    heading: 'Socializing and Social Events',
-    intro: 'Vocabulary for talking about parties and get-togethers.',
-    groups: [
-      {
-        words: [
-          { emoji: '🎉', word: 'host', meaning: 'to organize or hold an event', example: 'She **hosted** the party at her flat.' },
-          { emoji: '🥂', word: 'mingle', meaning: 'to move around talking to different people', example: 'Guests **mingled** at the reception.' },
-          { emoji: '🍕', word: 'get-together', meaning: 'an informal social meeting', example: 'We had a small **get-together** last weekend.' },
-          { emoji: '👨‍👩‍👧', word: 'reunion', meaning: "an event where people who haven't seen each other meet again", example: 'The school **reunion** was fun.' },
-          { emoji: '💬', word: 'small talk', meaning: 'light, informal conversation', example: 'They made **small talk** while waiting.' },
-          { emoji: '📩', word: 'RSVP', meaning: 'to reply to an invitation', example: 'Please **RSVP** by Friday.' },
-          { emoji: '☕', word: 'catch up', meaning: 'to talk and share recent news', example: "Let's **catch up** over coffee." },
-          { emoji: '👥', word: 'gathering', meaning: 'a group of people meeting together', example: 'It was a small family **gathering**.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::Talking About Movies': {
+  "B2::Arts and Literature": {
     heading: 'Talking About Movies',
     intro: 'Vocabulary for discussing and reviewing films.',
     groups: [
@@ -1485,7 +825,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Technology: Managing Your Devices': {
+  "B1::Technology and the Internet": {
     heading: 'Managing Your Devices',
     intro: 'Vocabulary for maintaining and troubleshooting technology.',
     groups: [
@@ -1504,7 +844,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Phrasal Verbs I': {
+  "B2::Advanced Phrasal Verbs": {
     heading: 'Phrasal Verbs I',
     intro: 'Common phrasal verbs at upper-intermediate level.',
     groups: [
@@ -1523,64 +863,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Phrasal Verbs II': {
-    heading: 'Phrasal Verbs II',
-    intro: 'More common phrasal verbs at upper-intermediate level.',
-    groups: [
-      {
-        words: [
-          { word: 'account for', meaning: 'to explain something, or make up a part of it', example: 'Tourism **accounts for** 20% of income.' },
-          { word: 'break down', meaning: 'to stop working, or to become very upset', example: 'She **broke down** in tears.' },
-          { word: 'catch up on', meaning: 'to do something you fell behind on', example: 'I need to **catch up on** emails.' },
-          { word: 'come across as', meaning: 'to give a particular impression', example: 'He **comes across as** very confident.' },
-          { word: 'get away with', meaning: 'to avoid punishment for something', example: 'He **got away with** cheating.' },
-          { word: 'hold on to', meaning: 'to keep, not let go of', example: '**Hold on to** your ticket.' },
-          { word: 'look up to', meaning: 'to admire and respect', example: 'She **looks up to** her older sister.' },
-          { word: 'stand up for', meaning: 'to defend or support', example: 'You should **stand up for** your beliefs.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::Relationships': {
-    heading: 'Relationships',
-    intro: 'More advanced vocabulary for describing relationships.',
-    groups: [
-      {
-        words: [
-          { word: 'compatible', meaning: 'suited to each other', example: 'They are very **compatible**.' },
-          { word: 'commitment', meaning: 'dedication to a relationship', example: 'Marriage requires **commitment**.' },
-          { word: 'take someone for granted', meaning: 'to not appreciate someone enough', example: "Don't **take** her **for granted**." },
-          { word: 'drift apart', meaning: 'to gradually become less close', example: 'They **drifted apart** after university.' },
-          { word: 'on good/bad terms', meaning: 'having a good or bad relationship with someone', example: "We're on **good terms** with our neighbours." },
-          { word: 'mutual respect', meaning: 'respect shared between two people', example: 'Their friendship is based on **mutual respect**.' },
-          { word: 'long-distance relationship', meaning: 'a relationship where partners live far apart', example: 'They are in a **long-distance relationship**.' },
-          { word: 'trust', meaning: "belief in someone's honesty or reliability", example: '**Trust** is essential in a relationship.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::Challenges and Achievements': {
-    heading: 'Challenges and Achievements',
-    intro: 'Vocabulary for talking about difficulties and success.',
-    groups: [
-      {
-        words: [
-          { emoji: '💪', word: 'overcome', meaning: 'to succeed in dealing with a problem', example: 'She **overcame** many obstacles.' },
-          { emoji: '🎯', word: 'milestone', meaning: 'an important stage or event', example: 'Graduating was a huge **milestone**.' },
-          { emoji: '💡', word: 'breakthrough', meaning: 'an important discovery or development', example: 'Scientists made a major **breakthrough**.' },
-          { emoji: '✅', word: 'accomplish', meaning: 'to succeed in doing something', example: 'We **accomplished** our goal.' },
-          { emoji: '📉', word: 'setback', meaning: 'a problem that delays progress', example: 'The project suffered a **setback**.' },
-          { emoji: '🔁', word: 'persevere', meaning: 'to continue despite difficulty', example: 'She **persevered** and finished the marathon.' },
-          { emoji: '🏆', word: 'triumph', meaning: 'a great victory or achievement', example: 'It was a **triumph** for the whole team.' },
-          { emoji: '🌟', word: 'fulfil potential', meaning: 'to achieve what you are capable of', example: 'He finally **fulfilled his potential**.' },
-        ],
-      },
-    ],
-  },
-
-  'B2::Feelings and Emotions': {
+  "B2::Psychology and Emotions": {
     heading: 'Feelings and Emotions',
     intro: 'More nuanced vocabulary for emotional states.',
     groups: [
@@ -1599,7 +882,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::News and Media': {
+  "B2::Media and Advertising": {
     heading: 'News and Media',
     intro: 'More advanced vocabulary about the press and how it operates.',
     groups: [
@@ -1617,7 +900,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::War and Peace': {
+  "B2::Politics and Society": {
     heading: 'War and Peace',
     intro: 'Vocabulary for talking about conflict and diplomacy.',
     groups: [
@@ -1636,7 +919,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Tourism': {
+  "B2::Travel and Culture": {
     heading: 'Tourism',
     intro: 'Vocabulary for talking about the tourism industry.',
     groups: [
@@ -1655,7 +938,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Pollution and the Environment': {
+  "B2::Climate Change": {
     heading: 'Pollution and the Environment',
     intro: 'More advanced vocabulary for environmental issues.',
     groups: [
@@ -1674,7 +957,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Money and Finance': {
+  "B2::Business and the Economy": {
     heading: 'Money and Finance',
     intro: 'Vocabulary for talking about personal and national finance.',
     groups: [
@@ -1693,7 +976,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Cars, Roads and Traffic': {
+  "B2::Urban Life": {
     heading: 'Cars, Roads and Traffic',
     intro: 'Vocabulary for driving and road conditions.',
     groups: [
@@ -1711,7 +994,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Health and Sickness': {
+  "B2::Health and Medicine": {
     heading: 'Health and Sickness',
     intro: 'Vocabulary for describing illness and medical care.',
     groups: [
@@ -1730,7 +1013,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Work and Jobs': {
+  "B2::Work and Employment": {
     heading: 'Work and Jobs',
     intro: 'More advanced vocabulary for the workplace.',
     groups: [
@@ -1749,7 +1032,7 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'B2::Education': {
+  "B2::Higher Education": {
     heading: 'Education',
     intro: 'More advanced vocabulary about schools, universities, and learning.',
     groups: [
@@ -1768,300 +1051,4 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  'C1::Feelings and Reactions': {
-    heading: 'Feelings and Reactions',
-    intro: 'Precise adjectives for describing emotional reactions.',
-    groups: [
-      {
-        words: [
-          { word: 'taken aback', meaning: 'very surprised', example: 'I was **taken aback** by his rudeness.' },
-          { word: 'appalled', meaning: 'shocked and disgusted', example: 'She was **appalled** at the conditions.' },
-          { word: 'elated', meaning: 'extremely happy', example: 'He was **elated** after winning.' },
-          { word: 'apprehensive', meaning: 'anxious about something in the future', example: "I'm a bit **apprehensive** about the exam." },
-          { word: 'indignant', meaning: 'angry because something seems unfair', example: 'She was **indignant** at the accusation.' },
-          { word: 'wistful', meaning: 'sadly thinking about something desired', example: 'He gave a **wistful** smile.' },
-          { word: 'disgruntled', meaning: 'annoyed or dissatisfied', example: '**Disgruntled** customers complained.' },
-          { word: 'awestruck', meaning: 'filled with amazement', example: 'We were **awestruck** by the view.' },
-        ],
-      },
-    ],
-  },
-
-  'C1::Ways of Walking': {
-    heading: 'Ways of Walking',
-    intro: 'Precise verbs for different manners of walking.',
-    groups: [
-      {
-        words: [
-          { emoji: '🚶‍♂️', word: 'stride', meaning: 'to walk with long, confident steps', example: 'He **strode** into the room.' },
-          { emoji: '🚶', word: 'stroll', meaning: 'to walk slowly and casually', example: 'We **strolled** along the beach.' },
-          { emoji: '🥴', word: 'stagger', meaning: 'to walk unsteadily', example: 'He **staggered** home after the party.' },
-          { emoji: '🤫', word: 'tiptoe', meaning: 'to walk quietly on your toes', example: 'She **tiptoed** past the sleeping baby.' },
-          { emoji: '🥾', word: 'march', meaning: 'to walk with firm, regular steps', example: 'The soldiers **marched** in formation.' },
-          { emoji: '🦵', word: 'limp', meaning: 'to walk unevenly because of an injury', example: 'He **limped** off the field.' },
-          { emoji: '🚶‍♀️', word: 'wander', meaning: 'to walk without a clear direction', example: 'We **wandered** around the old town.' },
-          { emoji: '👣', word: 'stomp', meaning: 'to walk with heavy, deliberate steps, often angrily', example: 'She **stomped** out of the room.' },
-        ],
-      },
-    ],
-  },
-
-  'C1::Vague Language: Imprecision': {
-    heading: 'Vague Language',
-    intro: 'Expressions used to make a statement deliberately less exact or precise.',
-    groups: [
-      {
-        words: [
-          { word: 'sort of / kind of', meaning: 'used to make a statement less exact', example: "It's **sort of** difficult to explain." },
-          { word: 'or so', meaning: 'approximately', example: 'It took an hour **or so**.' },
-          { word: 'and stuff like that', meaning: 'and other similar things', example: 'We talked about work **and stuff like that**.' },
-          { word: 'a bit of a', meaning: 'somewhat, softening a statement', example: "It's **a bit of a** problem." },
-          { word: 'roughly', meaning: 'approximately', example: 'It costs **roughly** $50.' },
-          { word: 'more or less', meaning: 'approximately, almost', example: 'The project is **more or less** finished.' },
-          { word: 'thingy / whatsit', meaning: "informal words for an object you can't name", example: 'Pass me that **thingy** over there.' },
-        ],
-      },
-    ],
-    tips: ['Vague language softens statements and is common in informal spoken English — avoid it in formal writing.'],
-  },
-
-  'C1::Idiomatic Infinitive Phrases': {
-    heading: 'Idiomatic Infinitive Phrases',
-    intro: 'Fixed to-infinitive phrases used to introduce or comment on a statement.',
-    groups: [
-      {
-        words: [
-          { word: 'to cut a long story short', meaning: 'to summarize quickly', example: '**To cut a long story short**, we missed the flight.' },
-          { word: 'to be honest', meaning: 'used to give a frank opinion', example: "**To be honest**, I didn't enjoy the film." },
-          { word: 'to say the least', meaning: 'used to show something is an understatement', example: 'The service was slow, **to say the least**.' },
-          { word: 'to make matters worse', meaning: 'and the situation became even more difficult', example: '**To make matters worse**, it started raining.' },
-          { word: 'needless to say', meaning: 'obviously', example: '**Needless to say**, we were exhausted.' },
-          { word: 'to top it all off', meaning: 'as a final, often unwelcome, addition', example: 'And **to top it all off**, we got a parking ticket.' },
-        ],
-      },
-    ],
-  },
-
-  'C1::Adverb-Adjective Collocations': {
-    heading: 'Adverb-Adjective Collocations',
-    intro: "Fixed adverb-adjective pairs that sound more natural than 'very' + adjective.",
-    groups: [
-      {
-        words: [
-          { word: 'bitterly disappointed', meaning: 'very disappointed', example: 'She was **bitterly disappointed** with the result.' },
-          { word: 'deeply concerned', meaning: 'very worried', example: 'We are **deeply concerned** about the situation.' },
-          { word: 'highly unlikely', meaning: 'very improbable', example: "It's **highly unlikely** to rain today." },
-          { word: 'blissfully unaware', meaning: 'happily not knowing about something', example: 'He was **blissfully unaware** of the danger.' },
-          { word: 'painfully obvious', meaning: 'extremely clear', example: 'It was **painfully obvious** he was lying.' },
-          { word: 'utterly convinced', meaning: 'completely certain', example: "I'm **utterly convinced** she's right." },
-          { word: 'ridiculously expensive', meaning: 'extremely and unreasonably expensive', example: 'This hotel is **ridiculously expensive**.' },
-          { word: 'perfectly reasonable', meaning: 'completely fair or sensible', example: 'That seems like a **perfectly reasonable** request.' },
-        ],
-      },
-    ],
-    tips: ["Learn these adverb-adjective pairs as fixed chunks — not every intensifier combines naturally with every adjective."],
-  },
-
-  'C1::Eating and Drinking': {
-    heading: 'Eating and Drinking',
-    intro: 'More precise and idiomatic verbs for eating and drinking.',
-    groups: [
-      {
-        words: [
-          { emoji: '🐭', word: 'nibble', meaning: 'to eat in small bites', example: 'She **nibbled** on some crackers.' },
-          { emoji: '😋', word: 'devour', meaning: 'to eat quickly and eagerly', example: 'He **devoured** the whole pizza.' },
-          { emoji: '😌', word: 'savour', meaning: 'to enjoy food slowly', example: 'She **savoured** every bite of the cake.' },
-          { emoji: '🥤', word: 'gulp down', meaning: 'to drink or eat quickly', example: 'He **gulped down** his coffee.' },
-          { emoji: '🍿', word: 'munch', meaning: 'to chew steadily and noisily', example: 'They **munched** on popcorn during the film.' },
-          { emoji: '🍽️', word: 'gorge oneself', meaning: 'to eat a large amount greedily', example: 'We **gorged ourselves** at the buffet.' },
-          { emoji: '🍴', word: 'be starving', meaning: 'to be extremely hungry', example: "I'm **starving** — let's eat!" },
-          { emoji: '🍫', word: 'have a sweet tooth', meaning: 'to love sweet food', example: 'She **has a sweet tooth**.' },
-        ],
-      },
-    ],
-  },
-
-  'C1::Time and Place Idioms': {
-    heading: 'Time and Place Idioms',
-    intro: 'Common idioms for describing when and where things happen.',
-    groups: [
-      {
-        words: [
-          { word: 'in the nick of time', meaning: 'at the last possible moment', example: 'We arrived **in the nick of time**.' },
-          { word: 'once in a blue moon', meaning: 'very rarely', example: 'He visits **once in a blue moon**.' },
-          { word: 'out of the blue', meaning: 'suddenly, unexpectedly', example: 'She called me **out of the blue**.' },
-          { word: 'in broad daylight', meaning: 'during the day, openly', example: 'The robbery happened **in broad daylight**.' },
-          { word: 'in the middle of nowhere', meaning: 'in a very remote place', example: 'Their house is **in the middle of nowhere**.' },
-          { word: 'on the spot', meaning: 'immediately, at that exact place', example: 'He was hired **on the spot**.' },
-          { word: 'around the clock', meaning: 'all day and night', example: 'The factory operates **around the clock**.' },
-        ],
-      },
-    ],
-  },
-
-  'C1::Government and Politics': {
-    heading: 'Government and Politics',
-    intro: 'Vocabulary for discussing political systems and processes.',
-    groups: [
-      {
-        words: [
-          { word: 'legislation', meaning: 'laws considered as a group', example: 'New **legislation** was passed last month.' },
-          { word: 'constituency', meaning: 'a district represented by an elected official', example: 'She represents a large **constituency**.' },
-          { word: 'ballot', meaning: 'a vote, often written and secret', example: 'They cast their **ballot** in the election.' },
-          { word: 'coalition', meaning: 'a temporary alliance between parties', example: 'A **coalition** government was formed.' },
-          { word: 'referendum', meaning: 'a public vote on a single issue', example: 'The country held a **referendum** on independence.' },
-          { word: 'cabinet', meaning: 'the senior ministers of a government', example: 'The Prime Minister met with the **cabinet**.' },
-          { word: 'opposition', meaning: 'the party not in power', example: 'The **opposition** criticized the new policy.' },
-          { word: 'manifesto', meaning: "a party's public declaration of policy", example: 'They published their election **manifesto**.' },
-        ],
-      },
-    ],
-  },
-
-  'C2::Advanced Idiomatic Expressions': {
-    heading: 'Advanced Idiomatic Expressions',
-    intro: 'Widely used idioms for advanced, natural-sounding English.',
-    groups: [
-      {
-        words: [
-          { word: 'bite the bullet', meaning: 'to face something difficult bravely', example: 'We just have to **bite the bullet** and start.' },
-          { word: 'burn the midnight oil', meaning: 'to work late into the night', example: 'She **burned the midnight oil** before the exam.' },
-          { word: 'let the cat out of the bag', meaning: 'to reveal a secret accidentally', example: 'He **let the cat out of the bag** about the surprise.' },
-          { word: 'throw in the towel', meaning: 'to give up', example: 'After years of trying, they **threw in the towel**.' },
-          { word: 'read between the lines', meaning: 'to understand a hidden meaning', example: 'You need to **read between the lines** here.' },
-          { word: 'the tip of the iceberg', meaning: 'a small visible part of a much bigger problem', example: 'These complaints are just **the tip of the iceberg**.' },
-          { word: 'cut corners', meaning: 'to do something in the cheapest or easiest way, often badly', example: 'They **cut corners** on safety.' },
-        ],
-      },
-    ],
-  },
-
-  'C2::Literary and Rhetorical Devices': {
-    heading: 'Literary and Rhetorical Devices',
-    intro: 'Terms for techniques used in literature and persuasive writing.',
-    groups: [
-      {
-        words: [
-          { word: 'metaphor', meaning: 'describing something as if it were something else', example: "'Time is a thief' is a **metaphor**." },
-          { word: 'alliteration', meaning: 'repetition of the same starting sound', example: "'Peter Piper picked' uses **alliteration**." },
-          { word: 'irony', meaning: 'a contrast between expectation and reality', example: 'It was pure **irony** that the fire station burned down.' },
-          { word: 'hyperbole', meaning: 'deliberate exaggeration for effect', example: "'I've told you a million times' is **hyperbole**." },
-          { word: 'foreshadowing', meaning: 'hinting at future events in a story', example: 'The dark clouds were **foreshadowing** in the novel.' },
-          { word: 'juxtaposition', meaning: 'placing two contrasting things side by side', example: 'The **juxtaposition** of wealth and poverty was striking.' },
-          { word: 'personification', meaning: 'giving human qualities to non-human things', example: "'The wind whispered' is **personification**." },
-          { word: 'rhetorical question', meaning: 'a question asked for effect, not an answer', example: "'Who wouldn't want that?' is a **rhetorical question**." },
-        ],
-      },
-    ],
-  },
-
-  'C2::Specialized Academic Terminology': {
-    heading: 'Specialized Academic Terminology',
-    intro: 'Common terms used in academic writing and research.',
-    groups: [
-      {
-        words: [
-          { word: 'hypothesis', meaning: 'a proposed explanation to be tested', example: 'The researcher tested her **hypothesis**.' },
-          { word: 'methodology', meaning: 'the methods used in research', example: "The study's **methodology** was well designed." },
-          { word: 'empirical', meaning: 'based on observation or experiment, not theory', example: 'The claim lacks **empirical** evidence.' },
-          { word: 'paradigm', meaning: 'a typical model or pattern of something', example: 'This represents a new **paradigm** in medicine.' },
-          { word: 'correlation', meaning: 'a relationship between two variables', example: 'There is a strong **correlation** between the two factors.' },
-          { word: 'qualitative', meaning: 'relating to quality or description, not numbers', example: 'They used **qualitative** interviews.' },
-          { word: 'quantitative', meaning: 'relating to numbers or measurable data', example: 'The **quantitative** data supported the theory.' },
-          { word: 'peer-reviewed', meaning: 'checked by other experts before publication', example: 'It was published in a **peer-reviewed** journal.' },
-        ],
-      },
-    ],
-  },
-
-  'C2::Subtle Connotations': {
-    heading: 'Subtle Connotations',
-    intro: 'Word pairs that share a literal meaning but carry different emotional associations.',
-    groups: [
-      {
-        words: [
-          { word: 'slim (positive) vs skinny (negative)', meaning: 'both mean thin, but skinny sounds less flattering', example: 'She looks **slim**; he looks a bit **skinny**.' },
-          { word: 'curious (positive) vs nosy (negative)', meaning: 'both mean interested in others, but nosy is critical', example: "He's **curious** about people; she's just **nosy**." },
-          { word: 'confident (positive) vs arrogant (negative)', meaning: 'both show self-belief, but arrogant is excessive', example: "She's **confident**, not **arrogant**." },
-          { word: 'frugal (positive) vs stingy (negative)', meaning: 'both mean careful with money, but stingy is unkind', example: "He's **frugal**, not **stingy**." },
-          { word: 'assertive (positive) vs pushy (negative)', meaning: 'both mean direct, but pushy is too forceful', example: 'Be **assertive**, not **pushy**.' },
-          { word: 'unique (positive) vs weird (negative)', meaning: 'both mean unusual, but weird is judgmental', example: 'Her style is **unique**, not **weird**.' },
-        ],
-      },
-    ],
-    tips: ["Two words can share a literal meaning but carry very different connotations — choose carefully depending on your attitude."],
-  },
-
-  'C2::Professional and Legal Vocabulary': {
-    heading: 'Professional and Legal Vocabulary',
-    intro: 'Formal vocabulary used in business and legal contexts.',
-    groups: [
-      {
-        words: [
-          { word: 'liability', meaning: 'legal responsibility for something', example: 'The company denied **liability** for the accident.' },
-          { word: 'breach of contract', meaning: 'failing to follow the terms of an agreement', example: 'They sued for **breach of contract**.' },
-          { word: 'jurisdiction', meaning: 'the authority of a court to make decisions', example: "This falls outside the court's **jurisdiction**." },
-          { word: 'litigation', meaning: 'the process of taking legal action', example: 'The dispute led to lengthy **litigation**.' },
-          { word: 'defendant / plaintiff', meaning: 'the accused / the person bringing the case', example: 'The **defendant** pleaded not guilty.' },
-          { word: 'terms and conditions', meaning: 'the rules of an agreement', example: 'Read the **terms and conditions** carefully.' },
-          { word: 'compliance', meaning: 'acting according to rules or laws', example: 'The company ensures **compliance** with regulations.' },
-          { word: 'indemnity', meaning: 'security or protection against financial loss', example: 'The policy provides **indemnity** for damages.' },
-        ],
-      },
-    ],
-  },
-
-  'C2::Advanced Collocations': {
-    heading: 'Advanced Collocations',
-    intro: 'Sophisticated verb-noun collocations for formal, precise English.',
-    groups: [
-      {
-        words: [
-          { word: 'reach a consensus', meaning: 'to come to a general agreement', example: 'The committee **reached a consensus**.' },
-          { word: 'exercise caution', meaning: 'to be careful', example: 'Drivers should **exercise caution** in fog.' },
-          { word: 'pose a threat', meaning: 'to be a danger', example: 'The virus **poses a threat** to public health.' },
-          { word: 'harbour doubts', meaning: 'to have doubts, usually secretly', example: 'She **harboured doubts** about the plan.' },
-          { word: 'draw a conclusion', meaning: 'to decide something based on evidence', example: "It's too early to **draw a conclusion**." },
-          { word: 'exert influence', meaning: 'to use your power to affect something', example: 'He **exerted influence** over the decision.' },
-          { word: 'bear responsibility', meaning: 'to be responsible for something', example: 'They must **bear responsibility** for the failure.' },
-          { word: 'forge a relationship', meaning: 'to build a strong relationship over time', example: 'The two countries **forged a relationship**.' },
-        ],
-      },
-    ],
-  },
-
-  'C2::Figurative Language': {
-    heading: 'Figurative Language',
-    intro: 'Vivid figurative expressions used to describe situations and feelings.',
-    groups: [
-      {
-        words: [
-          { word: 'a rollercoaster of emotions', meaning: 'a period with many ups and downs of feeling', example: 'The trial was **a rollercoaster of emotions**.' },
-          { word: 'a ray of hope', meaning: 'a small sign that something good might happen', example: 'The new treatment offers **a ray of hope**.' },
-          { word: 'a storm is brewing', meaning: 'trouble is developing', example: 'You could feel **a storm brewing** in the office.' },
-          { word: 'walking on eggshells', meaning: 'being very careful not to upset someone', example: "I feel like I'm **walking on eggshells** around him." },
-          { word: 'an uphill battle', meaning: 'a difficult struggle', example: 'Recovering from the injury was **an uphill battle**.' },
-          { word: 'a drop in the ocean', meaning: 'a very small amount compared to what is needed', example: 'The donation was **a drop in the ocean**.' },
-        ],
-      },
-    ],
-  },
-
-  'C2::Register and Tone': {
-    heading: 'Register and Tone',
-    intro: 'Vocabulary for describing how formal, direct, or emotionally loaded language is.',
-    groups: [
-      {
-        words: [
-          { word: 'colloquial', meaning: 'informal, conversational language', example: "'Gonna' is a **colloquial** form of 'going to'." },
-          { word: 'candid', meaning: 'honest and direct, sometimes blunt', example: 'He gave a **candid** answer.' },
-          { word: 'diplomatic', meaning: 'tactful, careful not to offend', example: 'She gave a **diplomatic** response to a difficult question.' },
-          { word: 'condescending', meaning: 'showing a feeling of superiority', example: 'His tone was quite **condescending**.' },
-          { word: 'sarcastic', meaning: 'saying the opposite of what you mean, to mock', example: '"Great job," he said **sarcastically**.' },
-          { word: 'understated', meaning: 'expressed in a subtle, restrained way', example: 'His achievements were **understated** in the report.' },
-        ],
-      },
-    ],
-    tips: ['Register is about formality (formal ↔ informal); tone is about attitude (serious, sarcastic, diplomatic) — adjust both to your audience.'],
-  },
 };

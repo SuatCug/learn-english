@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, MessageSquareText, Newspaper, PenLine, BarChart3, Users } from 'lucide-react';
+import { BookOpen, MessageSquareText, Newspaper, PenLine, Headphones, BarChart3 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import TopicsOfTheDay from '@/components/home/TopicsOfTheDay';
 import { LEVELS } from '@/lib/constants';
 // Fotoğraf: Unsplash (photo-1513258496099-48168024aec0), Unsplash lisansı ile ücretsiz kullanım.
 // Kişi orijinalde solda; yazı sola geldiği için görsel yatayda aynalanıyor (-scale-x-100).
@@ -11,8 +12,8 @@ import grammarImage from '@/assets/home-grammar.webp'; // photo-1501504905252-47
 import vocabularyImage from '@/assets/home-vocabulary.webp'; // photo-1503676260728-1c00da094a0b
 import readingImage from '@/assets/home-reading.webp'; // photo-1497633762265-9d179a990aa6
 import writingImage from '@/assets/home-writing.webp'; // photo-1455390582262-044cdead277a
+import listeningImage from '@/assets/home-listening.webp'; // photo-1484704849700-f032a568e944
 import levelTestImage from '@/assets/home-level-test.webp'; // photo-1606326608606-aa0b62935f2b
-import classroomsImage from '@/assets/home-classrooms.webp'; // photo-1571260899304-425eee4c7efc
 
 const BRAND = '#50af31';
 
@@ -72,26 +73,28 @@ const CARDS = [
     cta: 'Go to the lessons',
   },
   {
+    key: 'listening',
+    tag: 'Listening',
+    title: 'Listening Practice',
+    color: '#f7741d',
+    image: listeningImage,
+    Icon: Headphones,
+    intro: 'Listen to dialogues, messages, talks and podcasts recorded for each level:',
+    outro: 'Answer the questions, then read the transcript to check what you heard.',
+    levelBase: '/topics/listening',
+    to: '/topics/listening',
+    cta: 'Start listening',
+  },
+  {
     key: 'level-test',
     tag: 'Level Test',
     title: 'Level Test',
     color: BRAND,
     image: levelTestImage,
     Icon: BarChart3,
-    text: "If you are not sure about your level, don't worry, you can take this online test. There are 55 questions and you will find out your level from A1 to C2 when you finish the test.",
+    text: "If you are not sure about your level, don't worry, you can take this online test. There are 55 questions and you will find out your level from A1 to B2 when you finish the test.",
     to: '/placement-test',
     cta: 'Take a level test',
-  },
-  {
-    key: 'classrooms',
-    tag: 'School Mode',
-    title: 'Classrooms & Live Quiz',
-    color: '#5f6f79',
-    image: classroomsImage,
-    Icon: Users,
-    text: 'Join your teacher’s classroom, complete assignments and compete with your classmates in live quizzes.',
-    to: '/classrooms',
-    cta: 'Go to classrooms',
   },
 ];
 
@@ -109,7 +112,7 @@ function LevelLinks({ base }) {
 function CategoryCard({ card }) {
   const { Icon } = card;
   return (
-    <div className="px-4 py-2.5 sm:p-4">
+    <div className="px-4 py-2.5 sm:p-4 h-full">
       <div className="group h-full bg-white border border-[#f0f0f0] rounded-sm flex flex-col shadow-[0_1px_2px_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] transition-shadow duration-500 ease-in-out hover:shadow-[0_8px_17px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.19)]">
         <div className="relative h-48 sm:h-60 overflow-hidden rounded-t-[15px]">
           <img src={card.image} alt="" loading="lazy" className="w-full h-full object-cover" />
@@ -196,10 +199,18 @@ export default function HomePage() {
         </h2>
 
         <section className="max-w-[1400px] mx-auto px-0 sm:px-4 pb-10 sm:pb-16 grid sm:grid-cols-2 lg:grid-cols-3">
-          {CARDS.map((card) => (
-            <CategoryCard key={card.key} card={card} />
+          {CARDS.map((card, i) => (
+            // 3 sütunlu düzende son satırda tek kart kalırsa ortaya alınır.
+            <div
+              key={card.key}
+              className={i === CARDS.length - 1 && CARDS.length % 3 === 1 ? 'lg:col-start-2' : undefined}
+            >
+              <CategoryCard card={card} />
+            </div>
           ))}
         </section>
+
+        <TopicsOfTheDay />
       </main>
 
       <Footer />

@@ -7,12 +7,11 @@ import Footer from '@/components/layout/Footer';
 import { useGetClassroomQuery, useGetClassroomResultsQuery } from '@/services/classroomApi';
 import { LEVELS } from '@/lib/constants';
 
-// Seviyeleri kaba üç kademeye ayırıp nokta rengini buna göre belirler; gerçek kod (A2, B1+ vb.) yine de gösterilir.
+// Seviyeleri A ve B kademelerine ayırıp nokta rengini buna göre belirler; gerçek kod (A2, B1 vb.) yine de gösterilir.
 function levelDotColor(level) {
   if (!level) return 'bg-gray-300';
   if (level.startsWith('A')) return 'bg-emerald-500';
-  if (level.startsWith('B')) return 'bg-amber-500';
-  return 'bg-purple-500';
+  return 'bg-amber-500';
 }
 
 const AVATAR_PALETTE = ['bg-emerald-100 text-emerald-700', 'bg-sky-100 text-sky-700', 'bg-purple-100 text-purple-700', 'bg-amber-100 text-amber-700', 'bg-rose-100 text-rose-700'];

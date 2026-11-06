@@ -6,6 +6,7 @@ import {
   ListChecks,
   PenLine,
   GraduationCap,
+  Headphones,
   ChevronRight,
   CalendarDays,
   Sparkles,
@@ -26,6 +27,7 @@ const CATEGORY_ICONS = {
   vocabulary: ListChecks,
   reading: GraduationCap,
   writing: PenLine,
+  listening: Headphones,
 };
 
 function formatDate(value) {
@@ -156,7 +158,7 @@ function AssignmentsSection({ classroomId, assignments }) {
               {/* Step 1: Category */}
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">1. Category</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                   {CATEGORIES.map(({ slug, label }) => {
                     const Icon = CATEGORY_ICONS[slug];
                     const active = category === slug;

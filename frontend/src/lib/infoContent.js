@@ -19,7 +19,7 @@ export const INFO_CONTENT = {
         list: {
           type: 'ordered',
           items: [
-            'Start with our free placement test to find your approximate CEFR level, from A1 to C2.',
+            'Start with our free placement test to find your approximate CEFR level, from A1 to B2.',
             'Based on your result, work through grammar, vocabulary, reading and writing lessons built for your level.',
             'Every exercise gives you instant feedback, so you always know what you got right and why.',
             'Track your progress on your profile — streak, badges, and how far you are from your next level.',
@@ -247,7 +247,7 @@ export const INFO_CONTENT = {
         list: {
           type: 'unordered',
           items: [
-            "The level you'd like it for (A1 to C2)",
+            "The level you'd like it for (A1 to B2)",
             'The category — Grammar, Vocabulary, Reading, or Writing',
             "A short description of the topic, and, if you have one, an example sentence or question showing what you mean",
           ],

@@ -7,7 +7,10 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node utils/seed.js",
-    "migrate:progress-titles": "node utils/migrateProgressTopicTitles.js"
+    "migrate:progress-titles": "node utils/migrateProgressTopicTitles.js",
+    "migrate:levels": "node utils/migrateLevels.js",
+    "upload:images": "node utils/uploadTopicImages.js",
+    "generate:listening": "node utils/generateListeningAudio.js"
   },
   "keywords": [],
   "author": "",

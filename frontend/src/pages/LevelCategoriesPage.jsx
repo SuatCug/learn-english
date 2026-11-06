@@ -2,23 +2,14 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { CATEGORIES, LEVELS } from '@/lib/constants';
-import grammarIllustration from '@/assets/home-grammar.webp';
-import vocabularyIllustration from '@/assets/home-vocabulary.webp';
-import writingIllustration from '@/assets/home-writing.webp';
-import readingIllustration from '@/assets/home-reading.webp';
-
-const CATEGORY_ILLUSTRATIONS = {
-  grammar: grammarIllustration,
-  vocabulary: vocabularyIllustration,
-  writing: writingIllustration,
-  reading: readingIllustration,
-};
+import { CATEGORY_ILLUSTRATIONS } from '@/lib/categoryIllustrations';
 
 const DESCRIPTIONS = {
   grammar: 'Learn grammar topics with clear examples and reinforce them with exercises.',
   vocabulary: 'Expand your everyday English with vocabulary sets tailored to this level.',
   reading: 'Practice with reading passages and comprehension questions.',
   writing: 'Improve your writing skills with prompts and get instant, detailed feedback.',
+  listening: 'Listen to dialogues, talks and reports, then answer comprehension questions.',
 };
 
 // Footer'daki "Levels" listesinden bir seviyeye (ör. A1) tıklandığında, CategorySection'daki
@@ -51,7 +42,7 @@ export default function LevelCategoriesPage() {
           Pick one of the categories and start learning right away.
         </p>
 
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {CATEGORIES.map((category) => (
             <div
               key={category.slug}

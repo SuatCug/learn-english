@@ -14,7 +14,7 @@ const progressEntrySchema = new mongoose.Schema(
     source: { type: String, enum: ['lesson', 'game'], default: 'lesson' },
     // topicId null olduğunda (canlı oyun) Profile sayfasındaki kategori bazlı ortalamaya
     // dahil edilebilmesi için kategori burada ayrıca tutulur.
-    category: { type: String, enum: ['grammar', 'vocabulary', 'writing', 'reading'], default: null },
+    category: { type: String, enum: ['grammar', 'vocabulary', 'writing', 'reading', 'listening'], default: null },
     // Konunun hangi egzersizinin (1, 2, 3...) tamamlandığı — aynı konuya dönüldüğünde
     // daha önce kaydedilmiş egzersiz için "Try Again" gösterebilmek amacıyla tutulur.
     exerciseGroup: { type: Number, default: 1 },
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
     // şifre var kabul edilir.
     hasPassword: { type: Boolean },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    level: { type: String, enum: ['A1', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2'], default: null },
+    level: { type: String, enum: ['A1', 'A2', 'B1', 'B2'], default: null },
     placementTestCompleted: { type: Boolean, default: false },
     progress: { type: [progressEntrySchema], default: [] },
     badges: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Badge' }],

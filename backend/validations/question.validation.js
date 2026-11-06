@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-const LEVELS = ['A1', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2'];
+const LEVELS = ['A1', 'A2', 'B1', 'B2'];
 const TYPES = ['multiple-choice', 'fill-in-blanks', 'matching'];
 
 const baseQuestionRules = [

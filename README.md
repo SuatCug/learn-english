@@ -2,7 +2,7 @@
 
 # learnenglish 🍃
 
-**A1'den C2'ye kadar dilbilgisi, kelime, okuma ve yazma pratiği yapılan;
+**A1'den B2'ye kadar dilbilgisi, kelime, okuma ve yazma pratiği yapılan;
 interaktif testler, anlık geri bildirim, seviye tespit sınavı ve öğretmenlerin
 canlı quiz oynatabildiği "Okul Modu" ile birlikte gelen bir İngilizce öğrenme
 platformu.**
@@ -27,8 +27,8 @@ platformu.**
 ## Proje hakkında
 
 learnenglish, İngilizce öğrenenlerin kendi hızında ilerleyebildiği bir alıştırma
-platformudur. İçerik dört kategoriye ve yedi CEFR seviyesine (A1, A2, B1, B1+, B2,
-C1, C2) ayrılır:
+platformudur. İçerik dört kategoriye ve dört CEFR seviyesine (A1, A2, B1, B2)
+ayrılır:
 
 - **🔤 Grammar** – Her seviyede konu anlatımı + üç bölümlü alıştırma seti
   (çoktan seçmeli, boşluk doldurma, eşleştirme/dönüştürme). Konu başlıkları
@@ -57,7 +57,7 @@ puan ve açıklamalı geri bildirim döner; sonuç kalıcı ilerlemeye (streak, 
 - Konu tamamlanınca ilerlemenin `User.progress` içine kaydedilmesi
 
 **Seviye tespit sınavı**
-- ~55 soru, ~80 dakika, A1–C2 aralığında bölümlere (reading/grammar/vocabulary/writing) ayrılmış test
+- ~55 soru, ~80 dakika, A1–B2 aralığında bölümlere (reading/grammar/vocabulary/writing) ayrılmış test
 - Sınav sonunda kullanıcının seviyesinin otomatik atanması (`placementTestCompleted`)
 
 **İlerleme & rozetler**

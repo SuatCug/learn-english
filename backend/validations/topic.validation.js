@@ -1,7 +1,7 @@
 const { body } = require('express-validator');
 
-const LEVELS = ['A1', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2'];
-const CATEGORIES = ['grammar', 'vocabulary', 'writing', 'reading'];
+const LEVELS = ['A1', 'A2', 'B1', 'B2'];
+const CATEGORIES = ['grammar', 'vocabulary', 'writing', 'reading', 'listening'];
 
 const createTopicRules = [
   body('title').trim().notEmpty().withMessage('Konu başlığı zorunludur.'),

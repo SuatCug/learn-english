@@ -1,9 +1,9 @@
 const { Topic } = require('../models');
 
-const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B1+', 'B2', 'C1', 'C2'];
+const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2'];
 
 // Bir sonraki seviyeye geçmek için tamamlanması istenen konu sayısı. Bir seviyede bundan
-// daha az konu varsa (ör. C1/C2), hedef o seviyenin gerçek konu sayısına düşürülür —
+// daha az konu varsa, hedef o seviyenin gerçek konu sayısına düşürülür —
 // aksi halde imkansız bir hedef olurdu.
 const LEVEL_UP_TOPICS_REQUIRED = 80;
 

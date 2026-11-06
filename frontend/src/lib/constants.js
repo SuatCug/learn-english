@@ -2,10 +2,7 @@ export const LEVELS = [
   { code: 'A1', name: 'Elementary' },
   { code: 'A2', name: 'Pre-intermediate' },
   { code: 'B1', name: 'Intermediate' },
-  { code: 'B1+', name: 'Upper-intermediate' },
-  { code: 'B2', name: 'Pre-advanced' },
-  { code: 'C1', name: 'Advanced' },
-  { code: 'C2', name: 'Proficiency' },
+  { code: 'B2', name: 'Upper-intermediate' },
 ];
 
 export const CATEGORIES = [
@@ -13,6 +10,7 @@ export const CATEGORIES = [
   { label: 'Vocabulary', slug: 'vocabulary', icon: '📖' },
   { label: 'Reading', slug: 'reading', icon: '📚' },
   { label: 'Writing', slug: 'writing', icon: '✏️' },
+  { label: 'Listening', slug: 'listening', icon: '🎧' },
 ];
 
 // Kategoriye özel tema: konu/ders sayfalarında Navbar'ın hemen altındaki başlık şeridinin rengi.
@@ -21,11 +19,12 @@ export const CATEGORY_BANNER_CLASS = {
   vocabulary: 'bg-pink-400',
   reading: 'bg-red-600',
   writing: 'bg-purple-600',
+  listening: 'bg-orange-500',
 };
 export const DEFAULT_BANNER_CLASS = 'bg-emerald-600';
 
 // Kategoriye özel tema: exercise sayfasındaki butonlar, soru numaraları ve vurgu renkleri
-// bu paletten gelir (grammar mavi, vocabulary pembe, reading kırmızı, writing mor).
+// bu paletten gelir (grammar mavi, vocabulary pembe, reading kırmızı, writing mor, listening turuncu).
 export const CATEGORY_THEME = {
   grammar: {
     solid: 'bg-blue-500',
@@ -82,6 +81,21 @@ export const CATEGORY_THEME = {
     lightBgHover: 'hover:bg-purple-100',
     subtleBg: 'bg-purple-50/40',
     ring: 'focus:ring-purple-500',
+  },
+  listening: {
+    solid: 'bg-orange-500',
+    solidHover: 'hover:bg-orange-600',
+    border: 'border-orange-500',
+    borderLight: 'border-orange-300',
+    borderLighter: 'border-orange-100',
+    hoverBorder: 'hover:border-orange-400',
+    text: 'text-orange-700',
+    hoverText: 'hover:text-orange-700',
+    lightBg: 'bg-orange-50',
+    lightBgHover: 'hover:bg-orange-100',
+    subtleBg: 'bg-orange-50/40',
+    ring: 'focus:ring-orange-500',
+    accent: 'accent-orange-500',
   },
 };
 export const DEFAULT_THEME = {

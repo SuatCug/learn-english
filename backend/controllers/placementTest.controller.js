@@ -6,15 +6,12 @@ const { isAnswerCorrect } = require('../utils/checkAnswer');
 const SECTIONS = ['reading', 'grammar', 'vocabulary', 'writing'];
 
 // Toplam 55 puan (Reading 20 + Grammar 15 + Vocabulary 10 + Writing 10) üzerinden CEFR seviyesine bantlama.
-// Bantlar, eski 45 puanlık ölçekten (Writing eklenmeden önce) 55/45 oranıyla büyütüldü.
+// Seviye sistemi A1–B2 (4 kur); eski B1+ bandının alt yarısı B1'e, üst yarısı ve üstü B2'ye katıldı.
 const LEVEL_BANDS = [
   { max: 7, level: 'A1' },
   { max: 18, level: 'A2' },
-  { max: 24, level: 'B1' },
-  { max: 31, level: 'B1+' },
-  { max: 42, level: 'B2' },
-  { max: 49, level: 'C1' },
-  { max: Infinity, level: 'C2' },
+  { max: 28, level: 'B1' },
+  { max: Infinity, level: 'B2' },
 ];
 
 const levelForScore = (score) => LEVEL_BANDS.find((band) => score <= band.max).level;

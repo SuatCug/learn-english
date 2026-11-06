@@ -14,6 +14,10 @@ import { GRAMMAR_EXPLANATIONS } from '@/lib/grammarExplanations';
 import GrammarExplanation from '@/components/lesson/GrammarExplanation';
 import { WRITING_EXPLANATIONS } from '@/lib/writingExplanations';
 import WritingExplanation from '@/components/lesson/WritingExplanation';
+import { cloudinaryUrl, cloudinaryAudioUrl } from '@/lib/cloudinary';
+import ListeningPlayer from '@/components/lesson/ListeningPlayer';
+import FadeImage from '@/components/FadeImage';
+import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrations';
 import { VOCABULARY_EXPLANATIONS } from '@/lib/vocabularyExplanations';
 import VocabularyExplanation from '@/components/lesson/VocabularyExplanation';
 
@@ -422,6 +426,8 @@ export default function LessonPage() {
   const exerciseNumbers = availableExercises.length > 0 ? availableExercises : EXERCISE_NUMBERS;
   const questions = allQuestions.filter((q) => (q.exerciseGroup ?? 1) === activeExercise);
   const isWritingBlanks = topic?.category === 'writing' && Boolean(passage);
+  // Listening'de passage transkripttir: dinlerken okunmasın diye sadece cevaplar kontrol edilince açılır.
+  const isListening = topic?.category === 'listening';
   const categoryInfo = topic ? CATEGORIES.find((c) => c.slug === topic.category) : null;
   const categoryLabel = categoryInfo?.label ?? topic?.category;
   const bannerClass = (topic && CATEGORY_BANNER_CLASS[topic.category]) ?? DEFAULT_BANNER_CLASS;
@@ -430,7 +436,10 @@ export default function LessonPage() {
   const writingExplanation = topic ? WRITING_EXPLANATIONS[`${topic.level}::${topic.title}`] : null;
   const vocabularyExplanation = topic ? VOCABULARY_EXPLANATIONS[`${topic.level}::${topic.title}`] : null;
   // Reading konularının kendi metni zaten "Exercises" sekmesinde gösteriliyor — ayrı bir Explanation sekmesine gerek yok.
-  const tabs = topic?.category === 'reading' ? TABS.filter((tab) => tab.key !== 'explanation') : TABS;
+  // Listening'in içeriği de (kayıt) "Exercises" sekmesinde, o yüzden onda da Explanation sekmesi yok.
+  const tabs = ['reading', 'listening'].includes(topic?.category)
+    ? TABS.filter((tab) => tab.key !== 'explanation')
+    : TABS;
 
   useEffect(() => {
     setActiveTab('exercises');
@@ -451,7 +460,14 @@ export default function LessonPage() {
     { category: topic?.category, level: topic?.level },
     { skip: !topic }
   );
-  const relatedTopics = (siblingData?.data?.topics ?? []).filter((t) => t._id !== topicId).slice(0, 3);
+  // Müfredat sırasında bu konudan sonra gelen 3 konu (liste sonundaysa baştan devam eder).
+  const siblings = siblingData?.data?.topics ?? [];
+  const currentIndex = siblings.findIndex((t) => t._id === topicId);
+  const relatedTopics = siblings
+    .slice(currentIndex + 1)
+    .concat(siblings.slice(0, Math.max(currentIndex, 0)))
+    .filter((t) => t._id !== topicId)
+    .slice(0, 3);
 
   const allAnswered = questions.length > 0 && questions.every((q) => answers[q.id] !== undefined && answers[q.id] !== '');
 
@@ -669,7 +685,25 @@ export default function LessonPage() {
 
                     {showExerciseContent && (
                       <>
-                        {passage && !isWritingBlanks && (
+                        {isListening && (
+                          <>
+                            <ListeningPlayer key={topic._id} src={cloudinaryAudioUrl(topic.audio)} theme={theme} />
+                            {passage && displayResultsById && (
+                              <details className={`rounded-xl border ${theme.borderLighter} bg-white mb-6`}>
+                                <summary className={`cursor-pointer select-none px-4 sm:px-6 py-3 text-sm font-semibold ${theme.text}`}>
+                                  Show transcript
+                                </summary>
+                                <div className="px-4 sm:px-6 pb-5 text-base text-gray-700 leading-relaxed space-y-3">
+                                  {passage.split('\n\n').map((paragraph, i) => (
+                                    <p key={i}>{paragraph}</p>
+                                  ))}
+                                </div>
+                              </details>
+                            )}
+                          </>
+                        )}
+
+                        {passage && !isWritingBlanks && !isListening && (
                           <div className={`rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-4 sm:p-6 mb-6 text-base text-gray-700 leading-relaxed space-y-3`}>
                             {passage.split('\n\n').map((paragraph, i) => (
                               <p key={i}>{paragraph}</p>
@@ -867,19 +901,26 @@ export default function LessonPage() {
               <p className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-3">
                 Related lessons
               </p>
-              <div className="space-y-3">
-                {relatedTopics.map((related) => (
-                  <Link
-                    key={related._id}
-                    to={`/lesson/${related._id}`}
-                    className="flex items-center gap-3 rounded-lg border border-gray-100 p-3 hover:shadow-sm transition-shadow"
-                  >
-                    <span className={`w-9 h-9 rounded-lg ${theme.lightBg} flex items-center justify-center text-lg shrink-0`}>
-                      {categoryInfo?.icon}
-                    </span>
-                    <span className="text-sm text-gray-700 leading-snug">{related.title}</span>
-                  </Link>
-                ))}
+              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
+                {relatedTopics.map((related) => {
+                  const image = cloudinaryUrl(related.image, 480) ?? CATEGORY_ILLUSTRATIONS[related.category];
+                  return (
+                    <Link
+                      key={related._id}
+                      to={`/lesson/${related._id}`}
+                      className="block rounded-xl border border-[#f0f0f0] bg-white overflow-hidden shadow-[0_1px_2px_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] hover:shadow-[0_8px_17px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.19)] transition-shadow duration-500 ease-in-out"
+                    >
+                      <div className={`${CARD_IMAGE_BOX} overflow-hidden ${theme.lightBg} flex items-center justify-center`}>
+                        {image ? (
+                          <FadeImage src={image} width={1200} height={630} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-3xl">{categoryInfo?.icon}</span>
+                        )}
+                      </div>
+                      <p className="px-3 py-2.5 text-sm font-medium text-gray-800 leading-snug line-clamp-2">{related.title}</p>
+                    </Link>
+                  );
+                })}
                 {relatedTopics.length === 0 && <p className="text-sm text-gray-400">No other lessons yet.</p>}
               </div>
             </aside>

@@ -26,7 +26,7 @@ export default function AuthLayout({ children }) {
             <span className="block mt-2 text-[0.8em] text-emerald-500">Take your learning with you!</span>
           </p>
           <p className="mt-4 text-white/85 text-lg font-light leading-snug">
-            Grammar, vocabulary, reading and writing lessons from A1 to C2, with instant feedback on every
+            Grammar, vocabulary, reading and writing lessons from A1 to B2, with instant feedback on every
             exercise.
           </p>
         </div>
