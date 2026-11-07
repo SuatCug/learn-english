@@ -7,7 +7,7 @@ export default function CreateRoomButton({ trigger, open: openProp, onOpenChange
   const isPremium = useSelector((state) => state.auth.user?.isPremium);
   const navigate = useNavigate();
   const [internalOpen, setInternalOpen] = useState(false);
-  // Kontrollü (RoomsMenu gibi bir üst bileşenin open state'ini yönettiği) veya
+  // Kontrollü (SchoolPage gibi bir üst bileşenin open state'ini yönettiği) veya
   // kontrolsüz (kendi başına <CreateRoomButton /> olarak kullanıldığında) çalışabilir.
   const open = openProp !== undefined ? openProp : internalOpen;
   const setOpen = onOpenChange ?? setInternalOpen;

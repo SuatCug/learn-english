@@ -51,7 +51,7 @@ export default function AvatarMenu() {
 
             {user?.isPremium && (
               <Link
-                to="/classrooms"
+                to="/school"
                 onClick={() => setMenuOpen(false)}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >

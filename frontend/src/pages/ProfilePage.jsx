@@ -321,7 +321,7 @@ function QuickLinks({ isPremium, hasLevel }) {
           Edit Profile →
         </Link>
         {isPremium && (
-          <Link to="/classrooms" className="block text-gray-600 hover:text-emerald-600 transition-colors">
+          <Link to="/school" className="block text-gray-600 hover:text-emerald-600 transition-colors">
             Manage My Classes →
           </Link>
         )}

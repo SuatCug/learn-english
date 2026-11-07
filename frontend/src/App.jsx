@@ -13,7 +13,7 @@ import LessonPage from '@/pages/LessonPage';
 import PlacementTestPage from '@/pages/PlacementTestPage';
 import ProfilePage from '@/pages/ProfilePage';
 import EditProfilePage from '@/pages/EditProfilePage';
-import ClassroomsListPage from '@/pages/ClassroomsListPage';
+import SchoolPage from '@/pages/SchoolPage';
 import ClassroomDetailPage from '@/pages/ClassroomDetailPage';
 import ClassroomStudentsPage from '@/pages/ClassroomStudentsPage';
 import LiveGamePage from '@/pages/LiveGamePage';
@@ -104,13 +104,14 @@ export default function App() {
           }
         />
         <Route
-          path="/classrooms"
+          path="/school"
           element={
             <RequireAuth>
-              <ClassroomsListPage />
+              <SchoolPage />
             </RequireAuth>
           }
         />
+        <Route path="/classrooms" element={<Navigate to="/school" replace />} />
         <Route
           path="/classroom/:id"
           element={

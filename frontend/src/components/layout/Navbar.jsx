@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School } from 'lucide-react';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
 import { useGetTopicsQuery } from '@/services/topicsApi';
-import RoomsMenu from './RoomsMenu';
 import AvatarMenu from './AvatarMenu';
 import BrandMark from '@/components/BrandMark';
 
@@ -144,7 +143,14 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3 sm:gap-5 justify-self-end">
-          <RoomsMenu />
+          <Link
+            to="/school"
+            className={`hidden sm:inline-flex items-center gap-2 rounded-md text-sm font-medium px-3 py-1.5 transition-colors ${
+              location.pathname === '/school' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+            }`}
+          >
+            <School size={17} strokeWidth={1.75} aria-hidden="true" /> School Mode
+          </Link>
 
           {/* Kapalıyken sadece büyüteç ikonu görünür; tıklanınca kutu sağdan sola yumuşakça genişler. */}
           <div className="relative hidden sm:flex items-center">
@@ -313,7 +319,7 @@ export default function Navbar() {
             </div>
 
             <Link
-              to="/classrooms"
+              to="/school"
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-2 rounded-lg border border-emerald-200 px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
             >
