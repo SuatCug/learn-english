@@ -10,29 +10,18 @@
 //   groups: [{ heading?: string, words: [{ emoji?: string, word: string, meaning: string, example?: string }] }],
 //   tips?: string[],
 // }
+import { VOCABULARY_LESSONS, lessonExplanation } from './vocabularyLessons';
+
+// vocabularyLessons.js'teki konuların açıklamaları oradaki kelime listesinden üretilir.
+const GENERATED = Object.fromEntries(
+  Object.entries(VOCABULARY_LESSONS).map(([key, lesson]) => [key, lessonExplanation(key.split('::')[1], lesson)])
+);
+
 export const VOCABULARY_EXPLANATIONS = {
-  "A1::Common Things": {
-    heading: 'Common Things',
-    intro: 'Everyday objects you use or see all the time.',
-    groups: [
-      {
-        words: [
-          { emoji: '📱', word: 'phone', meaning: 'a device for calling and texting', example: 'I left my **phone** at home.' },
-          { emoji: '🔑', word: 'key', meaning: 'used to lock or unlock a door', example: 'Have you seen my **keys**?' },
-          { emoji: '👜', word: 'bag', meaning: 'used to carry things', example: 'She put her books in her **bag**.' },
-          { emoji: '⌚', word: 'watch', meaning: 'worn on the wrist to tell the time', example: 'He checked his **watch**.' },
-          { emoji: '📖', word: 'book', meaning: 'pages with writing to read', example: "I'm reading a good **book**." },
-          { emoji: '💻', word: 'computer', meaning: 'a machine for work and the internet', example: 'I use my **computer** every day.' },
-          { emoji: '🖊️', word: 'pen', meaning: 'used for writing', example: 'Can I borrow a **pen**?' },
-          { emoji: '💡', word: 'lamp', meaning: 'gives light', example: 'Turn on the **lamp**, please.' },
-        ],
-      },
-    ],
-    tips: ['Learn each noun together with a common verb (use a phone, carry a bag) to remember it better.'],
-  },
+  ...GENERATED,
 
   "A1::Parts of the Body": {
-    heading: 'Parts of the Body',
+    heading: "Parts of the Body",
     intro: 'The main parts of the human body.',
     groups: [
       {
@@ -52,8 +41,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["Use 'has got' with body parts for physical descriptions: She's got green eyes."],
   },
 
-  "A1::Shops and Shopping": {
-    heading: 'Shops and Shopping',
+  "A2::Shopping and Prices": {
+    heading: "Shopping and Prices",
     intro: 'Common shops and words you need when shopping.',
     groups: [
       {
@@ -73,7 +62,7 @@ export const VOCABULARY_EXPLANATIONS = {
   },
 
   "A1::Countries and Nationalities": {
-    heading: 'Countries and Nationalities',
+    heading: "Countries and Nationalities",
     intro: 'Some common countries and their nationality adjectives.',
     groups: [
       {
@@ -92,8 +81,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Nationality adjectives are always capitalized in English: French, not french.'],
   },
 
-  "A1::Food and Meals": {
-    heading: 'Food and Meals',
+  "A1::Food and Drinks": {
+    heading: "Food and Drinks",
     intro: 'Words for meals and basic food.',
     groups: [
       {
@@ -113,7 +102,7 @@ export const VOCABULARY_EXPLANATIONS = {
   },
 
   "A1::Daily Routines": {
-    heading: 'Daily Routine Verbs',
+    heading: "Daily Routines",
     intro: 'The verbs and phrases we use to talk about a typical day.',
     groups: [
       {
@@ -131,8 +120,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Remember the -s ending for he/she/it: she wakes up, he gets dressed.'],
   },
 
-  "A1::Opposite Adjectives": {
-    heading: 'Opposite Adjectives',
+  "A1::Common Adjectives": {
+    heading: "Common Adjectives",
     intro: 'Adjective pairs with opposite meanings.',
     groups: [
       {
@@ -151,8 +140,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Learn adjectives in opposite pairs — it helps you remember both words at the same time.'],
   },
 
-  "A1::Family and Relatives": {
-    heading: 'Family and Relatives',
+  "A1::Family Members": {
+    heading: "Family Members",
     intro: 'Words for extended family and relationships by marriage.',
     groups: [
       {
@@ -170,8 +159,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["Add '-in-law' to a family word to describe relatives by marriage: mother-in-law, brother-in-law."],
   },
 
-  "A1::Common Verbs and Verb Phrases": {
-    heading: 'Common Verbs',
+  "A1::Common Verbs": {
+    heading: "Common Verbs",
     intro: 'Some of the most frequent verbs in English, used in everyday phrases.',
     groups: [
       {
@@ -191,7 +180,7 @@ export const VOCABULARY_EXPLANATIONS = {
   },
 
   "A1::Days, Months and Seasons": {
-    heading: 'Days, Months, Seasons and Dates',
+    heading: "Days, Months and Seasons",
     intro: 'The words we use to talk about the calendar, and the prepositions that go with them.',
     groups: [
       {
@@ -216,8 +205,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ['Learn the 7 days (Monday–Sunday) and 12 months (January–December) as full lists, then practice with the right preposition.'],
   },
 
-  "A1::Clothes": {
-    heading: 'Clothes',
+  "A1::Clothes and Accessories": {
+    heading: "Clothes and Accessories",
     intro: 'Common items of clothing.',
     groups: [
       {
@@ -235,8 +224,8 @@ export const VOCABULARY_EXPLANATIONS = {
     tips: ["'Trousers', 'shoes', 'socks', and 'glasses' are always plural: My trousers are new, not 'is new'."],
   },
 
-  "A1::The House: Rooms and Things": {
-    heading: 'The House: Rooms and Parts',
+  "A1::Rooms and Furniture": {
+    heading: "Rooms and Furniture",
     intro: 'The main rooms and parts of a house.',
     groups: [
       {
@@ -254,8 +243,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A1::Places in a Town": {
-    heading: 'Places in a Town',
+  "A1::Places in Town": {
+    heading: "Places in Town",
     intro: 'Common buildings and places you find in a town.',
     groups: [
       {
@@ -273,8 +262,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A1::At the Restaurant": {
-    heading: 'At the Restaurant',
+  "A2::Restaurants and Ordering Food": {
+    heading: "Restaurants and Ordering Food",
     intro: 'Useful words for eating out.',
     groups: [
       {
@@ -291,46 +280,10 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A1::Eating and Drinking Utensils": {
-    heading: 'Eating and Drinking Utensils',
-    intro: 'The items we use to eat and drink at the table.',
-    groups: [
-      {
-        words: [
-          { emoji: '🍴', word: 'fork', meaning: 'used to pick up food', example: 'Use your **fork** to eat the salad.' },
-          { emoji: '🔪', word: 'knife', meaning: 'used to cut food', example: 'Be careful with that **knife**.' },
-          { emoji: '🥄', word: 'spoon', meaning: 'used to eat soup or liquid food', example: 'I need a **spoon** for my soup.' },
-          { emoji: '🍽️', word: 'plate', meaning: 'a flat dish for food', example: 'Put the food on your **plate**.' },
-          { emoji: '🥛', word: 'glass', meaning: 'used for cold drinks', example: 'Can I have a **glass** of water?' },
-          { emoji: '☕', word: 'cup', meaning: 'used for hot drinks', example: 'She had a **cup** of tea.' },
-          { emoji: '🥣', word: 'bowl', meaning: 'a round, deep dish', example: 'He ate cereal from a **bowl**.' },
-          { emoji: '🧻', word: 'napkin', meaning: 'used to clean your mouth or hands', example: 'Please pass me a **napkin**.' },
-        ],
-      },
-    ],
-  },
 
-  "A1::Movement Verbs": {
-    heading: 'Movement Verbs',
-    intro: 'Verbs that describe how we move.',
-    groups: [
-      {
-        words: [
-          { emoji: '🚶', word: 'walk', meaning: 'to move on foot at a normal speed', example: 'I **walk** to school every day.' },
-          { emoji: '🏃', word: 'run', meaning: 'to move fast on foot', example: 'She **runs** every morning.' },
-          { emoji: '🤸', word: 'jump', meaning: 'to push yourself off the ground', example: 'The dog **jumped** over the fence.' },
-          { emoji: '🏊', word: 'swim', meaning: 'to move through water', example: 'We **swim** in the sea in summer.' },
-          { emoji: '🧗', word: 'climb', meaning: 'to go up using your hands and feet', example: 'They **climbed** the mountain.' },
-          { emoji: '✈️', word: 'fly', meaning: 'to travel through the air', example: 'We **flew** to London.' },
-          { emoji: '🚗', word: 'drive', meaning: 'to control a car', example: 'He **drives** to work every day.' },
-          { emoji: '🚴', word: 'ride', meaning: 'to travel on a bike or horse', example: 'She **rides** her bike to school.' },
-        ],
-      },
-    ],
-  },
 
-  "A1::Time Words": {
-    heading: 'Time Words',
+  "A1::Time and Dates": {
+    heading: "Time and Dates",
     intro: 'Common words for talking about when things happen.',
     groups: [
       {
@@ -348,8 +301,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A1::Basic Phrasal Verbs": {
-    heading: 'Basic Phrasal Verbs',
+  "A2::Common Phrasal Verbs": {
+    heading: "Common Phrasal Verbs",
     intro: 'Simple two-word verbs used very often in everyday English.',
     groups: [
       {
@@ -367,8 +320,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::Technology": {
-    heading: 'Technology',
+  "A2::Technology and Gadgets": {
+    heading: "Technology and Gadgets",
     intro: 'Everyday words for devices and the internet.',
     groups: [
       {
@@ -386,8 +339,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::Describing People": {
-    heading: "Describing People's Appearance",
+  "A2::Physical Appearance": {
+    heading: "Physical Appearance",
     intro: 'Words for describing how someone looks.',
     groups: [
       {
@@ -405,8 +358,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Personality Adjectives": {
-    heading: "Describing People's Personality",
+  "A2::Personality and Character": {
+    heading: "Personality and Character",
     intro: 'Adjectives for describing what someone is like.',
     groups: [
       {
@@ -424,45 +377,10 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Shopping and Consumerism": {
-    heading: 'Shops and Shopping',
-    intro: 'More useful vocabulary for shopping trips and returns.',
-    groups: [
-      {
-        words: [
-          { emoji: '👗', word: 'try on', meaning: 'to put on clothes to see if they fit', example: 'Can I **try on** this jacket?' },
-          { emoji: '🚪', word: 'fitting room', meaning: 'a small room to try on clothes', example: 'The **fitting rooms** are at the back.' },
-          { emoji: '🏷️', word: 'sale / discount', meaning: 'a reduced price', example: 'These shoes are 30% off in the **sale**.' },
-          { emoji: '💰', word: 'refund', meaning: 'money given back for a returned item', example: 'I asked for a **refund**.' },
-          { emoji: '🔄', word: 'exchange', meaning: 'to swap an item for another', example: 'Can I **exchange** this for a bigger size?' },
-          { emoji: '📏', word: 'size', meaning: 'how big or small something is', example: 'Do you have this in a bigger **size**?' },
-          { emoji: '🧑‍🤝‍🧑', word: 'customer', meaning: 'a person who buys something', example: 'The shop was full of **customers**.' },
-        ],
-      },
-    ],
-  },
 
-  "A2::Containers and Quantities": {
-    heading: 'Containers and Quantities',
-    intro: 'How we describe quantities of food and other items.',
-    groups: [
-      {
-        words: [
-          { emoji: '🍾', word: 'a bottle of', meaning: 'used for liquids', example: 'a **bottle of** water' },
-          { emoji: '🥫', word: 'a can of', meaning: 'used for canned food or drinks', example: 'a **can of** soup' },
-          { emoji: '📦', word: 'a box of', meaning: 'used for solid items in a box', example: 'a **box of** chocolates' },
-          { emoji: '🛍️', word: 'a bag of', meaning: 'used for loose items', example: 'a **bag of** rice' },
-          { emoji: '🍯', word: 'a jar of', meaning: 'used for jam, honey, etc.', example: 'a **jar of** honey' },
-          { emoji: '🥛', word: 'a carton of', meaning: 'used for milk or juice', example: 'a **carton of** milk' },
-          { emoji: '🍰', word: 'a piece of', meaning: 'a single part of something', example: 'a **piece of** cake' },
-          { emoji: '🍫', word: 'a bar of', meaning: 'used for chocolate or soap', example: 'a **bar of** chocolate' },
-        ],
-      },
-    ],
-  },
 
-  "A2::Nature and Landscape": {
-    heading: 'The Countryside',
+  "A2::City and Countryside": {
+    heading: "City and Countryside",
     intro: 'Vocabulary for describing rural areas.',
     groups: [
       {
@@ -479,8 +397,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::Holidays and Travel": {
-    heading: 'Holidays',
+  "A2::Travel and Holidays": {
+    heading: "Travel and Holidays",
     intro: 'Vocabulary for talking about trips and vacations.',
     groups: [
       {
@@ -497,8 +415,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::Free Time Activities": {
-    heading: 'Hobbies and Free Time',
+  "A1::Hobbies and Free Time": {
+    heading: "Hobbies and Free Time",
     intro: 'Common activities people do in their free time.',
     groups: [
       {
@@ -515,8 +433,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::The Weather": {
-    heading: 'The Weather',
+  "A1::Weather": {
+    heading: "Weather",
     intro: 'Words for describing different kinds of weather.',
     groups: [
       {
@@ -534,8 +452,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Common Phrasal Verbs": {
-    heading: 'Common Phrasal Verbs',
+  "B1::Phrasal Verbs": {
+    heading: "Phrasal Verbs",
     intro: 'Everyday two- and three-word verbs.',
     groups: [
       {
@@ -553,8 +471,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Sport and Competition": {
-    heading: 'Sport',
+  "A2::Sports and Exercise": {
+    heading: "Sports and Exercise",
     intro: 'Common words used to talk about sports and competitions.',
     groups: [
       {
@@ -572,27 +490,9 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Houses and Homes": {
-    heading: 'Houses and Buildings',
-    intro: 'Types of housing and words related to buying or renting.',
-    groups: [
-      {
-        words: [
-          { emoji: '🏠', word: 'detached house', meaning: 'a house standing alone, not joined to another', example: 'They live in a **detached house**.' },
-          { emoji: '🏘️', word: 'terraced house', meaning: 'a house joined to others in a row', example: 'Many people in the UK live in **terraced houses**.' },
-          { emoji: '🏢', word: 'apartment block', meaning: 'a building divided into flats', example: 'She lives on the 5th floor of an **apartment block**.' },
-          { emoji: '🏡', word: 'cottage', meaning: 'a small house, often in the countryside', example: 'We rented a **cottage** for the weekend.' },
-          { emoji: '💰', word: 'mortgage', meaning: 'a loan used to buy a house', example: 'They took out a **mortgage** to buy their home.' },
-          { emoji: '🧑', word: 'tenant', meaning: 'a person who rents a property', example: 'The **tenant** pays rent every month.' },
-          { emoji: '🧑‍💼', word: 'landlord', meaning: 'a person who owns and rents out property', example: 'Our **landlord** fixed the heating quickly.' },
-          { emoji: '🔑', word: 'estate agent', meaning: 'a person who helps buy, sell, or rent property', example: 'We contacted an **estate agent** to find a flat.' },
-        ],
-      },
-    ],
-  },
 
-  "A2::Transport": {
-    heading: 'Transport',
+  "A2::Transportation": {
+    heading: "Transportation",
     intro: 'Vocabulary for talking about travel and getting around.',
     groups: [
       {
@@ -609,8 +509,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Travel and Tourism": {
-    heading: 'Hotels and Accommodation',
+  "A2::Accommodation and Hotels": {
+    heading: "Accommodation and Hotels",
     intro: 'More detailed vocabulary about staying in a hotel.',
     groups: [
       {
@@ -628,8 +528,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Food and Cooking": {
-    heading: 'Food and Cooking',
+  "A2::Cooking and Recipes": {
+    heading: "Cooking and Recipes",
     intro: 'Basic cooking verbs and words.',
     groups: [
       {
@@ -647,8 +547,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Work and Careers": {
-    heading: 'Work',
+  "A2::Work and Workplace": {
+    heading: "Work and Workplace",
     intro: 'Common vocabulary for talking about jobs and the workplace.',
     groups: [
       {
@@ -666,8 +566,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Money and Banking": {
-    heading: 'Money',
+  "B1::Money and Finance": {
+    heading: "Money and Finance",
     intro: 'Vocabulary for talking about personal finance.',
     groups: [
       {
@@ -685,8 +585,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Education": {
-    heading: 'Education',
+  "A2::Education and Learning": {
+    heading: "Education and Learning",
     intro: 'Vocabulary for schools, universities, and studying.',
     groups: [
       {
@@ -704,8 +604,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Relationships": {
-    heading: 'Relationships',
+  "B1::Relationships and Social Life": {
+    heading: "Relationships and Social Life",
     intro: 'Vocabulary for talking about friendships and romantic relationships.',
     groups: [
       {
@@ -724,7 +624,7 @@ export const VOCABULARY_EXPLANATIONS = {
   },
 
   "B1::Media and News": {
-    heading: 'News and Media',
+    heading: "Media and News",
     intro: 'Vocabulary for talking about newspapers, TV news, and journalism.',
     groups: [
       {
@@ -742,8 +642,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "A2::Animals": {
-    heading: 'Animals: Bodies and Sounds',
+  "A1::Animals": {
+    heading: "Animals",
     intro: 'Body parts specific to animals, and the sounds they make.',
     groups: [
       {
@@ -768,8 +668,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::Entertainment": {
-    heading: 'Types of Movies and TV Shows',
+  "A2::Entertainment and Movies": {
+    heading: "Entertainment and Movies",
     intro: 'Vocabulary for talking about films and television genres.',
     groups: [
       {
@@ -787,8 +687,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B1::The Environment": {
-    heading: 'Pollution and How to Stop It',
+  "B1::Environment and Climate Change": {
+    heading: "Environment and Climate Change",
     intro: 'Vocabulary for talking about environmental problems and solutions.',
     groups: [
       {
@@ -806,27 +706,9 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Arts and Literature": {
-    heading: 'Talking About Movies',
-    intro: 'Vocabulary for discussing and reviewing films.',
-    groups: [
-      {
-        words: [
-          { emoji: '🎟️', word: 'box office', meaning: 'ticket sales, or where tickets are sold', example: 'The film topped the **box office**.' },
-          { emoji: '🔀', word: 'plot twist', meaning: 'an unexpected turn in the story', example: 'The **plot twist** surprised everyone.' },
-          { emoji: '🎬', word: 'cast', meaning: 'the actors in a film', example: 'The **cast** includes several famous actors.' },
-          { emoji: '🎵', word: 'soundtrack', meaning: 'the music in a film', example: 'I love the **soundtrack** of that movie.' },
-          { emoji: '2️⃣', word: 'sequel', meaning: 'a film that continues an earlier story', example: 'They are making a **sequel**.' },
-          { emoji: '🔤', word: 'subtitle', meaning: 'translated text shown on screen', example: 'I watched it with English **subtitles**.' },
-          { emoji: '💥', word: 'blockbuster', meaning: 'a very successful, popular film', example: "It was the summer's biggest **blockbuster**." },
-          { emoji: '⭐', word: 'critically acclaimed', meaning: 'praised highly by critics', example: 'The film was **critically acclaimed**.' },
-        ],
-      },
-    ],
-  },
 
-  "B1::Technology and the Internet": {
-    heading: 'Managing Your Devices',
+  "B1::Internet and Digital Life": {
+    heading: "Internet and Digital Life",
     intro: 'Vocabulary for maintaining and troubleshooting technology.',
     groups: [
       {
@@ -845,7 +727,7 @@ export const VOCABULARY_EXPLANATIONS = {
   },
 
   "B2::Advanced Phrasal Verbs": {
-    heading: 'Phrasal Verbs I',
+    heading: "Advanced Phrasal Verbs",
     intro: 'Common phrasal verbs at upper-intermediate level.',
     groups: [
       {
@@ -863,8 +745,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Psychology and Emotions": {
-    heading: 'Feelings and Emotions',
+  "B1::Emotions and Reactions": {
+    heading: "Emotions and Reactions",
     intro: 'More nuanced vocabulary for emotional states.',
     groups: [
       {
@@ -882,8 +764,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Media and Advertising": {
-    heading: 'News and Media',
+  "B2::Media Influence and Advertising": {
+    heading: "Media Influence and Advertising",
     intro: 'More advanced vocabulary about the press and how it operates.',
     groups: [
       {
@@ -900,8 +782,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Politics and Society": {
-    heading: 'War and Peace',
+  "B1::Global Issues": {
+    heading: "Global Issues",
     intro: 'Vocabulary for talking about conflict and diplomacy.',
     groups: [
       {
@@ -919,8 +801,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Travel and Culture": {
-    heading: 'Tourism',
+  "B1::Travel Experiences": {
+    heading: "Travel Experiences",
     intro: 'Vocabulary for talking about the tourism industry.',
     groups: [
       {
@@ -938,8 +820,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Climate Change": {
-    heading: 'Pollution and the Environment',
+  "B2::Environmental Challenges": {
+    heading: "Environmental Challenges",
     intro: 'More advanced vocabulary for environmental issues.',
     groups: [
       {
@@ -957,8 +839,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Business and the Economy": {
-    heading: 'Money and Finance',
+  "B1::Business and Economy": {
+    heading: "Business and Economy",
     intro: 'Vocabulary for talking about personal and national finance.',
     groups: [
       {
@@ -976,26 +858,9 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Urban Life": {
-    heading: 'Cars, Roads and Traffic',
-    intro: 'Vocabulary for driving and road conditions.',
-    groups: [
-      {
-        words: [
-          { emoji: '🛣️', word: 'motorway', meaning: 'a large road for fast traffic', example: 'We drove on the **motorway**.' },
-          { emoji: '🚦', word: 'speed limit', meaning: 'the maximum legal speed', example: 'The **speed limit** here is 50 km/h.' },
-          { emoji: '🚸', word: 'pedestrian crossing', meaning: 'a place for people to cross the road safely', example: 'Use the **pedestrian crossing**.' },
-          { emoji: '🚗', word: 'overtake', meaning: 'to pass another vehicle', example: 'It is dangerous to **overtake** here.' },
-          { emoji: '🚧', word: 'roadworks', meaning: 'repairs being done on a road', example: 'There are **roadworks** on the main road.' },
-          { emoji: '🚙', word: 'congestion', meaning: 'heavy traffic that blocks movement', example: 'Traffic **congestion** is worse in the mornings.' },
-          { emoji: '🔧', word: 'breakdown', meaning: 'when a vehicle stops working', example: 'We had a **breakdown** on the motorway.' },
-        ],
-      },
-    ],
-  },
 
-  "B2::Health and Medicine": {
-    heading: 'Health and Sickness',
+  "B2::Healthcare and Medical Developments": {
+    heading: "Healthcare and Medical Developments",
     intro: 'Vocabulary for describing illness and medical care.',
     groups: [
       {
@@ -1013,8 +878,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Work and Employment": {
-    heading: 'Work and Jobs',
+  "B1::Career and Professional Life": {
+    heading: "Career and Professional Life",
     intro: 'More advanced vocabulary for the workplace.',
     groups: [
       {
@@ -1032,8 +897,8 @@ export const VOCABULARY_EXPLANATIONS = {
     ],
   },
 
-  "B2::Higher Education": {
-    heading: 'Education',
+  "B1::Education Systems": {
+    heading: "Education Systems",
     intro: 'More advanced vocabulary about schools, universities, and learning.',
     groups: [
       {

@@ -136,9 +136,9 @@ function GrammarClozeGroup({ passage, questions, answers, onChange, disabled, st
                   value={answers[question.id] ?? ''}
                   onChange={(e) => onChange(question.id, e.target.value)}
                   disabled={disabled}
-                  className="inline-block max-w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-50"
+                  className="inline-block min-w-[6rem] max-w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-50"
                 >
-                  <option value="">...</option>
+                  <option value="" disabled hidden></option>
                   {question.options.map((option) => (
                     <option key={option} value={option}>
                       {option}

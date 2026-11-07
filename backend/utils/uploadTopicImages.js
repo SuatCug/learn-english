@@ -10,7 +10,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { GRAMMAR_CURRICULUM, grammarImageId } = require('../data/grammarCurriculum');
+const { GRAMMAR_CURRICULUM, grammarImageId, grammarImageLevel } = require('../data/grammarCurriculum');
 const { VOCABULARY_CURRICULUM, vocabularyImageId } = require('../data/vocabularyCurriculum');
 const { READING_DATA } = require('../data/readingData');
 const { WRITING_DATA } = require('../data/writingData');
@@ -34,6 +34,8 @@ const SETS = {
   grammar: {
     curriculum: GRAMMAR_CURRICULUM,
     imageId: grammarImageId,
+    // Taşınan konuların resmi eski seviyenin klasöründe; { image: false } olanların resmi yok.
+    imageLevel: grammarImageLevel,
     dir: path.join(IMAGES_ROOT, 'LearnEnglish-Kartlar'),
     extraDir: 'Ekstra',
   },
@@ -62,7 +64,15 @@ const run = async () => {
     const set = SETS[name];
     if (!fs.existsSync(set.dir)) throw new Error(`Resim klasörü bulunamadı: ${set.dir}`);
     return Object.entries(set.curriculum).flatMap(([level, rows]) =>
-      rows.map(([file]) => ({ level, file, publicId: set.imageId(level, file), filePath: findFile(set, level, file) }))
+      rows
+        .map(([file, , , options]) => ({ file, imageLevel: set.imageLevel ? set.imageLevel(level, options) : level }))
+        .filter(({ imageLevel }) => imageLevel)
+        .map(({ file, imageLevel }) => ({
+          level: imageLevel,
+          file,
+          publicId: set.imageId(imageLevel, file),
+          filePath: findFile(set, imageLevel, file),
+        }))
     );
   });
 

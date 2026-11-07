@@ -2,1099 +2,1333 @@
 // Kart resmi adı listedeki sıradan ve başlıktan türetilir (data/topicImages.js) — konu eklerken/sıra
 // değiştirirken resim dosya adlarını da buna göre güncelle.
 
-// Writing: her konu tek bir egzersiz — "kelime kutusu" + 10 boşluklu tek bir metin
-// (test-english.com formatı). passage = "kelime1 | kelime2 | ...\n---\nMetin ___ ile ___.".
+// Kart resmi henüz hazır olmayan seviyeler: seed bu seviyelerin konularına resim atamaz (kategori
+// illüstrasyonu görünür). Resimler topic-images/rwl/Writing/<seviye>/ altına konup yüklenince buradan çıkar.
+const WRITING_IMAGES_PENDING = [];
+
+// Writing: her konu tek bir egzersiz — "kelime kutusu" + 10 boşluklu özgün bir örnek metin.
+// passage = "kelime1 | kelime2 | ...\n---\nMetin ___ ile ___." Başlıklar frontend/src/lib/writingExplanations.js
+// anahtarlarıyla (`${level}::${title}`) eşleşir; başlık değişirse oradaki anahtarı da güncelle.
 const WRITING_DATA = {
   A1: [
     {
-      title: 'Writing About My Family',
+      title: "An Email Introducing Yourself",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `'s got | Her | dad's | reading | than | taller | at | in | loves | works
+      passage: `and | in | watching | with | Do | about | works | back | are | have
 ---
-Dear Marta,
+Hi Clara,
 
-Thank you for your letter! I want to tell you about my family. We live ___ a small town in the south of England.
+My name is Yusuf, and I'm your new e-pal! I'm fourteen years old, and I live ___ Bursa, a big city in the north-west of Turkey.
 
-My ___ name is Peter. He's 45 years old, and he ___ as an engineer in the city. He has short black hair and blue eyes. He ___ cooking, and he makes the best pasta in the world!
+I live with my parents and my little sister, Asya. She's six, ___ she's very funny. My dad is a mechanic, and my mum ___ in a bank.
 
-My mum's name is Anna. She ___ long red hair and green eyes. She's a little shorter ___ my dad. She works ___ a big hospital near our house. She likes ___ books in her free time.
+I go to Atatürk Secondary School. My favourite subjects ___ English and PE. I don't like history very much.
 
-I've got a younger sister. ___ name's Emma. She's 10 years old, and she's got brown hair like me. But she is much ___ than me already!
+In my free time, I play volleyball ___ my friends. I also like ___ films, especially comedies.
 
-We also have a cat called Whiskers.
+I ___ a pet bird. His name is Limon, because he's yellow!
 
-What about your family?
+What ___ you? Where do you live? ___ you have any brothers or sisters?
 
-Love,
-Sam`,
+Please write ___ soon!
+
+Best wishes,
+Yusuf`,
       questions: [
-        ['Blank 1', 'in', "'live in a place' kalıbı kullanılır."],
-        ['Blank 2', "dad's", "İyelik eki: 'dad's name' = babamın adı."],
-        ['Blank 3', 'works', "3. tekil şahıs (he) ile 'works' kullanılır."],
-        ['Blank 4', 'loves', "3. tekil şahıs (he) ile 'loves' kullanılır."],
-        ['Blank 5', "'s got", "'she's got' = sahiplik ifadesi (has got)."],
-        ['Blank 6', 'than', "Karşılaştırma yaparken 'shorter than' kullanılır."],
-        ['Blank 7', 'at', "'work at a hospital' kalıbı kullanılır."],
-        ['Blank 8', 'reading', "'like + fiil-ing' kalıbı: 'likes reading'."],
-        ['Blank 9', 'Her', "Kız kardeşten bahsederken iyelik zamiri 'Her' kullanılır."],
-        ['Blank 10', 'taller', "Karşılaştırma sıfatı: 'taller than'."],
+        ['Blank 1', "in", "Şehir için 'live in' kullanılır."],
+        ['Blank 2', "and", "İki bilgiyi bağlar: 'and' = ve."],
+        ['Blank 3', "works", "3. tekil şahıs (she) ile fiile -s eklenir."],
+        ['Blank 4', "are", "Çoğul özneyle (subjects) 'are' kullanılır."],
+        ['Blank 5', "with", "'with my friends' = arkadaşlarımla."],
+        ['Blank 6', "watching", "'like + fiil-ing': like watching."],
+        ['Blank 7', "have", "1. tekil şahısla 'I have' kullanılır."],
+        ['Blank 8', "about", "'What about you?' = Peki ya sen?"],
+        ['Blank 9', "Do", "Present simple soru: 'Do you have...?' kalıbı."],
+        ['Blank 10', "back", "'write back' = cevap yazmak."],
       ],
     },
     {
-      title: 'Writing About My Daily Routine',
+      title: "A Note to Your Neighbour",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `then | breakfast | dinner | up | home | watch | to | before | bed | until
+      passage: `on | promise | wishes | at | from | for | sorry | like | because | be
 ---
-Every day, I get ___ at seven o'clock. I have a shower and I eat ___ with my family. After that, I go ___ school by bus. School starts at eight thirty, so I always leave ___ eight fifteen.
+Dear Mrs Kaplan,
 
-I study ___ half past three in the afternoon. Then I walk ___ and I do my homework. In the evening, we have ___ together at seven o'clock. After dinner, I ___ TV for an hour, and ___ I read a book. Finally, I go to ___ at ten o'clock.`,
+Hello! I'm Elena, your new neighbour ___ flat 5. My family and I moved in last week.
+
+I'm writing ___ we are having a small party on Saturday evening for my son's birthday. He's going to ___ twelve! There are about ten children, so it might be a little noisy. I'm very ___ about that.
+
+The party starts ___ five o'clock and finishes at nine. After nine, it will be quiet, I ___!
+
+Would you ___ to come and have some cake with us? You are very welcome.
+
+If there is a problem, please knock ___ our door or call me. My number is 0532 555 12 34.
+
+Thank you ___ your understanding.
+
+Best ___,
+Elena`,
       questions: [
-        ['Blank 1', 'up', "'get up' = kalkmak."],
-        ['Blank 2', 'breakfast', "'have breakfast' = kahvaltı yapmak."],
-        ['Blank 3', 'to', "'go to school' kalıbı kullanılır."],
-        ['Blank 4', 'before', "'leave before a time' = bir saatten önce çıkmak."],
-        ['Blank 5', 'until', "'study until a time' = bir saate kadar çalışmak."],
-        ['Blank 6', 'home', "'walk home' = eve yürümek."],
-        ['Blank 7', 'dinner', "'have dinner' = akşam yemeği yemek."],
-        ['Blank 8', 'watch', "'watch TV' = televizyon izlemek."],
-        ['Blank 9', 'then', "Sıralama bağlacı: sonra."],
-        ['Blank 10', 'bed', "'go to bed' = yatağa gitmek."],
+        ['Blank 1', "from", "'from flat 5' = 5 numaralı daireden."],
+        ['Blank 2', "because", "Sebep bildirir: 'because' = çünkü."],
+        ['Blank 3', "be", "'be going to be' = olacak."],
+        ['Blank 4', "sorry", "'I'm sorry' = özür dilerim."],
+        ['Blank 5', "at", "Saatle 'at' kullanılır."],
+        ['Blank 6', "promise", "'I promise' = söz veriyorum."],
+        ['Blank 7', "like", "'Would you like to + fiil' kalıbı."],
+        ['Blank 8', "on", "'knock on the door' = kapıyı çalmak."],
+        ['Blank 9', "for", "'Thank you for + isim' kalıbı."],
+        ['Blank 10', "wishes", "'Best wishes' kapanış ifadesi."],
       ],
     },
     {
-      title: 'My Hobby',
+      title: "My Favourite Place in Town",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `on | band | since | to | every | because | with | favourite | enjoy | concerts
+      passage: `homemade | or | is | with | near | are | usually | because | called | but
 ---
-My ___ hobby is playing the guitar. I have been playing ___ I was eight years old. I ___ it because it helps me relax after a busy day at school.
+My favourite place in my town is a small café ___ The Blue Door. It's in an old street ___ the river.
 
-I practise ___ day for thirty minutes, usually ___ my older brother, who also plays. We like making music together ___ we both love rock songs.
+The café isn't very big. There are only eight tables, ___ it's always warm and friendly. The walls ___ yellow, and there are lots of old photos of the town on them. There's also a big bookshelf ___ books in English and Turkish. You can read them for free!
 
-Last year, we started a small ___ with two friends from school. We meet ___ Saturdays to rehearse in my garage. We have even played at two school ___, and everyone said we did a great job!
+I go there every Saturday morning with my best friend, Derya. We ___ have hot chocolate and a piece of carrot cake. The cakes are ___, and they are delicious.
 
-I really think music is a wonderful way ___ express your feelings.`,
+The owner ___ an old man called Mr Erol. He's very kind, and he always remembers our names.
+
+I love The Blue Door ___ it's quiet and relaxing. It's the perfect place to talk, read ___ just watch the people in the street.`,
       questions: [
-        ['Blank 1', 'favourite', "'favourite' = en sevilen."],
-        ['Blank 2', 'since', "'since + zaman noktası' = -den beri."],
-        ['Blank 3', 'enjoy', "'enjoy + isim/fiil-ing' = keyif almak."],
-        ['Blank 4', 'every', "'every day' = her gün."],
-        ['Blank 5', 'with', "'practise with someone' = biriyle birlikte çalışmak."],
-        ['Blank 6', 'because', 'Sebep bağlacı: çünkü.'],
-        ['Blank 7', 'band', "'form a band' = grup kurmak."],
-        ['Blank 8', 'on', "'on Saturdays' = belirli günler için 'on' kullanılır."],
-        ['Blank 9', 'concerts', "Okul konserleri: 'school concerts'."],
-        ['Blank 10', 'to', "'a way to do something' kalıbı kullanılır."],
+        ['Blank 1', "called", "'a café called...' = ... adında bir kafe."],
+        ['Blank 2', "near", "'near the river' = nehrin yakınında."],
+        ['Blank 3', "but", "Zıtlık: 'but' = ama."],
+        ['Blank 4', "are", "Çoğul özneyle 'are' kullanılır."],
+        ['Blank 5', "with", "'a bookshelf with books' = kitaplarla dolu raf."],
+        ['Blank 6', "usually", "Sıklık zarfı: 'usually' = genellikle."],
+        ['Blank 7', "homemade", "'homemade' = ev yapımı."],
+        ['Blank 8', "is", "Tekil özneyle 'is' kullanılır."],
+        ['Blank 9', "because", "Sebep bildirir: 'because' = çünkü."],
+        ['Blank 10', "or", "Seçenek bildirir: 'or' = ya da."],
       ],
     },
     {
-      title: 'Essay About My Neighbourhood',
+      title: "A Text Message Changing Plans",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `friendly | corner | quiet | shops | near | walk | Next | buy | live | love
+      passage: `know | by | again | after | can | bring | think | is | meet | on
 ---
-I ___ in a small neighbourhood in the north of the city. It is very ___ and safe, so I like living here.
+Hi Mert! 😊
 
-There is a park ___ my house, and I go there every morning. ___ to the park, there is a school where many children study. On the ___ of my street, there are some small ___ where I can ___ fruit and bread every day.
+I'm really sorry, but I can't ___ you at the cinema at six today. My mum ___ ill, and I have to look ___ my little brother this evening. 😕
 
-My neighbours are very ___, and we often talk when we meet. I like to ___ around the streets in the evening because it is calm and beautiful.
+Can we go ___ Saturday instead? There's a film at four o'clock and another one at seven. I ___ four o'clock is better, because I have to be home ___ eight.
 
-I really ___ my neighbourhood, and I don't want to move away.`,
+We ___ meet in front of the cinema at half past three and buy popcorn. 🍿
+
+Oh, and can you ___ my book? I left it at your house last week.
+
+Let me ___ what you think!
+
+Sorry ___!
+
+Zehra`,
       questions: [
-        ['Blank 1', 'live', "'live in a place' = bir yerde yaşamak."],
-        ['Blank 2', 'quiet', "'quiet' = sakin, sessiz."],
-        ['Blank 3', 'near', "'near my house' = evime yakın."],
-        ['Blank 4', 'Next', "'next to' = yanında (cümle başında büyük harf)."],
-        ['Blank 5', 'corner', "'on the corner' = köşede."],
-        ['Blank 6', 'shops', 'Çoğul isim: dükkanlar.'],
-        ['Blank 7', 'buy', "'buy fruit and bread' = meyve ve ekmek satın almak."],
-        ['Blank 8', 'friendly', "'friendly' = arkadaş canlısı."],
-        ['Blank 9', 'walk', "'walk around' = etrafta yürümek."],
-        ['Blank 10', 'love', "1. tekil şahıs: 'I love'."],
+        ['Blank 1', "meet", "'meet you' = seninle buluşmak."],
+        ['Blank 2', "is", "Tekil özneyle 'is' kullanılır."],
+        ['Blank 3', "after", "'look after' = bakmak, ilgilenmek."],
+        ['Blank 4', "on", "Günlerle 'on' kullanılır: on Saturday."],
+        ['Blank 5', "think", "'I think...' = bence."],
+        ['Blank 6', "by", "'by eight' = en geç sekizde."],
+        ['Blank 7', "can", "Olasılık/öneri: 'We can' = -ebiliriz."],
+        ['Blank 8', "bring", "'bring' = getirmek."],
+        ['Blank 9', "know", "'Let me know' = bana haber ver."],
+        ['Blank 10', "again", "'Sorry again' = tekrar özür dilerim."],
       ],
     },
     {
-      title: 'A Description of My House',
+      title: "My Best Friend",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `small | Upstairs | garden | two | kitchen | enough | bedrooms | big | bathroom | living
+      passage: `often | makes | at | has | lucky | together | who | funny | met | both
 ---
-I live in a ___ house with ___ floors. On the ground floor, there is a ___ room where we watch TV, and a ___ where my mum cooks delicious meals. There is also a ___ with a shower and a bath.
+My best friend's name is Zoe. We ___ in primary school when we were seven, and now we are fifteen.
 
-___, there are three ___: mine, my sister's, and my parents'. My room is quite ___, but I love it because it has a big window.
+Zoe is tall and slim. She ___ long dark hair and brown eyes, and she always wears colourful clothes. She has a lovely smile.
 
-Behind the house, there is a beautiful ___ with flowers and a tree. We often have breakfast there in summer.
+Zoe is very kind and ___. She always ___ me laugh when I'm sad. She is also very good ___ music. She plays the piano and sings in the school choir.
 
-I really enjoy living here because everyone has ___ space.`,
+We have a lot in common. We ___ love animals, and we both want to be vets in the future. We often walk ___ to school, and at the weekend we go to the park with my dog.
+
+But we are different too. Zoe is very organised, but I'm not. She always does her homework early, and I ___ forget mine!
+
+I think a good friend is someone ___ listens to you and helps you. Zoe is that kind of friend, and I'm very ___ to have her.`,
       questions: [
-        ['Blank 1', 'big', "'big house' = büyük ev."],
-        ['Blank 2', 'two', 'Sayı sıfatı: iki.'],
-        ['Blank 3', 'living', "'living room' = oturma odası."],
-        ['Blank 4', 'kitchen', "'kitchen' = mutfak."],
-        ['Blank 5', 'bathroom', "'bathroom' = banyo."],
-        ['Blank 6', 'Upstairs', "'upstairs' = üst katta (cümle başı büyük harf)."],
-        ['Blank 7', 'bedrooms', 'Çoğul isim: yatak odaları.'],
-        ['Blank 8', 'small', "'small' = küçük."],
-        ['Blank 9', 'garden', "'garden' = bahçe."],
-        ['Blank 10', 'enough', "'enough space' = yeterli alan."],
+        ['Blank 1', "met", "Geçmiş zaman: 'meet → met' = tanıştık."],
+        ['Blank 2', "has", "3. tekil şahısla 'has' kullanılır."],
+        ['Blank 3', "funny", "Kişilik sıfatı: 'funny' = komik."],
+        ['Blank 4', "makes", "'make someone laugh' = birini güldürmek."],
+        ['Blank 5', "at", "'good at' = bir şeyde iyi olmak."],
+        ['Blank 6', "both", "'We both like' = ikimiz de seviyoruz."],
+        ['Blank 7', "together", "'walk together' = birlikte yürümek."],
+        ['Blank 8', "often", "Sıklık zarfı: 'often' = sık sık."],
+        ['Blank 9', "who", "Kişiyi niteleyen ilgi zamiri: 'who' ."],
+        ['Blank 10', "lucky", "'lucky' = şanslı."],
       ],
     },
     {
-      title: 'How to Write a Personal Profile',
+      title: "A Lost Pet Poster",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `hobbies | currently | name | study | speak | from | hope | years | friendly | enjoy
+      passage: `call | who | don't | post | scared | with | loves | is | on | seen
 ---
-My ___ is Elena, and I am ___ Poland. I am 19 ___ old, and I am ___ studying English at a language school.
+LOST CAT! PLEASE HELP!
 
-In my free time, I ___ reading books and playing tennis. My other ___ include cooking and painting. I can ___ two languages: Polish and English.
+Have you ___ our cat, Pamuk?
 
-People say I am a ___ and hard-working person. I like to ___ hard and always try my best.
+Pamuk is a small white cat ___ green eyes and a black spot on her nose. She is three years old, and she ___ wearing a red collar with a little bell.
 
-In the future, I ___ to become a translator.`,
+She went missing ___ Tuesday, 4th March, from our garden on Lale Street, near the ___ office.
+
+Pamuk is very friendly, but she is a bit shy with strangers. She ___ fish, so she may be near the fish shop.
+
+If you see her, please ___ try to catch her. She may be ___. Please ___ us immediately on 0541 222 33 44.
+
+There is a reward of 1,000 lira for anyone ___ finds her.
+
+We miss her very much. Thank you!
+
+The Aydın family`,
       questions: [
-        ['Blank 1', 'name', "'my name is' kalıbı."],
-        ['Blank 2', 'from', "'from + ülke' = -den (köken)."],
-        ['Blank 3', 'years', "'years old' = yaşında."],
-        ['Blank 4', 'currently', "'currently' = şu anda."],
-        ['Blank 5', 'enjoy', "'enjoy + fiil-ing' = keyif almak."],
-        ['Blank 6', 'hobbies', 'Çoğul isim: hobiler.'],
-        ['Blank 7', 'speak', "'speak a language' = bir dil konuşmak."],
-        ['Blank 8', 'friendly', "'friendly' = arkadaş canlısı."],
-        ['Blank 9', 'study', "'study hard' = çok çalışmak."],
-        ['Blank 10', 'hope', "'hope to do something' = bir şey yapmayı ummak."],
+        ['Blank 1', "seen", "Present perfect soru: 'Have you seen...?' = gördünüz mü?"],
+        ['Blank 2', "with", "'a cat with green eyes' = yeşil gözlü kedi."],
+        ['Blank 3', "is", "Tekil özneyle 'is' kullanılır."],
+        ['Blank 4', "on", "Tarihlerle 'on' kullanılır."],
+        ['Blank 5', "post", "'post office' = postane."],
+        ['Blank 6', "loves", "3. tekil şahıs: loves."],
+        ['Blank 7', "don't", "Olumsuz emir: 'please don't' kalıbı."],
+        ['Blank 8', "scared", "'scared' = korkmuş."],
+        ['Blank 9', "call", "Emir kipi: 'Please call...' = lütfen arayın."],
+        ['Blank 10', "who", "Kişiyi niteleyen ilgi zamiri: 'anyone who' ."],
       ],
     },
     {
-      title: 'How to Write an Invitation',
+      title: "A Birthday Card",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `wear | party | RSVP | on | invite | bring | birthday | food | hope | at
+      passage: `remember | special | and | with | you | everything | best | have | in | to
 ---
-Dear Sam,
+Dear Grandma,
 
-I would like to ___ you to my ___ ___! It will be ___ Saturday, 14th June, ___ 6 o'clock in the evening.
+Happy 70th birthday! 🎂
 
-We will have music, games, and lots of ___. Please don't ___ a present; just come and have fun! You don't need to ___ anything special, just something comfortable.
+I hope you ___ a wonderful day with all the family. I'm so sorry I can't be ___ you today. I'm still in Germany for my studies, but I'm thinking of ___!
 
-Please ___ by Wednesday so I know how many people are coming.
+Thank you for ___. You are the ___ grandmother in the world. I ___ all the summers in your garden, eating your delicious cherry jam and listening ___ your stories.
 
-I ___ you can come!
+I have a little present for you. It's ___ the post, so it's going to arrive next week. I hope you like it!
 
-Love,
-Katie`,
+I'm coming home in July. Then we can make cherry jam together again.
+
+Enjoy your ___ day!
+
+Lots of love ___ hugs,
+Can`,
       questions: [
-        ['Blank 1', 'invite', "'invite someone to' = birini davet etmek."],
-        ['Blank 2', 'birthday', "'birthday party' = doğum günü partisi."],
-        ['Blank 3', 'party', 'Bileşik isim: parti.'],
-        ['Blank 4', 'on', "Tarihlerden önce 'on' kullanılır: 'on Saturday'."],
-        ['Blank 5', 'at', "Saatlerden önce 'at' kullanılır: 'at 6 o'clock'."],
-        ['Blank 6', 'food', "'lots of food' = bol yiyecek."],
-        ['Blank 7', 'bring', "'bring a present' = hediye getirmek."],
-        ['Blank 8', 'wear', "'wear something' = bir şey giymek."],
-        ['Blank 9', 'RSVP', 'Fransızca kısaltma: lütfen yanıt verin (katılım bildirme).'],
-        ['Blank 10', 'hope', "'I hope' = umuyorum."],
+        ['Blank 1', "have", "'have a wonderful day' = harika bir gün geçirmek."],
+        ['Blank 2', "with", "'be with you' = seninle olmak."],
+        ['Blank 3', "you", "Nesne zamiri: 'thinking of you' = seni düşünüyorum."],
+        ['Blank 4', "everything", "'Thank you for everything' = her şey için teşekkürler."],
+        ['Blank 5', "best", "Üstünlük: 'the best' = en iyi."],
+        ['Blank 6', "remember", "'I remember' = hatırlıyorum."],
+        ['Blank 7', "to", "'listen to' kalıbı."],
+        ['Blank 8', "in", "'in the post' = postada, yolda."],
+        ['Blank 9', "special", "'your special day' = özel günün."],
+        ['Blank 10', "and", "Ekleme: 'love and hugs' ."],
       ],
     },
     {
-      title: 'Describing a Photograph',
+      title: "My Favourite Food",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `background | wearing | photo | holding | standing | sunny | taken | smiling | together | looks
+      passage: `Sometimes | reminds | long | world | usually | top | from | and | with | happy
 ---
-This is a ___ of my family. It was ___ last summer during our holiday at the beach.
+My favourite food is mantı. It's a traditional Turkish dish, and my grandmother makes the best mantı in the ___!
 
-In the photo, my parents are ___ in the middle, and they are ___ casual summer clothes. My mum is ___ happily at the camera.
+Mantı are very small pieces of dough ___ meat inside. You cook them in water, and then you put yoghurt with garlic on ___. After that, you add hot butter with red pepper. It looks beautiful, ___ it smells wonderful.
 
-In the ___, you can see the sea and some boats. My little brother is ___ an ice cream, and he ___ very happy.
+Making mantı takes a ___ time. My grandmother cuts the dough into hundreds of tiny squares. ___ I help her, but my mantı are always too big!
 
-It was a ___ day, and we all had a wonderful time ___.`,
+We ___ eat mantı on Sundays, when all the family visits my grandparents. We sit around a big table and talk for hours.
+
+I love mantı because it's delicious, but also because it ___ me of my family. When I eat it, I feel ___.
+
+Do you know any traditional dishes ___ your country?`,
       questions: [
-        ['Blank 1', 'photo', "'a photo of' = birinin fotoğrafı."],
-        ['Blank 2', 'taken', "'was taken' = edilgen yapı, çekildi."],
-        ['Blank 3', 'standing', "'be standing' = ayakta durmak (şimdiki zaman)."],
-        ['Blank 4', 'wearing', "'be wearing' = giyiyor olmak."],
-        ['Blank 5', 'smiling', "'be smiling' = gülümsüyor olmak."],
-        ['Blank 6', 'background', "'in the background' = arka planda."],
-        ['Blank 7', 'holding', "'be holding' = elinde tutuyor olmak."],
-        ['Blank 8', 'looks', "'look + sıfat' = görünmek."],
-        ['Blank 9', 'sunny', "'a sunny day' = güneşli bir gün."],
-        ['Blank 10', 'together', "'together' = birlikte."],
+        ['Blank 1', "world", "'the best in the world' = dünyanın en iyisi."],
+        ['Blank 2', "with", "'with meat inside' = içi etli."],
+        ['Blank 3', "top", "'on top' = üstüne."],
+        ['Blank 4', "and", "Ekleme: 'and' bağlacı."],
+        ['Blank 5', "long", "'a long time' = uzun zaman."],
+        ['Blank 6', "Sometimes", "Sıklık zarfı: 'Sometimes' = bazen."],
+        ['Blank 7', "usually", "Sıklık zarfı: 'usually' = genellikle."],
+        ['Blank 8', "reminds", "'remind me of' = bana hatırlatmak."],
+        ['Blank 9', "happy", "'feel happy' = mutlu hissetmek."],
+        ['Blank 10', "from", "'dishes from your country' = ülkenden yemekler."],
       ],
     },
     {
-      title: 'Writing an Email Giving Instructions',
+      title: "An Online Advert: Selling My Bike",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `opposite | past | straight | left | station | until | arrive | right | turn | walk
+      passage: `Please | see | my | includes | and | in | bought | or | first | for
 ---
-Hi Marco,
+FOR SALE: Blue mountain bike — 2,500 lira
 
-Here are the directions to my house from the train ___.
+I'm selling ___ mountain bike because it's too small for me now.
 
-When you leave the station, ___ left and go ___ on for two minutes. Then, ___ the traffic lights, turn ___ into Green Street.
+The bike is two years old, and it's ___ very good condition. It's blue ___ black, and it has 21 gears. The tyres are new — I ___ them last month.
 
-Continue ___ the small bridge, and you will see a bakery on your ___. My house is ___ the bakery, on the corner.
+It's perfect ___ a teenager between 11 and 14 years old. It's great for riding in the park ___ in the countryside.
 
-It only takes about ten minutes to ___ there if you ___, or five minutes by car.
+The price ___ a helmet, a bike lock and a small light.
 
-See you soon!
+You can ___ the bike at my house in Çankaya, Ankara, any evening after six o'clock or at the weekend.
 
-Anna`,
+___ call or send a message to Arda on 0555 111 22 33.
+
+First come, ___ served!`,
       questions: [
-        ['Blank 1', 'station', "'train station' = tren istasyonu."],
-        ['Blank 2', 'turn', "'turn left' = sola dönmek."],
-        ['Blank 3', 'straight', "'go straight on' = düz devam etmek."],
-        ['Blank 4', 'until', "'until' = -e kadar."],
-        ['Blank 5', 'right', "'turn right' = sağa dönmek."],
-        ['Blank 6', 'past', "'go past something' = bir şeyin yanından/önünden geçmek."],
-        ['Blank 7', 'left', "'on your left' = solunuzda."],
-        ['Blank 8', 'opposite', "'opposite' = karşısında."],
-        ['Blank 9', 'arrive', "'arrive there' = oraya varmak."],
-        ['Blank 10', 'walk', "'if you walk' = eğer yürürsen."],
+        ['Blank 1', "my", "İyelik sıfatı: 'my bike' = bisikletim."],
+        ['Blank 2', "in", "'in very good condition' = çok iyi durumda."],
+        ['Blank 3', "and", "Ekleme: 'and' bağlacı."],
+        ['Blank 4', "bought", "Geçmiş zaman: 'buy → bought' = satın aldım."],
+        ['Blank 5', "for", "'perfect for' = için mükemmel."],
+        ['Blank 6', "or", "Seçenek: 'or' = ya da."],
+        ['Blank 7', "includes", "'The price includes' = fiyata dahil."],
+        ['Blank 8', "see", "'see the bike' = bisikleti görmek."],
+        ['Blank 9', "Please", "Kibar istek: 'Please call or send...' ."],
+        ['Blank 10', "first", "'First come, first served' = ilk gelen alır."],
       ],
     },
     {
-      title: 'My Weekend Plans',
+      title: "A Diary Entry: My Sunday",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `meet | afternoon | Saturday | going | forward | plan | relax | morning | visit | evening
+      passage: `after | were | was | did | on | went | with | for | so | but
 ---
-This weekend, I have a lot of ___ activities. On ___, I am ___ to ___ my grandparents in the countryside. We usually have lunch together in the ___.
+Sunday, 9th November
 
-In the ___, I am going to ___ my friends at the cinema to watch a new film.
+Dear Diary,
 
-On Sunday, I don't have any plans. I just want to ___ at home and read a book. In the ___, I will probably cook dinner for my family.
+Today ___ a lovely day! I woke up late, at ten o'clock, because I was very tired ___ the school trip yesterday.
 
-I am really looking ___ to this weekend!`,
+In the morning, I had breakfast ___ my family. My dad made pancakes with honey. They ___ delicious!
+
+After breakfast, my sister and I ___ to the park. It was sunny ___ cold. We played with our dog, Fındık, and we fed the ducks ___ the lake.
+
+In the afternoon, I ___ my homework. It wasn't easy — I had a lot of maths! Then I called my best friend, Ece, and we talked ___ an hour.
+
+In the evening, we watched a funny film together. I laughed a lot.
+
+Now I'm in bed. Tomorrow is Monday, and I have a test, ___ I need to sleep early.
+
+Good night!`,
       questions: [
-        ['Blank 1', 'plan', "'plan' = plan (isim)."],
-        ['Blank 2', 'Saturday', 'Gün adı: Cumartesi.'],
-        ['Blank 3', 'going', "'be going to' = gelecek zaman kalıbı."],
-        ['Blank 4', 'visit', "'visit someone' = birini ziyaret etmek."],
-        ['Blank 5', 'morning', "'in the morning' = sabahleyin."],
-        ['Blank 6', 'afternoon', "'in the afternoon' = öğleden sonra."],
-        ['Blank 7', 'meet', "'meet someone' = biriyle buluşmak."],
-        ['Blank 8', 'relax', "'relax at home' = evde dinlenmek."],
-        ['Blank 9', 'evening', "'in the evening' = akşamleyin."],
-        ['Blank 10', 'forward', "'look forward to' = dört gözle beklemek."],
+        ['Blank 1', "was", "Geçmiş zaman: 'Today was' = bugün ... idi."],
+        ['Blank 2', "after", "'after the school trip' = okul gezisinden sonra."],
+        ['Blank 3', "with", "'with my family' = ailemle."],
+        ['Blank 4', "were", "Çoğul özneyle geçmiş: 'They were' ."],
+        ['Blank 5', "went", "Geçmiş zaman: 'go → went' = gittik."],
+        ['Blank 6', "but", "Zıtlık: 'but' = ama."],
+        ['Blank 7', "on", "'on the lake' = gölde."],
+        ['Blank 8', "did", "Geçmiş zaman: 'do → did' = yaptım."],
+        ['Blank 9', "for", "Süre: 'for an hour' = bir saat boyunca."],
+        ['Blank 10', "so", "Sonuç: 'so' = bu yüzden."],
       ],
     },
   ],
   A2: [
     {
-      title: 'Writing and Responding to an Informal Email Invitation',
+      title: "An Email Asking a Friend for Advice",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `sounds | plans | delighted | catch | bring | reply | invited | instead | definitely | unfortunately
+      passage: `went | more | where | for | on | it | need | by | could | like
 ---
-Hi Chloe,
+Hi Sara,
 
-Thank you so much for the email! I am really ___ that you have ___ me to your barbecue next Saturday.
+How are you? I hope you're enjoying your new job!
 
-I would ___ love to come, but ___, I already have other ___ that day — my cousin's wedding.
+I'm writing because I ___ your advice. You know I've been learning English for three years. Well, my teacher says I can go ___ a summer language course abroad, and my parents have agreed to pay for ___!
 
-Could we meet ___ the week after? That ___ like a great idea to me!
+The problem is that I can't decide ___ to go. There are two options. The first one is a four-week course in Dublin. It's cheaper, and I ___ stay with a host family. The second option is a two-week course in London. It's ___ expensive, but the school is very famous, and there are lots of trips to museums.
 
-Should I ___ anything to the wedding? Just joking! I would love to ___ up with you soon and hear about the barbecue.
+You ___ to Ireland last year, didn't you? What was it ___? Which course do you think is better ___ me?
 
-Please ___ when you get a chance!
-
-Best,
-Maria`,
-      questions: [
-        ['Blank 1', 'delighted', "'delighted that' = çok memnun."],
-        ['Blank 2', 'invited', "'have invited' = present perfect, davet etmek."],
-        ['Blank 3', 'definitely', "'would definitely' = kesinlikle."],
-        ['Blank 4', 'unfortunately', 'Zarf: ne yazık ki.'],
-        ['Blank 5', 'plans', "'have plans' = planları olmak."],
-        ['Blank 6', 'instead', "'meet instead' = onun yerine."],
-        ['Blank 7', 'sounds', "'sounds like' = kulağa ... gibi gelmek."],
-        ['Blank 8', 'bring', "'bring something' = bir şey getirmek."],
-        ['Blank 9', 'catch', "'catch up with someone' = biriyle görüşüp sohbet etmek."],
-        ['Blank 10', 'reply', "'reply soon' = yakında yanıtlamak."],
-      ],
-    },
-    {
-      title: 'My Last Holiday',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `tried | souvenirs | went | relaxing | stayed | unforgettable | visited | return | weather | enjoyed
----
-Last summer, I ___ to Greece with my family. We ___ in a small hotel near the beach for ten days.
-
-We ___ many beautiful islands by boat, and the ___ was sunny every day. I really ___ swimming in the clear blue sea.
-
-One day, we ___ some traditional Greek food at a local restaurant — it was delicious! In the evenings, we usually had a ___ walk along the beach.
-
-Before we left, I bought some ___ for my friends. It was such an ___ trip, and I can't wait to ___ to Greece one day!`,
-      questions: [
-        ['Blank 1', 'went', "'go' fiilinin geçmiş hali (went)."],
-        ['Blank 2', 'stayed', "'stay in a hotel' = otelde kalmak (geçmiş zaman)."],
-        ['Blank 3', 'visited', "'visit' fiilinin geçmiş hali."],
-        ['Blank 4', 'weather', "'the weather' = hava durumu."],
-        ['Blank 5', 'enjoyed', "'enjoy + fiil-ing' geçmiş zaman."],
-        ['Blank 6', 'tried', "'try' fiilinin geçmiş hali: denedik."],
-        ['Blank 7', 'relaxing', "'a relaxing walk' = rahatlatıcı bir yürüyüş."],
-        ['Blank 8', 'souvenirs', 'Çoğul isim: hediyelik eşyalar.'],
-        ['Blank 9', 'unforgettable', "'unforgettable' = unutulmaz."],
-        ['Blank 10', 'return', "'return to a place' = bir yere geri dönmek."],
-      ],
-    },
-    {
-      title: "Writing an Essay About Someone's Job",
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `skills | challenging | patient | works | rewarding | requires | responsible | shifts | career | colleagues
----
-My aunt Laura ___ as a nurse at a busy hospital in London. She is ___ for taking care of patients and helping doctors during operations.
-
-She works closely with her ___, and together they make an excellent team. Being a nurse is very ___ because it ___ a lot of energy and concentration. My aunt has to be ___ and calm, even when things get difficult.
-
-She often works night ___, which can be tiring, but she says the job is very ___ because she helps people every single day. She has excellent ___, like communication and quick thinking.
-
-My aunt has always loved her ___ and hopes to become a senior nurse in the future.`,
-      questions: [
-        ['Blank 1', 'works', "3. tekil şahıs: 'works as'."],
-        ['Blank 2', 'responsible', "'responsible for' = -den sorumlu."],
-        ['Blank 3', 'colleagues', 'Çoğul isim: iş arkadaşları.'],
-        ['Blank 4', 'challenging', "'challenging' = zorlu."],
-        ['Blank 5', 'requires', "3. tekil şahıs: 'requires'."],
-        ['Blank 6', 'patient', "'be patient' = sabırlı olmak."],
-        ['Blank 7', 'shifts', "'night shifts' = gece vardiyaları."],
-        ['Blank 8', 'rewarding', "'rewarding' = tatmin edici."],
-        ['Blank 9', 'skills', 'Çoğul isim: beceriler.'],
-        ['Blank 10', 'career', "'her career' = kariyeri."],
-      ],
-    },
-    {
-      title: 'Writing a Postcard',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `amazing | beautiful | relaxing | weather | souvenir | wish | delicious | visited | spending | postcard
----
-Dear Grandma,
-
-Greetings from Italy! I am ___ a wonderful week here with my family. The ___ is warm and sunny every day.
-
-Yesterday, we ___ an ___ old castle on a hill. The views were absolutely stunning! We also tried some ___ pizza and ice cream — my favourite!
-
-The beach here is ___, and it's very ___ just lying in the sun. I bought you a small ___ from a local market.
-
-I ___ you were here with us! I will send this ___ today.
+Please write back soon. I have to tell the school ___ Friday!
 
 Love,
-Sophie`,
+Nehir`,
       questions: [
-        ['Blank 1', 'spending', "'be spending time' = zaman geçiriyor olmak."],
-        ['Blank 2', 'weather', "'the weather' = hava durumu."],
-        ['Blank 3', 'visited', 'Geçmiş zaman: ziyaret ettik.'],
-        ['Blank 4', 'amazing', "'an amazing castle' = muhteşem bir kale."],
-        ['Blank 5', 'delicious', "'delicious pizza' = lezzetli pizza."],
-        ['Blank 6', 'beautiful', "'the beach is beautiful' = plaj güzel."],
-        ['Blank 7', 'relaxing', "'relaxing' = rahatlatıcı."],
-        ['Blank 8', 'souvenir', "'a souvenir' = hediyelik eşya."],
-        ['Blank 9', 'wish', "'I wish you were here' = keşke burada olsaydın kalıbı."],
-        ['Blank 10', 'postcard', "'send this postcard' = bu kartpostalı göndermek."],
+        ['Blank 1', "need", "'I need your advice' = tavsiyene ihtiyacım var."],
+        ['Blank 2', "on", "'go on a course' = kursa gitmek."],
+        ['Blank 3', "it", "Tekil nesne zamiri: 'pay for it' ."],
+        ['Blank 4', "where", "'decide where to go' = nereye gideceğine karar vermek."],
+        ['Blank 5', "could", "Olasılık: 'I could stay' = kalabilirim."],
+        ['Blank 6', "more", "Karşılaştırma: 'more expensive' ."],
+        ['Blank 7', "went", "Geçmiş zaman: 'go → went' = gittin."],
+        ['Blank 8', "like", "'What was it like?' = nasıldı?"],
+        ['Blank 9', "for", "'better for me' = benim için daha iyi."],
+        ['Blank 10', "by", "Son tarih: 'by Friday' = en geç cuma."],
       ],
     },
     {
-      title: 'How to Write an Application Letter for a Summer Job',
+      title: "A Story: A Terrible Morning",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `reliable | references | position | applying | interview | enclosed | hardworking | opportunity | experience | available
+      passage: `lost | later | when | ring | was | Finally | at | too | while | without
 ---
-Dear Mr. Johnson,
+It was Monday morning, and it was the most important day of my year: my job interview at a big hotel.
 
-I am writing because I am ___ for the summer ___ advertised at your café.
+Unfortunately, my alarm didn't ___. When I woke up, it was already half past eight, and my interview was ___ nine! I jumped out of bed, got dressed quickly and ran out of the house ___ breakfast.
 
-I have some previous ___ working in customer service, and I am ___ from June to September. I consider myself a ___ and ___ person who always arrives on time.
+At the bus stop, I waited and waited, but the bus didn't come. ___, I decided to take a taxi. But ___ we were driving through the city centre, there was a terrible traffic jam. I ___ getting more and more nervous.
 
-I have ___ my CV with this letter, along with two ___ from my previous employer.
+I arrived at the hotel at quarter past nine. I was sure I had ___ the job. But ___ I told the manager what had happened, she smiled.
 
-I would be very grateful for the ___ to work with your team, and I hope you will consider me for an ___.
+'Don't worry,' she said. 'I was late ___ this morning — I was in the same traffic jam!'
 
-Yours sincerely,
-Tom Baker`,
+We both laughed, and the interview went really well. A week ___, they called me: I got the job!`,
       questions: [
-        ['Blank 1', 'applying', "'be applying for' = başvuruyor olmak."],
-        ['Blank 2', 'position', "'the position' = pozisyon, iş."],
-        ['Blank 3', 'experience', "'previous experience' = önceki deneyim."],
-        ['Blank 4', 'available', "'be available' = müsait olmak."],
-        ['Blank 5', 'hardworking', "'a hardworking person' = çalışkan bir kişi."],
-        ['Blank 6', 'reliable', "'reliable' = güvenilir."],
-        ['Blank 7', 'enclosed', "'have enclosed' = iliştirdim (resmi yazışma)."],
-        ['Blank 8', 'references', 'Çoğul isim: referanslar.'],
-        ['Blank 9', 'opportunity', "'the opportunity to' = fırsat."],
-        ['Blank 10', 'interview', "'an interview' = mülakat."],
+        ['Blank 1', "ring", "'the alarm didn't ring' = alarm çalmadı."],
+        ['Blank 2', "at", "Saatle 'at' kullanılır."],
+        ['Blank 3', "without", "'without breakfast' = kahvaltısız."],
+        ['Blank 4', "Finally", "Sıralama: 'Finally' = sonunda."],
+        ['Blank 5', "while", "'while we were driving' = biz giderken (süregelen eylem)."],
+        ['Blank 6', "was", "Geçmiş zaman: 'I was getting' — past continuous."],
+        ['Blank 7', "lost", "Past perfect: 'had lost' = kaybetmiştim."],
+        ['Blank 8', "when", "'when I told her' = ona anlattığımda."],
+        ['Blank 9', "too", "'too' = de/da (cümle sonunda)."],
+        ['Blank 10', "later", "'A week later' = bir hafta sonra."],
       ],
     },
     {
-      title: 'How to Write an Email to Book a Hotel Room',
+      title: "A Restaurant Review",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `arrive | booking | double | deposit | confirm | breakfast | reservation | includes | nights | available
+      passage: `ever | lovely | near | each | to | recommend | busy | but | and | with
 ---
-Dear Sir or Madam,
+★★★★☆ Luna Pizzeria, Kadıköy
 
-I would like to make a ___ for a ___ room from 10th to 14th August, that's four ___.
+Last Friday, I went to Luna Pizzeria with three friends ___ celebrate my birthday. It's a small Italian restaurant ___ the ferry station.
 
-Could you please tell me if a room is ___ for those dates? We will ___ in the afternoon on the 10th.
+The atmosphere was ___. There were candles on the tables and soft music, and the walls were decorated ___ old photos of Naples.
 
-Does the price ___ breakfast, and until what time is ___ served?
+The food was excellent. We shared two pizzas — a classic margherita and one with mushrooms and cheese. The bases were thin and crispy, ___ the tomatoes were really fresh. For dessert, I had tiramisu, which was the best I've ___ eaten.
 
-Please could you ___ my ___ by email, and let me know if a ___ is required.
+The waiters were friendly, ___ the service was quite slow. We waited forty minutes for our pizzas because the restaurant was very ___.
 
-Thank you very much,
-Helen White`,
+The prices are reasonable — we paid about 400 lira ___, including drinks.
+
+I would definitely ___ Luna Pizzeria, especially for a special occasion. But book a table and don't go if you're in a hurry!`,
       questions: [
-        ['Blank 1', 'reservation', "'make a reservation' = rezervasyon yapmak."],
-        ['Blank 2', 'double', "'a double room' = çift kişilik oda."],
-        ['Blank 3', 'nights', 'Çoğul isim: geceler.'],
-        ['Blank 4', 'available', "'be available' = müsait olmak."],
-        ['Blank 5', 'arrive', "'we will arrive' = geleceğiz."],
-        ['Blank 6', 'includes', "3. tekil şahıs: 'includes'."],
-        ['Blank 7', 'breakfast', "'breakfast is served' = kahvaltı servis edilir."],
-        ['Blank 8', 'confirm', "'confirm my booking' = rezervasyonumu onaylamak."],
-        ['Blank 9', 'booking', "'my booking' = rezervasyonum."],
-        ['Blank 10', 'deposit', "'a deposit' = depozito."],
+        ['Blank 1', "to", "Amaç: 'to celebrate' = kutlamak için."],
+        ['Blank 2', "near", "'near the station' = istasyona yakın."],
+        ['Blank 3', "lovely", "'lovely' = hoş, güzel."],
+        ['Blank 4', "with", "'decorated with' = ile süslenmiş."],
+        ['Blank 5', "and", "Ekleme: 'and' bağlacı."],
+        ['Blank 6', "ever", "Present perfect ile 'ever' = şimdiye kadar."],
+        ['Blank 7', "but", "Zıtlık: 'but' = ama."],
+        ['Blank 8', "busy", "'busy' = kalabalık, yoğun."],
+        ['Blank 9', "each", "'each' = kişi başı."],
+        ['Blank 10', "recommend", "'recommend' = tavsiye etmek."],
       ],
     },
     {
-      title: 'How to Write an Opinion Essay',
+      title: "An Apology Message to a Friend",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `addition | disadvantages | However | important | argue | conclusion | opinion | Overall | believe | advantages
+      passage: `amazing | until | her | missed | and | make | front | was | to | so
 ---
-In my ___, social media has both positive and negative effects on young people.
+Hi Deniz,
 
-Firstly, there are many ___ to using social media. It helps people stay in touch with friends and family, even when they live far away. In ___, it allows students to find useful information for school quickly.
+I'm really sorry I ___ your concert last night. I know how important it was ___ you, and I feel terrible.
 
-___, there are also some ___. Many young people spend too much time online instead of studying or exercising. Some experts ___ that this can affect mental health.
+I want to explain what happened. I ___ on my way to the concert hall when my sister called me. She had fallen off her bike ___ hurt her arm, and my parents were away. I had to take ___ to the hospital. We were there ___ midnight. Don't worry — her arm isn't broken!
 
-I ___ that it is ___ to use social media carefully and not too often.
+I wanted to call you, but my phone battery was dead, ___ I couldn't.
 
-In ___, ___, I think social media can be useful if we use it responsibly.`,
+I heard from Melis that the concert was ___ and that you played brilliantly. I'm so proud of you!
+
+Can I ___ it up to you? Let me take you out for dinner this weekend — my treat. And next time you play, I promise I'll be in the ___ row!
+
+Sorry again.
+
+Your friend,
+Bora`,
       questions: [
-        ['Blank 1', 'opinion', "'in my opinion' = bence."],
-        ['Blank 2', 'advantages', 'Çoğul isim: avantajlar.'],
-        ['Blank 3', 'addition', "'in addition' = ayrıca."],
-        ['Blank 4', 'However', 'Zıtlık bağlacı: ancak (cümle başı büyük harf).'],
-        ['Blank 5', 'disadvantages', 'Çoğul isim: dezavantajlar.'],
-        ['Blank 6', 'argue', "3. çoğul şahıs: 'argue'."],
-        ['Blank 7', 'believe', "'I believe that' = inanıyorum ki."],
-        ['Blank 8', 'important', "'it is important to' = önemlidir."],
-        ['Blank 9', 'conclusion', "'in conclusion' = sonuç olarak."],
-        ['Blank 10', 'Overall', "'overall' = genel olarak (cümle başı büyük harf)."],
+        ['Blank 1', "missed", "Geçmiş zaman: 'missed' = kaçırdım."],
+        ['Blank 2', "to", "'important to you' = senin için önemli."],
+        ['Blank 3', "was", "Geçmiş zaman: 'I was on my way' ."],
+        ['Blank 4', "and", "Ekleme: 'and' bağlacı."],
+        ['Blank 5', "her", "Nesne zamiri (sister): 'take her' ."],
+        ['Blank 6', "until", "'until midnight' = gece yarısına kadar."],
+        ['Blank 7', "so", "Sonuç: 'so' = bu yüzden."],
+        ['Blank 8', "amazing", "'amazing' = harika."],
+        ['Blank 9', "make", "'make it up to you' = telafi etmek."],
+        ['Blank 10', "front", "'in the front row' = ön sırada."],
       ],
     },
     {
-      title: 'A Thank-You Email',
+      title: "A Blog Post: My First Week at a New School",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `kindness | thoroughly | grateful | wonderful | gift | generous | appreciate | again | hospitality | thoughtful
+      passage: `from | Let's | joined | so | to | but | lost | helpful | about | know
 ---
-Dear Aunt Susan,
+My First Week at Riverside High
 
-I just wanted to write and say how ___ I am for the lovely birthday ___ you sent me. It was so ___ of you to remember!
+So, I've survived my first week at my new school! As some of you know, my family moved ___ Leeds last month because of my mum's new job. I was really nervous ___ starting at a new school, especially in the middle of the year.
 
-I really ___ your ___, especially because I know how busy you are. You are always so ___ to everyone in the family.
+On the first day, I didn't ___ anyone, and the building was so big that I got ___ three times! But a girl in my class called Amira offered to show me around. She's been really ___ all week.
 
-I ___ enjoyed my visit last month too. Thank you so much for your ___ during my stay — it was a ___ few days.
+The lessons are quite different ___ my old school. The classes are smaller, and the teachers ask us to work in groups a lot. My favourite subject ___ far is drama — we're preparing a play for the end of term!
 
-Thank you ___ for everything!
+The worst thing is the school lunch. ___ just say I'm going to bring sandwiches from now on. 😅
 
-Love,
-Ella`,
+I still miss my old friends, ___ I think I'm going to be happy here. I've already ___ the photography club, and I'm meeting Amira and her friends at the cinema on Saturday.
+
+Has anyone else ever changed schools? Tell me about it in the comments!`,
       questions: [
-        ['Blank 1', 'grateful', "'grateful for' = minnettar."],
-        ['Blank 2', 'gift', "'birthday gift' = doğum günü hediyesi."],
-        ['Blank 3', 'thoughtful', "'thoughtful' = düşünceli."],
-        ['Blank 4', 'appreciate', "'appreciate something' = takdir etmek, değer vermek."],
-        ['Blank 5', 'kindness', "'your kindness' = nezaketiniz."],
-        ['Blank 6', 'generous', "'generous' = cömert."],
-        ['Blank 7', 'thoroughly', "'thoroughly enjoyed' = son derece."],
-        ['Blank 8', 'hospitality', "'your hospitality' = misafirperverliğiniz."],
-        ['Blank 9', 'wonderful', "'a wonderful few days' = harika birkaç gün."],
-        ['Blank 10', 'again', "'thank you again' = tekrar teşekkürler."],
+        ['Blank 1', "to", "'move to + yer' kalıbı."],
+        ['Blank 2', "about", "'nervous about' = ... konusunda gergin."],
+        ['Blank 3', "know", "'know anyone' = kimseyi tanımamak."],
+        ['Blank 4', "lost", "'get lost' = kaybolmak."],
+        ['Blank 5', "helpful", "'helpful' = yardımsever."],
+        ['Blank 6', "from", "'different from' = -den farklı."],
+        ['Blank 7', "so", "'so far' = şimdiye kadar."],
+        ['Blank 8', "Let's", "'Let's just say...' = diyelim ki..."],
+        ['Blank 9', "but", "Zıtlık: 'but' = ama."],
+        ['Blank 10', "joined", "Present perfect: 'I've joined' = katıldım."],
       ],
     },
     {
-      title: 'A Biography of Someone You Know',
+      title: "A Notice: Lost Property",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `achievements | grew | dedicated | born | married | retired | moved | admire | inspired | graduated
+      passage: `from | to | belongings | also | belongs | and | for | with | in | within
 ---
-My grandfather was ___ in a small village in 1948. He ___ up on a farm with his six brothers and sisters.
+FOUND IN THE LIBRARY
 
-When he was twenty, he ___ to the city to study engineering, and he ___ from university four years later. He ___ my grandmother in 1975, and they have been together ever since.
+A black backpack was found ___ the second-floor study room on Wednesday afternoon, 12th April.
 
-Throughout his career, my grandfather had many ___, including designing bridges in three different countries. He was always a ___ and hardworking man.
+Inside the backpack, there is a laptop, two notebooks ___ a pencil case. There is also a key ring ___ a small teddy bear on it.
 
-He ___ at the age of sixty-five, but he still stays busy with his garden.
+If this backpack ___ to you, please come to the library reception desk. The desk is open ___ 9 a.m. to 6 p.m., Monday to Friday.
 
-My grandfather has always ___ me with his determination, and I really ___ him.`,
+To collect the backpack, you will need ___ show your student card. You will ___ need to describe something inside the bag, ___ example the name on one of the notebooks.
+
+Please note: if nobody collects the backpack ___ 30 days, it will be sent to the main lost property office in the Student Centre.
+
+Students are reminded to keep their ___ with them at all times.
+
+Thank you.
+Library Staff`,
       questions: [
-        ['Blank 1', 'born', "'was born' = doğdu (edilgen)."],
-        ['Blank 2', 'grew', "'grow up' fiilinin geçmiş hali."],
-        ['Blank 3', 'moved', "'move to a place' geçmiş zaman."],
-        ['Blank 4', 'graduated', "'graduate from university' = üniversiteden mezun olmak."],
-        ['Blank 5', 'married', "'marry someone' geçmiş zaman."],
-        ['Blank 6', 'achievements', 'Çoğul isim: başarılar.'],
-        ['Blank 7', 'dedicated', "'dedicated' = özverili."],
-        ['Blank 8', 'retired', "'retire' fiilinin geçmiş hali: emekli oldu."],
-        ['Blank 9', 'inspired', "'inspire someone' geçmiş zaman."],
-        ['Blank 10', 'admire', "'I admire him' = ona hayranım."],
+        ['Blank 1', "in", "'in the study room' = çalışma odasında."],
+        ['Blank 2', "and", "Ekleme: 'and' bağlacı."],
+        ['Blank 3', "with", "'a key ring with a teddy bear' = ayıcıklı anahtarlık."],
+        ['Blank 4', "belongs", "'belong to' = ait olmak."],
+        ['Blank 5', "from", "'from ... to ...' saat aralığı."],
+        ['Blank 6', "to", "'need to + fiil' kalıbı."],
+        ['Blank 7', "also", "'also' = ayrıca."],
+        ['Blank 8', "for", "'for example' = örneğin."],
+        ['Blank 9', "within", "'within 30 days' = 30 gün içinde."],
+        ['Blank 10', "belongings", "'belongings' = eşyalar."],
       ],
     },
     {
-      title: 'My Favourite Photograph',
+      title: "An Email to a Teacher Explaining an Absence",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `memories | precious | expression | captures | remind | framed | moment | laughing | cherish | taken
+      passage: `back | have | extra | for | sure | better | couldn't | to | as | please
 ---
-My favourite photograph ___ a special ___ from my childhood. It shows me and my grandfather ___ together in the garden.
+Subject: Absence from class on Monday
 
-Every time I look at this photo, it brings back happy ___ of the summers we spent together. I love his ___ in the picture — he looks so relaxed and happy.
+Dear Mrs Walker,
 
-This photo is very ___ to me because my grandfather passed away two years ago. It ___ me of all the wonderful times we shared.
+I'm writing to tell you that I ___ come to your English class on Monday, 15th October. I'm sorry ___ missing the lesson.
 
-The photo was ___ by my mother, and I have ___ it and put it on my wall.
+On Sunday night, I had a high temperature and a bad sore throat. My mother took me ___ the doctor on Monday morning, and he told me to stay at home and rest for two days. I ___ attached a copy of the doctor's note.
 
-I will always ___ this photograph.`,
+I'm feeling much ___ now, and I'll be ___ at school tomorrow.
+
+Could you ___ tell me what homework I need to do? I've asked my classmate Jamal, but he wasn't ___ about the exercises in the workbook.
+
+Also, I know there's a vocabulary test next week. Is it possible to have ___ time to prepare, or should I take it on the same day ___ everyone else?
+
+Thank you for your understanding.
+
+Best regards,
+Eren Polat`,
       questions: [
-        ['Blank 1', 'captures', "3. tekil şahıs: 'captures'."],
-        ['Blank 2', 'moment', "'a special moment' = özel bir an."],
-        ['Blank 3', 'laughing', "'be laughing' = gülüyor olmak."],
-        ['Blank 4', 'memories', 'Çoğul isim: anılar.'],
-        ['Blank 5', 'expression', "'his expression' = ifadesi."],
-        ['Blank 6', 'precious', "'precious' = değerli."],
-        ['Blank 7', 'remind', "'remind someone of' = birine hatırlatmak."],
-        ['Blank 8', 'taken', "'was taken by' = tarafından çekildi (edilgen)."],
-        ['Blank 9', 'framed', "'have framed it' = çerçeveletmek."],
-        ['Blank 10', 'cherish', "'cherish something' = kıymetini bilmek, değer vermek."],
+        ['Blank 1', "couldn't", "Geçmiş yetenek olumsuz: 'couldn't come' = gelemedim."],
+        ['Blank 2', "for", "'sorry for + isim' kalıbı."],
+        ['Blank 3', "to", "'take someone to the doctor' kalıbı."],
+        ['Blank 4', "have", "'I have attached' = ekledim."],
+        ['Blank 5', "better", "'feel better' = daha iyi hissetmek."],
+        ['Blank 6', "back", "'be back' = geri dönmek."],
+        ['Blank 7', "please", "Kibar istek: 'Could you please tell me' ."],
+        ['Blank 8', "sure", "'not sure' = emin değil."],
+        ['Blank 9', "extra", "'extra time' = ek zaman."],
+        ['Blank 10', "as", "'the same day as' = ile aynı gün."],
+      ],
+    },
+    {
+      title: "Describing a Festival in My Country",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `kiss | new | why | for | known | to | of | when | receive | lasts
+---
+One of the most important festivals in Turkey is Ramazan Bayramı, also ___ as the Sugar Feast. It takes place at the end of Ramadan, the month ___ many people don't eat or drink during the day.
+
+The festival ___ for three days. On the first morning, people wake up early, put on ___ or their best clothes and visit their families. Children ___ the hands of older relatives and ___ sweets or a little money. That's why children love this festival so much!
+
+Food is a very important part of the celebrations. Families prepare big meals, and every house has sweets such as baklava and Turkish delight. That's ___ it's called the Sugar Feast!
+
+During the holiday, many people travel ___ their hometowns, so the roads and bus stations are very busy. Others visit friends and neighbours they haven't seen ___ a long time.
+
+For me, the best thing about the festival is that the whole family is together. My grandparents' house is full ___ people, noise and laughter. It's a time to forgive, share and feel thankful.`,
+      questions: [
+        ['Blank 1', "known", "'also known as' = olarak da bilinen."],
+        ['Blank 2', "when", "Zaman bildiren ilgi zamiri: 'the month when' ."],
+        ['Blank 3', "lasts", "'last' = sürmek."],
+        ['Blank 4', "new", "'new clothes' = yeni kıyafetler."],
+        ['Blank 5', "kiss", "'kiss the hands' = el öpmek."],
+        ['Blank 6', "receive", "'receive' = almak, kabul etmek."],
+        ['Blank 7', "why", "'That's why' = bu yüzden."],
+        ['Blank 8', "to", "'travel to + yer' kalıbı."],
+        ['Blank 9', "for", "Süre: 'for a long time' ."],
+        ['Blank 10', "of", "'full of' = ile dolu."],
+      ],
+    },
+    {
+      title: "Then and Now: How My Town Has Changed",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `sold | was | away | However | than | used | were | has | from | now
+---
+I was born in Fethiye, a small town on the south coast of Turkey. In the last fifteen years, it ___ changed a lot.
+
+When I was a child, Fethiye was a quiet fishing town. There ___ only a few hotels, and most people worked as fishermen or farmers. We ___ to play football in the street because there weren't many cars.
+
+Now, Fethiye is a popular tourist destination. There are dozens of hotels, restaurants and souvenir shops along the seafront. In summer, thousands of tourists arrive ___ all over the world, and the streets are full of people.
+
+Some changes have been positive. There are more jobs, and the town ___ has a new hospital and a modern sports centre. Young people don't need to move ___ to find work.
+
+___, other changes are not so good. Houses are much more expensive ___ before, and the beaches are very crowded. Many of the old fishing families have ___ their homes.
+
+I still love my town, but sometimes I miss the quiet place it ___ when I was young.`,
+      questions: [
+        ['Blank 1', "has", "Present perfect: 'it has changed' ."],
+        ['Blank 2', "were", "Çoğul isimle geçmiş: 'There were' ."],
+        ['Blank 3', "used", "'used to + fiil' = eskiden ... -ırdı."],
+        ['Blank 4', "from", "'from all over the world' = dünyanın her yerinden."],
+        ['Blank 5', "now", "'now' = artık, şimdi."],
+        ['Blank 6', "away", "'move away' = başka yere taşınmak."],
+        ['Blank 7', "However", "Zıtlık başlatır: 'However' = ancak."],
+        ['Blank 8', "than", "Karşılaştırma: 'more expensive than' ."],
+        ['Blank 9', "sold", "Present perfect: 'have sold' = sattılar."],
+        ['Blank 10', "was", "Geçmiş zaman: 'the place it was' = eskiden olduğu yer."],
+      ],
+    },
+    {
+      title: "Instructions: A Simple Recipe",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `worry | with | into | too | immediately | until | then | over | need | First
+---
+EASY BANANA PANCAKES (for 2 people)
+
+These pancakes are healthy, delicious and very easy to make. You only ___ three ingredients!
+
+Ingredients:
+• 2 ripe bananas
+• 2 eggs
+• 4 tablespoons of flour
+• a little butter for the pan
+
+Method:
+1. ___, peel the bananas and put them in a bowl. Mash them ___ a fork until they are smooth.
+
+2. Add the eggs and the flour, and mix everything together ___ you have a thick mixture.
+
+3. Heat a little butter in a frying pan ___ a medium heat.
+
+4. Pour two tablespoons of the mixture ___ the pan for each pancake. Don't make them ___ big, or they'll be difficult to turn.
+
+5. Cook the pancakes for about one minute, ___ turn them over carefully and cook the other side.
+
+6. Serve them ___ with honey, yoghurt or fresh fruit.
+
+Tip: Don't ___ if your first pancake isn't perfect. Nobody's first pancake is!`,
+      questions: [
+        ['Blank 1', "need", "'You only need' = sadece ... gerekli."],
+        ['Blank 2', "First", "Sıralama: 'First' = önce."],
+        ['Blank 3', "with", "'with a fork' = çatalla."],
+        ['Blank 4', "until", "'until' = -ene kadar."],
+        ['Blank 5', "over", "'over a medium heat' = orta ateşte."],
+        ['Blank 6', "into", "Hareket: 'pour into the pan' = tavaya dökmek."],
+        ['Blank 7', "too", "'too big' = fazla büyük."],
+        ['Blank 8', "then", "Sıralama: 'then' = sonra."],
+        ['Blank 9', "immediately", "'immediately' = hemen."],
+        ['Blank 10', "worry", "'Don't worry if...' = ... olursa endişelenme."],
       ],
     },
   ],
   B1: [
     {
-      title: 'Writing an Opinion Essay',
+      title: "A Story Ending with 'I'll Never Forget That Day'",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `essential | drawback | isolated | commute | flexibility | overall | balance | productivity | convinced | disagree
+      passage: `Although | colder | where | as | never | had | off | were | hardly | so
 ---
-In recent years, more and more people have started working from home, and I am ___ that this trend has many benefits.
+The sky was grey and heavy when Elif and her brother Kaan set off up the mountain path. The weather forecast had promised sunshine, ___ they hadn't brought warm clothes.
 
-Firstly, working from home gives employees much more ___ over their schedule. They can organise their day around personal responsibilities, which often improves their work-life ___.
+For the first two hours, everything went well. They ___ laughing and taking photos as they climbed higher. But ___ soon as they reached the top, thick fog came down, and they could ___ see their own hands.
 
-Secondly, without a daily ___ to the office, workers save valuable time and money. Many studies also show that ___ actually increases when people work in a comfortable environment.
+'Which way is the path?' Kaan asked nervously. Elif had no idea. Their phones had no signal, and it was getting ___ by the minute.
 
-However, there is one significant ___: some employees feel ___ from their colleagues, which can affect teamwork and motivation.
+They decided to stay where they were rather than risk walking ___ the edge of a cliff. They sat close together behind a rock, sharing their last chocolate bar. ___ they were terrified, they tried to keep each other's spirits up by telling jokes.
 
-Some people ___ with this idea and prefer working in an office. Even so, I believe that ___, remote work offers more advantages than disadvantages, as long as workers make an ___ effort to stay connected with their team.`,
+After what felt like hours, they heard a dog barking. A few minutes later, a shepherd appeared out of the fog. He ___ seen them earlier from the valley and had come to check they were safe.
+
+He led them down to his village, ___ his wife gave them hot soup and blankets. That evening, sitting by the fire, Elif looked at her brother and smiled.
+
+I'll ___ forget that day.`,
       questions: [
-        ['Blank 1', 'convinced', "'be convinced that' = ikna olmuş olmak."],
-        ['Blank 2', 'flexibility', "'flexibility' = esneklik."],
-        ['Blank 3', 'balance', "'work-life balance' = iş-yaşam dengesi."],
-        ['Blank 4', 'commute', "'daily commute' = günlük işe gidiş geliş."],
-        ['Blank 5', 'productivity', "'productivity' = verimlilik."],
-        ['Blank 6', 'drawback', "'a significant drawback' = önemli bir dezavantaj."],
-        ['Blank 7', 'isolated', "'feel isolated' = yalnız/izole hissetmek."],
-        ['Blank 8', 'disagree', "'disagree with' = katılmamak."],
-        ['Blank 9', 'overall', "'overall' = genel olarak."],
-        ['Blank 10', 'essential', "'an essential effort' = temel/gerekli çaba."],
+        ['Blank 1', "so", "Sonuç: 'so' = bu yüzden."],
+        ['Blank 2', "were", "Past continuous: 'were laughing' ."],
+        ['Blank 3', "as", "'as soon as' = -er -mez."],
+        ['Blank 4', "hardly", "'hardly' = neredeyse hiç."],
+        ['Blank 5', "colder", "Karşılaştırma: 'getting colder' = soğuyor."],
+        ['Blank 6', "off", "'walk off the edge' = kenardan düşmek."],
+        ['Blank 7', "Although", "'Although' = -e rağmen."],
+        ['Blank 8', "had", "Past perfect: 'had seen' = görmüştü."],
+        ['Blank 9', "where", "Yer bildiren ilgi zamiri: 'where his wife...' ."],
+        ['Blank 10', "never", "'I'll never forget' = asla unutmayacağım."],
       ],
     },
     {
-      title: 'How to Write an Email to a Friend Giving News',
+      title: "A Formal Email to a Language School",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `moving | thrilled | update | recently | apartment | Guess | catch | promoted | exciting | Meanwhile
+      passage: `found | Since | answer | receiving | cost | rather | about | if | whether | for
 ---
-Hi Jack,
+Subject: Enquiry about intensive English courses
 
-___ what? I have some really ___ news to share with you!
+Dear Sir or Madam,
 
-I ___ got ___ at work, so I am now the manager of my department. I'm absolutely ___ about the new opportunity!
+I am writing to ask for information ___ the intensive English courses at your school, which I ___ on your website.
 
-___, I've also found a new ___ in the city centre, and I'm ___ in next month. It's much bigger than my old flat.
+I am a 24-year-old engineer from Turkey, and I am planning to study in London for four weeks this summer. My current level is B1, and I would like to improve my speaking skills in particular, as I need English ___ my job.
 
-I'd love to ___ up soon and hear your ___ too.
+I would be grateful if you could ___ the following questions:
 
-Talk soon,
-Ben`,
+Firstly, how many students are there in each class? I would prefer a small group, ___ possible.
+
+Secondly, do you offer any courses in Business English? ___ I often have meetings with international clients, this would be very useful for me.
+
+Thirdly, could you tell me ___ you can help with accommodation? I would like to stay with a host family ___ than in a hotel.
+
+Finally, I would like to know the total ___ of a four-week course, including accommodation.
+
+I look forward to ___ your reply.
+
+Yours faithfully,
+Ozan Çelik`,
       questions: [
-        ['Blank 1', 'Guess', "'guess what' = tahmin et (cümle başı büyük harf)."],
-        ['Blank 2', 'exciting', "'exciting news' = heyecan verici haber."],
-        ['Blank 3', 'recently', "'recently' = yakın zamanda."],
-        ['Blank 4', 'promoted', "'get promoted' = terfi almak."],
-        ['Blank 5', 'thrilled', "'be thrilled about' = çok heyecanlı olmak."],
-        ['Blank 6', 'Meanwhile', "'meanwhile' = bu arada (cümle başı büyük harf)."],
-        ['Blank 7', 'apartment', "'a new apartment' = yeni bir daire."],
-        ['Blank 8', 'moving', "'be moving in' = taşınıyor olmak."],
-        ['Blank 9', 'catch', "'catch up' = görüşüp sohbet etmek."],
-        ['Blank 10', 'update', "'your update' = haberlerin, güncel durumun."],
+        ['Blank 1', "about", "'information about' kalıbı."],
+        ['Blank 2', "found", "Geçmiş zaman: 'find → found' = buldum."],
+        ['Blank 3', "for", "'need English for my job' kalıbı."],
+        ['Blank 4', "answer", "'answer the following questions' kalıbı."],
+        ['Blank 5', "if", "Koşul: 'if possible' = mümkünse."],
+        ['Blank 6', "Since", "Sebep: 'Since' = -dığı için."],
+        ['Blank 7', "whether", "Dolaylı soru: 'whether' = -ip -mediğini."],
+        ['Blank 8', "rather", "'rather than' = -den ziyade."],
+        ['Blank 9', "cost", "'the total cost' = toplam maliyet."],
+        ['Blank 10', "receiving", "'look forward to + fiil-ing': receiving your reply."],
       ],
     },
     {
-      title: 'How to Write a Past Story from a Given Sentence',
+      title: "A For and Against Essay: Homework",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `shelter | drenched | Eventually | forgotten | relieved | umbrella | hurried | suddenly | arriving | realised
+      passage: `amount | out | on | but | without | Recently | as | later | while | Having
 ---
-It was raining heavily when Sarah left the house. She had ___ walked only a few metres when she ___ that she had ___ her ___ at home.
+Should schools stop giving homework?
 
-Within minutes, she was completely ___. She ___ towards a bus stop to find ___ from the storm.
+Homework has been part of school life for generations. ___, however, some schools have decided to reduce or even ban it. There are good arguments ___ both sides of this debate.
 
-___, after waiting for almost twenty minutes, the rain stopped, and the sun came out. Sarah felt ___ and continued her walk to work, finally ___ only ten minutes late.`,
+On the one hand, homework gives students a chance to practise what they have learned in class. Many teachers believe that ___ regular practice, students quickly forget new information. Homework also teaches important skills such ___ time management and working independently, which students will need ___ in life.
+
+On the other hand, many students already spend six or seven hours a day at school. ___ to do two or three more hours of homework every evening can lead to stress and tiredness. Critics also point ___ that homework is unfair, since some students have parents who can help them, ___ others have to work alone or don't have a quiet place to study.
+
+In my opinion, homework should not be banned completely, ___ it should be limited. Short, meaningful tasks, such as reading or preparing for a discussion, can be useful without taking over students' free time.
+
+To sum up, the ___ of homework matters more than whether it exists at all.`,
       questions: [
-        ['Blank 1', 'suddenly', "'had suddenly walked' = zarf, aniden."],
-        ['Blank 2', 'realised', 'Geçmiş zaman: fark etti.'],
-        ['Blank 3', 'forgotten', "'had forgotten' = past perfect, unutmuştu."],
-        ['Blank 4', 'umbrella', "'her umbrella' = şemsiyesi."],
-        ['Blank 5', 'drenched', "'completely drenched' = sırılsıklam."],
-        ['Blank 6', 'hurried', 'Geçmiş zaman: aceleyle gitti.'],
-        ['Blank 7', 'shelter', "'find shelter' = sığınak bulmak."],
-        ['Blank 8', 'Eventually', "'eventually' = sonunda (cümle başı büyük harf)."],
-        ['Blank 9', 'relieved', "'feel relieved' = rahatlamak."],
-        ['Blank 10', 'arriving', "'finally arriving' = -ing yapısı, sonunda varış."],
+        ['Blank 1', "Recently", "'Recently' = son zamanlarda."],
+        ['Blank 2', "on", "'on both sides' = her iki tarafta."],
+        ['Blank 3', "without", "'without' = olmadan."],
+        ['Blank 4', "as", "'such as' = gibi."],
+        ['Blank 5', "later", "'later in life' = hayatın ilerleyen dönemlerinde."],
+        ['Blank 6', "Having", "Gerund özne: 'Having to do...' ."],
+        ['Blank 7', "out", "'point out' = belirtmek."],
+        ['Blank 8', "while", "Karşıtlık: 'while' = oysa, -ken."],
+        ['Blank 9', "but", "Zıtlık: 'but' = ama."],
+        ['Blank 10', "amount", "'the amount of homework' = ödev miktarı."],
       ],
     },
     {
-      title: 'How to Write a Hotel Review After a Stay',
+      title: "A Review of a Mobile App",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `spotless | friendly | value | located | comfortable | disappointed | recommend | Overall | spacious | stayed
+      passage: `keeps | more | when | around | Overall | into | replace | that | simple | which
 ---
-I recently ___ at the Grandview Hotel for three nights, and overall I had a great experience.
+FitQuest — ★★★★☆
 
-The room was ___ and very ___ — I didn't find a single speck of dust! The bed was extremely ___, and I slept very well.
+I downloaded FitQuest two months ago because I wanted to get fit, but I find going to the gym really boring. The app turns exercise ___ a game, and I have to say, it actually works!
 
-The staff were incredibly ___ and helpful throughout my stay. The hotel is also perfectly ___, just a short walk from the city centre.
+The idea is simple. You go for a walk or a run, and the app creates a story ___ you. For example, you might be escaping from zombies or searching for hidden treasure. The faster you move, the ___ points you get. It sounds silly, but it really ___ me motivated. I've been running three times a week since I started, which is a personal record!
 
-The only thing that ___ me slightly was the slow Wi-Fi connection. However, this was a minor issue.
+The graphics are ___ but attractive, and the app is very easy to use. I also like the fact ___ you can join challenges with friends and compare your progress.
 
-___, I would definitely ___ this hotel to other travellers. It offers excellent ___ for money.`,
+However, the app isn't perfect. The free version has quite a lot of adverts, which can be annoying ___ you're in the middle of a run. To remove them, you have to pay a monthly subscription, ___ I think is a bit expensive. It also uses a lot of battery.
+
+___, I'd recommend FitQuest to anyone who finds exercise boring. It won't ___ a personal trainer, but it's a fun way to get moving.`,
       questions: [
-        ['Blank 1', 'stayed', "'stayed at a hotel' = otelde kaldı."],
-        ['Blank 2', 'spacious', "'spacious' = ferah."],
-        ['Blank 3', 'spotless', "'spotless' = tertemiz."],
-        ['Blank 4', 'comfortable', "'comfortable' = rahat."],
-        ['Blank 5', 'friendly', "'friendly staff' = güler yüzlü personel."],
-        ['Blank 6', 'located', "'perfectly located' = mükemmel konumlanmış."],
-        ['Blank 7', 'disappointed', "'disappointed me' = beni hayal kırıklığına uğrattı."],
-        ['Blank 8', 'Overall', "'overall' = genel olarak (cümle başı büyük harf)."],
-        ['Blank 9', 'recommend', "'recommend something' = tavsiye etmek."],
-        ['Blank 10', 'value', "'value for money' = paranın karşılığı."],
+        ['Blank 1', "into", "'turn into' = -e dönüştürmek."],
+        ['Blank 2', "around", "'around you' = etrafında."],
+        ['Blank 3', "more", "'The faster..., the more...' kalıbı."],
+        ['Blank 4', "keeps", "'keeps me motivated' = motive tutuyor."],
+        ['Blank 5', "simple", "'simple but attractive' = sade ama çekici."],
+        ['Blank 6', "that", "'the fact that' = ... olması."],
+        ['Blank 7', "when", "Zaman: 'when you're in the middle of...' ."],
+        ['Blank 8', "which", "Önceki ifadeyi niteleyen ilgi zamiri."],
+        ['Blank 9', "Overall", "'Overall' = genel olarak."],
+        ['Blank 10', "replace", "'replace' = yerini almak."],
       ],
     },
     {
-      title: 'How to Write an Article',
+      title: "An Article: The Perfect Day Off",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `structure | quote | tone | headline | statistics | paragraph | audience | conclude | engaging | research
+      passage: `preferably | Instead | wake | feel | notice | about | enjoy | by | look | while
 ---
-Writing a good magazine article requires careful planning. First, choose a catchy ___ that will grab the reader's attention immediately.
+HOW TO SPEND THE PERFECT DAY OFF
 
-Before you start writing, think about your target ___ and what kind of information they want to read. Do some ___ to make sure your facts are accurate, and include interesting ___ to support your points.
+We all ___ forward to our days off, but how many of us actually use them well? Too often, we spend the whole day scrolling on our phones and then feel guilty ___ wasting it. Here are some ideas for a day off that you'll really remember.
 
-An ___ opening paragraph is essential — try starting with a surprising fact or a relevant ___ from an expert.
+Start slowly
+Don't set an alarm. Wake up naturally and ___ a long breakfast — ___ outside, if the weather is good. A slow morning tells your brain that today is different.
 
-Organise your article with a clear ___: an introduction, several body paragraphs, and a conclusion. Each ___ should focus on one main idea.
+Get outside
+Spending time in nature is one of the best ways to relax. Go for a walk in the park, cycle along the coast or simply sit ___ the water. Leave your phone in your pocket and ___ what's around you.
 
-Keep a consistent ___ throughout the article that matches your audience, and always ___ with a strong final thought.`,
+Try something new
+Visit a museum you've never been to, take a cooking class or explore a part of your city you don't know. New experiences make days ___ longer and more memorable.
+
+Spend time with people you love
+Call a friend you haven't seen for a ___, or invite your family for dinner. Good conversations are worth more than any TV series.
+
+End the day early
+___ of staying up late, go to bed at a reasonable time. You'll ___ up feeling rested and ready for the week ahead.
+
+So next time you have a free day, why not give it a try?`,
       questions: [
-        ['Blank 1', 'headline', "'a catchy headline' = dikkat çekici başlık."],
-        ['Blank 2', 'audience', "'target audience' = hedef kitle."],
-        ['Blank 3', 'research', "'do research' = araştırma yapmak."],
-        ['Blank 4', 'statistics', 'Çoğul isim: istatistikler.'],
-        ['Blank 5', 'engaging', "'an engaging paragraph' = ilgi çekici paragraf."],
-        ['Blank 6', 'quote', "'a relevant quote' = ilgili bir alıntı."],
-        ['Blank 7', 'structure', "'a clear structure' = net bir yapı."],
-        ['Blank 8', 'paragraph', "'each paragraph' = her paragraf."],
-        ['Blank 9', 'tone', "'a consistent tone' = tutarlı bir üslup."],
-        ['Blank 10', 'conclude', "'conclude with' = ... ile sonlandırmak."],
+        ['Blank 1', "look", "'look forward to' = dört gözle beklemek."],
+        ['Blank 2', "about", "'feel guilty about' = ... için suçlu hissetmek."],
+        ['Blank 3', "enjoy", "'enjoy' = keyfini çıkarmak."],
+        ['Blank 4', "preferably", "'preferably' = tercihen."],
+        ['Blank 5', "by", "'sit by the water' = suyun kenarında oturmak."],
+        ['Blank 6', "notice", "'notice' = fark etmek."],
+        ['Blank 7', "feel", "'make + nesne + feel' kalıbı."],
+        ['Blank 8', "while", "'for a while' = bir süredir."],
+        ['Blank 9', "Instead", "'Instead of' = yerine."],
+        ['Blank 10', "wake", "'wake up' = uyanmak."],
       ],
     },
     {
-      title: 'Email Making Plans for a Visit',
+      title: "A Letter to a Newspaper About Local Parks",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `accommodation | flexible | confirm | itinerary | arrange | look | convenient | suggest | planning | sightseeing
+      passage: `avoid | become | else | where | immediately | often | support | for | to | suggest
 ---
-Hi Laura,
+Dear Editor,
 
-I hope you're well! I'm ___ to visit you next month, and I wanted to discuss some details.
+I am writing in response ___ your article last week about the poor condition of parks in our town. I completely agree that something needs to be done, and I would like to ___ some solutions.
 
-Would it be ___ for you if I arrived on the 15th? I'm quite ___ with dates, so let me know what works best for you.
+As a mother of two young children, I visit Central Park almost every day. Sadly, it has ___ a place that many families now ___. The playground equipment is old and broken, there is litter everywhere, and the toilets have been closed ___ over a year. In the evenings, groups of teenagers gather there because there is nowhere ___ for them to go.
 
-I'd love to do some ___ while I'm there — maybe we could visit the old town and the museum? I'll leave the ___ mostly up to you, since you know the city better than me.
+I believe the council should take action ___. Firstly, the playground should be repaired so that children can play safely. Secondly, more rubbish bins should be installed, and they should be emptied more ___. Finally, it would be a good idea to create a youth centre or sports area ___ teenagers can meet.
 
-Could you also ___ whether I should book my own ___, or if I could stay with you? I don't want to be any trouble.
+Parks are not a luxury. They are one of the few places where people of all ages can meet, exercise and relax for free. If the council doesn't act now, we may lose them altogether.
 
-Please ___ anything else you think I should see, and I'll ___ my train tickets straight away.
+I hope other readers will ___ this campaign.
 
-I really ___ forward to seeing you soon!
-
-Best,
-Tom`,
+Yours faithfully,
+Gül Şahin`,
       questions: [
-        ['Blank 1', 'planning', "'be planning to' = planlıyor olmak."],
-        ['Blank 2', 'convenient', "'convenient' = uygun, elverişli."],
-        ['Blank 3', 'flexible', "'flexible with dates' = tarihler konusunda esnek."],
-        ['Blank 4', 'sightseeing', "'do some sightseeing' = gezip görme."],
-        ['Blank 5', 'itinerary', "'the itinerary' = seyahat planı."],
-        ['Blank 6', 'confirm', "'confirm whether' = teyit etmek."],
-        ['Blank 7', 'accommodation', "'book accommodation' = konaklama ayırtmak."],
-        ['Blank 8', 'suggest', "'suggest something' = önermek."],
-        ['Blank 9', 'arrange', "'arrange train tickets' = tren biletlerini ayarlamak."],
-        ['Blank 10', 'look', "'look forward to' = dört gözle beklemek."],
+        ['Blank 1', "to", "'in response to' = yanıt olarak."],
+        ['Blank 2', "suggest", "'suggest' = önermek."],
+        ['Blank 3', "become", "Present perfect: 'has become' = ... haline geldi."],
+        ['Blank 4', "avoid", "'avoid' = kaçınmak."],
+        ['Blank 5', "for", "Süre: 'for over a year' ."],
+        ['Blank 6', "else", "'nowhere else' = başka hiçbir yer."],
+        ['Blank 7', "immediately", "'immediately' = hemen."],
+        ['Blank 8', "often", "'more often' = daha sık."],
+        ['Blank 9', "where", "Yer bildiren ilgi zamiri: 'where teenagers can...' ."],
+        ['Blank 10', "support", "'support' = desteklemek."],
       ],
     },
     {
-      title: 'How to Write an Email Cover Letter',
+      title: "An Informal Email Giving Advice",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `availability | attached | qualifications | position | sincerely | consider | suited | contribute | regarding | enthusiastic
+      passage: `whatever | make | sure | with | about | easier | If | all | whether | used
 ---
-Dear Ms. Adams,
+Hi Ali,
 
-I am writing ___ the marketing assistant ___ advertised on your website.
+Thanks for your email. I'm sorry to hear you're feeling so stressed ___ your exams — I remember exactly how that feels!
 
-I believe my ___ make me well ___ for this role. I have two years of experience in digital marketing and I am ___ about the opportunity to work for your company.
+You asked for my advice, so here are a few things that really helped me last year.
 
-I have ___ my CV for your review, which provides further details about my background.
+First of ___, ___ a study plan. Write down all your exams and decide how much time you need for each subject. It's much ___ to stay calm when you can see everything on paper.
 
-I am confident that I could ___ valuable skills to your team. Regarding my ___, I am able to start immediately.
+Secondly, don't try to study for hours without a break. I ___ to do that, and I couldn't remember anything! Study for about forty-five minutes, then take a short break. Go for a walk or have a snack.
 
-I would be grateful if you could ___ my application, and I look forward to hearing from you.
+Another thing that helped me was studying ___ a friend. Explaining things to someone else is a great way to check ___ you really understand them.
+
+And ___ you do, don't stay up all night before an exam. Sleep is really important for your memory.
+
+___ I were you, I'd also turn off my phone while studying. It's amazing how much time you save!
+
+I'm ___ you'll do well. Let me know how it goes!
+
+Take care,
+Aslı`,
+      questions: [
+        ['Blank 1', "about", "'stressed about' = ... konusunda stresli."],
+        ['Blank 2', "all", "'First of all' = her şeyden önce."],
+        ['Blank 3', "make", "'make a plan' = plan yapmak."],
+        ['Blank 4', "easier", "Karşılaştırma: 'much easier' ."],
+        ['Blank 5', "used", "'used to + fiil' = eskiden ... -ırdım."],
+        ['Blank 6', "with", "'study with a friend' = bir arkadaşla çalışmak."],
+        ['Blank 7', "whether", "'check whether' = ... olup olmadığını kontrol etmek."],
+        ['Blank 8', "whatever", "'whatever you do' = ne yaparsan yap."],
+        ['Blank 9', "If", "Koşul: 'If I were you' = senin yerinde olsam."],
+        ['Blank 10', "sure", "'I'm sure' = eminim."],
+      ],
+    },
+    {
+      title: "A Report on a School Trip",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `enough | also | Nevertheless | on | recommend | evaluate | repeating | which | with | lunch
+---
+Report on the Year 10 trip to the Science Museum
+
+Introduction
+The purpose of this report is to ___ the Year 10 trip to the Science Museum on 14th March and to make suggestions for future trips. The information is based ___ a survey of the 45 students who took part.
+
+Positive aspects
+Most students (82%) said they enjoyed the trip. The interactive space exhibition was the most popular part, ___ many students saying it helped them understand topics they had studied in class. The guided workshop on electricity was ___ described as useful and fun.
+
+Problems
+___, there were some problems. Firstly, the coach left school forty minutes late, ___ meant that we missed part of the planned programme. Secondly, many students felt that there was not ___ free time to explore the museum independently. Finally, several students complained that the museum café was very crowded and expensive.
+
+Recommendations
+In the future, I would ___ booking the coach earlier and asking the company to confirm the departure time. It would also be a good idea to include at least one hour of free time and to ask students to bring a packed ___.
+
+Conclusion
+Overall, the trip was a success, and I would strongly recommend ___ it next year with the changes suggested above.`,
+      questions: [
+        ['Blank 1', "evaluate", "'evaluate' = değerlendirmek."],
+        ['Blank 2', "on", "'based on' = -e dayanarak."],
+        ['Blank 3', "with", "'with many students saying...' kalıbı."],
+        ['Blank 4', "also", "'also' = ayrıca."],
+        ['Blank 5', "Nevertheless", "Zıtlık: 'Nevertheless' = yine de."],
+        ['Blank 6', "which", "Önceki cümleyi niteleyen ilgi zamiri."],
+        ['Blank 7', "enough", "'not enough time' = yeterli zaman yok."],
+        ['Blank 8', "recommend", "'recommend + fiil-ing' = önermek."],
+        ['Blank 9', "lunch", "'packed lunch' = yanına alınan öğle yemeği."],
+        ['Blank 10', "repeating", "'recommend repeating' = tekrarlanmasını önermek."],
+      ],
+    },
+    {
+      title: "A Biography: Marie Curie",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `achievement | caused | born | that | lived | in | which | along | Despite | Determined
+---
+Marie Curie was one of the most important scientists in history, and the first woman ever to win a Nobel Prize.
+
+She was ___ Maria Skłodowska in Warsaw, Poland, in 1867. Her parents were both teachers, and from an early age she showed a great interest ___ science. However, at that time women were not allowed to study at university in Poland.
+
+___ to continue her education, she moved to Paris in 1891 and studied physics and mathematics at the Sorbonne. She had very little money and often ___ on bread and tea, but she finished top of her class.
+
+In Paris, she met Pierre Curie, a fellow scientist, and they married in 1895. Together they studied radioactivity, a word ___ Marie herself invented. In 1898, they discovered two new elements, polonium and radium. In 1903, they won the Nobel Prize in Physics, ___ with Henri Becquerel.
+
+Tragically, Pierre was killed in a street accident in 1906. ___ her grief, Marie continued their work and became the first female professor at the Sorbonne. In 1911, she won a second Nobel Prize, this time in Chemistry.
+
+During the First World War, she developed mobile X-ray units ___ helped to treat thousands of injured soldiers.
+
+Marie Curie died in 1934 from an illness ___ by years of working with radioactive materials. Today, she is remembered as a symbol of courage and scientific ___.`,
+      questions: [
+        ['Blank 1', "born", "'be born' = doğmak."],
+        ['Blank 2', "in", "'interest in' = ... ilgi."],
+        ['Blank 3', "Determined", "'Determined to' = ... kararlı."],
+        ['Blank 4', "lived", "Geçmiş zaman: 'lived on bread' = ekmekle yaşadı."],
+        ['Blank 5', "that", "İlgi zamiri: 'a word that she invented' ."],
+        ['Blank 6', "along", "'along with' = ile birlikte."],
+        ['Blank 7', "Despite", "'Despite + isim' = -e rağmen."],
+        ['Blank 8', "which", "İlgi zamiri: 'units which helped' ."],
+        ['Blank 9', "caused", "'caused by' = ... nedeniyle oluşan."],
+        ['Blank 10', "achievement", "'scientific achievement' = bilimsel başarı."],
+      ],
+    },
+    {
+      title: "A Job Application Email: Summer Volunteer",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `sincerely | throughout | working | confidently | on | opportunity | for | which | in | experience
+---
+Subject: Application for Summer Volunteer — Sea Turtle Project
+
+Dear Ms Demir,
+
+I am writing to apply for a place ___ your Sea Turtle Conservation Project in Dalyan this summer, which I read about on the WWF Turkey website.
+
+I am a 20-year-old biology student at Ege University, and I am particularly interested ___ marine life. Protecting endangered animals is something I feel very strongly about, ___ is why I chose to study biology in the first place.
+
+Although I have not worked on a turtle project before, I have some relevant ___. Last year, I volunteered for three months at a wildlife rescue centre, where I helped to care ___ injured birds. I also took part in several beach-cleaning events in Izmir.
+
+I am hard-working and responsible, and I am used to ___ outdoors in hot weather. I get on well with people from different backgrounds, and I can communicate ___ in English, which I understand would be useful when talking to tourists.
+
+I am available ___ July and August, and I am happy to work night shifts, as I know that turtles usually lay their eggs at night.
+
+I would be very grateful for the ___ to join your team. Please find my CV attached.
+
+Thank you for considering my application.
 
 Yours ___,
-Daniel Cooper`,
+Burak Er`,
       questions: [
-        ['Blank 1', 'regarding', "'writing regarding' = ... hakkında yazıyorum."],
-        ['Blank 2', 'position', "'the position' = pozisyon."],
-        ['Blank 3', 'qualifications', 'Çoğul isim: nitelikler.'],
-        ['Blank 4', 'suited', "'well suited for' = için uygun."],
-        ['Blank 5', 'enthusiastic', "'enthusiastic about' = hevesli."],
-        ['Blank 6', 'attached', "'have attached' = ekledim (resmi yazışma)."],
-        ['Blank 7', 'contribute', "'contribute skills' = katkıda bulunmak."],
-        ['Blank 8', 'availability', "'my availability' = müsaitlik durumum."],
-        ['Blank 9', 'consider', "'consider my application' = başvurumu değerlendirmek."],
-        ['Blank 10', 'sincerely', "'Yours sincerely' = resmi mektup kapanışı."],
-      ],
-    },
-    {
-      title: 'A Product Review',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `lightweight | worth | quality | drawback | purchased | recommend | battery | impressed | Overall | durable
----
-I ___ this wireless speaker last month, and I have to say I am really ___ with the ___.
-
-The sound is excellent, and the speaker itself is very ___ and ___ — I've dropped it twice and it still works perfectly!
-
-The only ___ is the ___ life, which only lasts about six hours on a full charge. This can be a little inconvenient for long trips.
-
-___, though, I think this is a great product, and I would definitely ___ it to anyone looking for a reliable speaker. It's ___ the price.
-
-Rating: 4.5 out of 5 stars`,
-      questions: [
-        ['Blank 1', 'purchased', "'purchased' = satın aldım (formal, geçmiş zaman)."],
-        ['Blank 2', 'impressed', "'be impressed with' = etkilenmiş olmak."],
-        ['Blank 3', 'quality', "'the quality' = kalite."],
-        ['Blank 4', 'durable', "'durable' = dayanıklı."],
-        ['Blank 5', 'lightweight', "'lightweight' = hafif."],
-        ['Blank 6', 'drawback', "'the only drawback' = tek dezavantaj."],
-        ['Blank 7', 'battery', "'battery life' = pil ömrü."],
-        ['Blank 8', 'Overall', "'overall' = genel olarak (cümle başı büyük harf)."],
-        ['Blank 9', 'recommend', "'recommend it' = tavsiye etmek."],
-        ['Blank 10', 'worth', "'worth the price' = fiyatına değer."],
-      ],
-    },
-    {
-      title: 'Describing Your Home',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `cosy | decorated | surrounded | spacious | furniture | modern | natural | favourite | located | peaceful
----
-My home is ___ in a quiet suburb, just outside the city centre. It's a ___ two-storey house with plenty of room for my whole family.
-
-The living room is bright and full of ___ light, thanks to the large windows. I have ___ it with warm colours and comfortable ___.
-
-My ___ room in the house is definitely the kitchen, where we spend most of our time cooking and talking together. It has a ___, ___ design, with all new appliances.
-
-The garden is small but very ___, ___ by tall trees that give us plenty of privacy.
-
-I love coming home every day because it always feels calm and welcoming.`,
-      questions: [
-        ['Blank 1', 'located', "'be located in' = konumlanmış olmak."],
-        ['Blank 2', 'spacious', "'spacious' = ferah."],
-        ['Blank 3', 'natural', "'natural light' = doğal ışık."],
-        ['Blank 4', 'decorated', "'have decorated' = dekore ettim."],
-        ['Blank 5', 'furniture', 'Toplu isim: mobilya.'],
-        ['Blank 6', 'favourite', "'my favourite room' = en sevdiğim oda."],
-        ['Blank 7', 'modern', "'modern' = modern."],
-        ['Blank 8', 'cosy', "'cosy' = sıcak/rahat (ev ortamı için)."],
-        ['Blank 9', 'peaceful', "'peaceful' = huzurlu."],
-        ['Blank 10', 'surrounded', "'surrounded by' = ile çevrili."],
+        ['Blank 1', "on", "'a place on the project' = projede yer."],
+        ['Blank 2', "in", "'interested in' = ile ilgilenmek."],
+        ['Blank 3', "which", "Önceki ifadeyi niteleyen ilgi zamiri."],
+        ['Blank 4', "experience", "'relevant experience' = ilgili deneyim."],
+        ['Blank 5', "for", "'care for' = bakmak."],
+        ['Blank 6', "working", "'be used to + fiil-ing' = alışkın olmak."],
+        ['Blank 7', "confidently", "'confidently' = kendinden emin bir şekilde."],
+        ['Blank 8', "throughout", "'throughout' = boyunca."],
+        ['Blank 9', "opportunity", "'the opportunity to' = fırsat."],
+        ['Blank 10', "sincerely", "Adı bilinen alıcıya (Dear Ms Demir) 'Yours sincerely' ."],
       ],
     },
   ],
   B2: [
     {
-      title: 'Formal Email or Letter Asking for Information',
+      title: "A Proposal for Improving Your Town",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `prospectus | clarify | forth | obliged | stipulated | correspondence | particulars | regard | prompt | enquiring
+      passage: `Furthermore | making | starting | In | aim | off | by | rather | undoubtedly | outweigh
 ---
-Dear Sir or Madam,
+Proposal: Making the town centre more pedestrian-friendly
 
-I am writing with ___ to the postgraduate course advertised on your website. I would be grateful if you could provide further ___ about the programme.
-
-I am ___ whether the course fees stated include accommodation, or whether this is arranged separately, as it is not clearly set ___ on your website.
-
-Could you also send me a copy of the course ___, along with information regarding the entry requirements ___ for international applicants?
-
-I would appreciate it if you could ___ whether scholarships are currently available for this course.
-
-I look forward to your ___ reply, and I would be much ___ if you could respond within the next two weeks.
-
-Thank you for your time, and I look forward to your ___.
-
-Yours faithfully,
-Robert Chen`,
-      questions: [
-        ['Blank 1', 'regard', "'with regard to' = ... ile ilgili olarak (resmi ifade)."],
-        ['Blank 2', 'particulars', "'further particulars' = ayrıntılar (resmi)."],
-        ['Blank 3', 'enquiring', "'be enquiring whether' = sorup öğrenmek istemek."],
-        ['Blank 4', 'forth', "'set forth' = ortaya koymak, belirtmek."],
-        ['Blank 5', 'prospectus', "'course prospectus' = kurs tanıtım kitapçığı."],
-        ['Blank 6', 'stipulated', "'stipulated for' = belirtilen, şart koşulan."],
-        ['Blank 7', 'clarify', "'clarify whether' = netleştirmek."],
-        ['Blank 8', 'prompt', "'a prompt reply' = hızlı bir yanıt."],
-        ['Blank 9', 'obliged', "'much obliged' = minnettar (resmi ifade)."],
-        ['Blank 10', 'correspondence', "'your correspondence' = yazışmanız."],
-      ],
-    },
-    {
-      title: 'Writing Formal Letter of Complaint',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `rectify | defective | regret | inconvenience | promptly | compensation | dissatisfied | refund | unacceptable | purchased
----
-Dear Customer Service Team,
-
-I am writing to express my extreme dissatisfaction regarding a product I recently ___ from your online store.
-
-The item I received was clearly ___, as it stopped working after only two days of use. I am thoroughly ___ with the quality of this product.
-
-I ___ to inform you that this is not the level of service I expected from your company. This situation is entirely ___, especially considering the price I paid.
-
-I would like to request a full ___, and I trust you will ___ this matter as soon as possible.
-
-Furthermore, given the significant ___ this has caused me, I believe some form of ___ would be appropriate.
-
-I hope you will address this issue ___ and take steps to prevent similar problems in the future.
-
-Yours faithfully,
-Diane Foster`,
-      questions: [
-        ['Blank 1', 'purchased', "'purchased from' = satın aldım (resmi geçmiş zaman)."],
-        ['Blank 2', 'defective', "'clearly defective' = açıkça kusurlu."],
-        ['Blank 3', 'dissatisfied', "'thoroughly dissatisfied' = son derece memnuniyetsiz."],
-        ['Blank 4', 'regret', "'I regret to inform you' = resmi şikayet kalıbı."],
-        ['Blank 5', 'unacceptable', "'entirely unacceptable' = tamamen kabul edilemez."],
-        ['Blank 6', 'refund', "'a full refund' = tam iade."],
-        ['Blank 7', 'rectify', "'rectify this matter' = bu durumu düzeltmek."],
-        ['Blank 8', 'inconvenience', "'the significant inconvenience' = önemli rahatsızlık."],
-        ['Blank 9', 'compensation', "'some form of compensation' = bir tür tazminat."],
-        ['Blank 10', 'promptly', "'address this issue promptly' = bu konuyu hızlıca ele almak."],
-      ],
-    },
-    {
-      title: 'Writing a Discussion Essay: Discuss Two Views and Give Your Opinion',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `merit | counterargument | perspective | contend | reconcile | viewpoint | undermine | Personally | whereas | standpoint
----
-There has long been debate about whether zoos should continue to exist. Some ___ that zoos play a vital role in conservation and education, ___ others believe they cause unnecessary suffering to animals.
-
-From one ___, zoos allow endangered species to be protected and bred in safe environments, and they give the public valuable opportunities to learn about wildlife. This ___ certainly has some ___, particularly regarding conservation efforts for critically endangered animals.
-
-However, a common ___ is that many zoo enclosures fail to replicate an animal's natural habitat, which can severely ___ their wellbeing.
-
-From the opposing ___, animal rights supporters argue that no amount of educational value justifies keeping wild animals in captivity.
-
-It is difficult to fully ___ these two positions, as both raise legitimate ethical concerns.
-
-___, I believe that modern zoos focused on conservation can be justified, provided that animal welfare remains the top priority.`,
-      questions: [
-        ['Blank 1', 'contend', "'some contend that' = bazıları iddia eder ki (resmi)."],
-        ['Blank 2', 'whereas', 'Zıtlık bağlacı: oysa, halbuki.'],
-        ['Blank 3', 'standpoint', "'from one standpoint' = bir bakış açısından."],
-        ['Blank 4', 'viewpoint', "'this viewpoint' = bu görüş."],
-        ['Blank 5', 'merit', "'has some merit' = bir miktar geçerliliği/değeri var."],
-        ['Blank 6', 'counterargument', "'a common counterargument' = yaygın bir karşı argüman."],
-        ['Blank 7', 'undermine', "'undermine their wellbeing' = refahlarını zedelemek."],
-        ['Blank 8', 'perspective', "'the opposing perspective' = karşıt bakış açısı."],
-        ['Blank 9', 'reconcile', "'reconcile these positions' = bu görüşleri uzlaştırmak."],
-        ['Blank 10', 'Personally', "'personally, I believe' = şahsen (cümle başı büyük harf)."],
-      ],
-    },
-    {
-      title: 'Opinion Essay – Agree or Disagree with a Statement',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `meaningful | Paradoxically | redefine | virtual | facilitate | Arguably | assertion | largely | isolate | disagree
----
-The ___ that technology has made people less social is one I ___ with, at least in its simplest form.
-
-While it is true that people now spend more time looking at screens, technology has ___ not eliminated, but rather ___ the way people connect with one another.
-
-Social media and messaging apps ___ ___ relationships across great distances, something that would have been impossible a few decades ago.
-
-___, some critics argue that constant screen use can actually ___ people from those physically around them, replacing real conversations with shallow ___ interactions.
-
-___, I would argue that technology itself is neutral; its effect on our social lives depends entirely on how we choose to use it.`,
-      questions: [
-        ['Blank 1', 'assertion', "'the assertion that' = iddia (resmi isim)."],
-        ['Blank 2', 'disagree', "'disagree with' = katılmamak."],
-        ['Blank 3', 'largely', "'largely not eliminated' = büyük ölçüde."],
-        ['Blank 4', 'redefine', "'redefine the way' = yeniden tanımlamak."],
-        ['Blank 5', 'facilitate', "'facilitate relationships' = ilişkileri kolaylaştırmak."],
-        ['Blank 6', 'meaningful', "'meaningful relationships' = anlamlı ilişkiler."],
-        ['Blank 7', 'Paradoxically', "'paradoxically' = paradoksal olarak (cümle başı büyük harf)."],
-        ['Blank 8', 'isolate', "'isolate people' = insanları izole etmek."],
-        ['Blank 9', 'virtual', "'virtual interactions' = sanal etkileşimler."],
-        ['Blank 10', 'Arguably', "'arguably' = tartışmasız biçimde/muhtemelen (cümle başı büyük harf)."],
-      ],
-    },
-    {
-      title: 'A Formal Letter of Apology',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `shortcomings | utmost | assure | jeopardise | rectified | goodwill | oversight | reassure | Regrettably | inconvenienced
----
-Dear Mr. Whitfield,
-
-I am writing to offer my sincere apologies regarding the delay in delivering your order.
-
-___, due to an administrative ___, your shipment was not processed on time. I fully understand that this may have significantly ___ you, and for that, I am truly sorry.
-
-Please ___ you that we take this matter extremely seriously, and the issue has now been ___. Steps have also been taken to ensure such ___ do not occur again in the future.
-
-We place the ___ importance on customer satisfaction, and we certainly do not wish this incident to ___ our valued relationship with you.
-
-As a gesture of ___, we would like to offer you a discount on your next order.
-
-I hope this reassures you of our commitment to service, and I would like to ___ you that we remain fully dedicated to resolving this matter.
-
-Yours sincerely,
-Customer Relations Team`,
-      questions: [
-        ['Blank 1', 'Regrettably', "'regrettably' = maalesef, ne yazık ki (cümle başı büyük harf)."],
-        ['Blank 2', 'oversight', "'an administrative oversight' = idari bir ihmal/hata."],
-        ['Blank 3', 'inconvenienced', "'significantly inconvenienced' = ciddi şekilde rahatsız etmiş olmak."],
-        ['Blank 4', 'assure', "'assure you that' = sizi temin ederim ki."],
-        ['Blank 5', 'rectified', "'has been rectified' = düzeltildi (edilgen)."],
-        ['Blank 6', 'shortcomings', "'such shortcomings' = bu tür eksiklikler/hatalar."],
-        ['Blank 7', 'utmost', "'the utmost importance' = en büyük önem."],
-        ['Blank 8', 'jeopardise', "'jeopardise our relationship' = ilişkimizi tehlikeye atmak."],
-        ['Blank 9', 'goodwill', "'a gesture of goodwill' = iyi niyet göstergesi."],
-        ['Blank 10', 'reassure', "'reassure you that' = sizi rahatlatmak/güvence vermek."],
-      ],
-    },
-    {
-      title: 'A Report',
-      instructions: 'Complete the text below with the words in the box.',
-      passage: `findings | highlighted | conducted | recommend | respondents | Overall | conclude | purpose | majority | survey
----
 Introduction
-The ___ of this report is to present the results of a recent employee satisfaction ___ ___ within the company.
+The ___ of this proposal is to suggest ways of making Merkez Street and the surrounding area safer and more attractive for pedestrians. It is based on observations made over a two-week period and on conversations with local residents and shop owners.
 
-Findings
-The ___ of ___ indicated that they were generally satisfied with their working conditions. However, several employees ___ concerns regarding the lack of career development opportunities.
-
-Conclusion
-___, employee morale appears to be relatively high, although certain areas require attention.
+Current situation
+At present, the town centre is dominated ___ traffic. Pavements are narrow and frequently blocked by parked cars, ___ it difficult for elderly people and parents with pushchairs to get around. Air quality is poor, particularly during rush hour, and several shop owners reported that customers are put ___ by the noise and congestion.
 
 Recommendations
-Based on these ___, I would ___ that the company introduce more regular training sessions.
+___ order to address these issues, I would like to propose the following measures:
+• Closing Merkez Street to private vehicles between 10 a.m. and 7 p.m., with exceptions for deliveries and emergency services.
+• Widening the pavements and introducing benches, trees and outdoor seating for cafés.
+• Improving bus services to the centre and providing a secure bicycle parking area.
 
-To ___, addressing these concerns could significantly improve staff retention in the long term.`,
+Benefits
+These changes would ___ make the town centre more pleasant to visit. Experience from other towns suggests that pedestrianisation tends to increase, ___ than reduce, the number of shoppers. ___, cleaner air and less noise would benefit residents' health.
+
+Conclusion
+While some drivers may initially object, I am convinced that the long-term advantages would far ___ the inconvenience. I therefore recommend that the council consider a six-month trial ___ next spring.`,
       questions: [
-        ['Blank 1', 'purpose', "'the purpose of' = amacı."],
-        ['Blank 2', 'survey', "'a satisfaction survey' = memnuniyet anketi."],
-        ['Blank 3', 'conducted', "'was conducted' = gerçekleştirildi (edilgen, rapor dili)."],
-        ['Blank 4', 'majority', "'the majority of' = çoğunluğu."],
-        ['Blank 5', 'respondents', "'respondents' = ankete katılanlar."],
-        ['Blank 6', 'highlighted', "'highlighted concerns' = endişeleri vurguladı."],
-        ['Blank 7', 'Overall', "'overall' = genel olarak (rapor başlığında, büyük harf)."],
-        ['Blank 8', 'findings', "'these findings' = bu bulgular."],
-        ['Blank 9', 'recommend', "'I would recommend that' = tavsiye ederim ki."],
-        ['Blank 10', 'conclude', "'to conclude' = sonuç olarak."],
+        ['Blank 1', "aim", "'The aim of this proposal' = bu önerinin amacı."],
+        ['Blank 2', "by", "Edilgen: 'dominated by' = ... tarafından hâkim olunan."],
+        ['Blank 3', "making", "Sonuç bildiren ortaç: 'making it difficult' ."],
+        ['Blank 4', "off", "'put off' = caydırmak."],
+        ['Blank 5', "In", "'In order to' = -mek için."],
+        ['Blank 6', "undoubtedly", "'undoubtedly' = şüphesiz."],
+        ['Blank 7', "rather", "'rather than' = -den ziyade."],
+        ['Blank 8', "Furthermore", "Ek bilgi: 'Furthermore' = ayrıca."],
+        ['Blank 9', "outweigh", "'outweigh' = ağır basmak."],
+        ['Blank 10', "starting", "'starting next spring' = gelecek bahardan itibaren."],
       ],
     },
     {
-      title: 'A Film Review',
+      title: "An Essay: Should Public Transport Be Free?",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `portrayal | pacing | evokes | soundtrack | masterfully | verdict | cinematography | standout | predictable | gripping
+      passage: `balance | impact | for | such | that | thereby | address | Nevertheless | compelling | Supporters
 ---
-'Beyond the Horizon' is a truly ___ thriller that keeps audiences on the edge of their seats from beginning to end.
+In recent years, a number of cities around the world, most notably Tallinn in Estonia and the whole of Luxembourg, have made public transport free for residents. ___ argue that this policy could solve many urban problems, while critics question whether it is affordable or even effective. This essay will examine both sides of the argument.
 
-The ___ is breathtaking, with sweeping shots of the desert landscape that perfectly ___ a sense of isolation. Director Elena Marsh has ___ crafted a tense atmosphere throughout the film.
+The most ___ argument in favour of free public transport is environmental. If buses and trains cost nothing, more people would be encouraged to leave their cars at home, ___ reducing traffic congestion and air pollution. Free transport would also benefit low-income groups, ___ whom travel costs can represent a significant proportion of their budget.
 
-Lead actor James Carter delivers a ___ performance, bringing real emotional depth to his troubled character. His ___ of a grieving father is both convincing and moving.
+___, there are serious concerns. Running a transport network is extremely expensive, and if passengers no longer pay, the cost must be met through higher taxes or cuts to other services. Furthermore, evidence from cities ___ have tried the scheme suggests that the increase in passengers often comes from people who previously walked or cycled, rather than from drivers. In ___ cases, the environmental benefits may be limited.
 
-The film's ___ also deserves praise, with a haunting score that perfectly complements each scene.
-
-My only criticism concerns the film's ___ in the final act, which occasionally feels rushed. The ending is also somewhat ___, which is a shame given how original the rest of the story feels.
-
-Final ___: despite a few minor flaws, this is an outstanding film well worth watching.`,
+On ___, I believe that making public transport free is not, by itself, the most effective solution. Investment in more frequent, reliable services is likely to have a greater ___, since many people choose their cars not because of cost but because public transport is slow or inconvenient. Reduced fares for students, pensioners and those on low incomes would ___ the issue of fairness at a far lower cost.`,
       questions: [
-        ['Blank 1', 'gripping', "'a truly gripping thriller' = gerçekten sürükleyici bir gerilim filmi."],
-        ['Blank 2', 'cinematography', "'the cinematography' = görüntü yönetimi."],
-        ['Blank 3', 'evokes', '3. tekil şahıs: uyandırır.'],
-        ['Blank 4', 'masterfully', "'masterfully crafted' = ustalıkla oluşturulmuş."],
-        ['Blank 5', 'standout', "'a standout performance' = göz alıcı bir performans."],
-        ['Blank 6', 'portrayal', "'his portrayal of' = ...canlandırışı."],
-        ['Blank 7', 'soundtrack', "'the film's soundtrack' = filmin müzikleri."],
-        ['Blank 8', 'pacing', "'the pacing' = anlatım temposu."],
-        ['Blank 9', 'predictable', "'somewhat predictable' = bir nebze tahmin edilebilir."],
-        ['Blank 10', 'verdict', "'final verdict' = nihai değerlendirme/karar."],
+        ['Blank 1', "Supporters", "'Supporters' = destekçiler."],
+        ['Blank 2', "compelling", "'compelling' = ikna edici, güçlü."],
+        ['Blank 3', "thereby", "'thereby' = böylece."],
+        ['Blank 4', "for", "'for whom' — kişi için ilgi zamiri."],
+        ['Blank 5', "Nevertheless", "Zıtlık: 'Nevertheless' = yine de."],
+        ['Blank 6', "that", "İlgi zamiri: 'cities that have tried' ."],
+        ['Blank 7', "such", "'In such cases' = bu gibi durumlarda."],
+        ['Blank 8', "balance", "'On balance' = genel olarak değerlendirildiğinde."],
+        ['Blank 9', "impact", "'impact' = etki."],
+        ['Blank 10', "address", "'address the issue' = sorunu ele almak."],
       ],
     },
     {
-      title: 'Writing an Article for the First Exam',
+      title: "A Book Review",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `subheading | anecdote | wrap | hook | informal | catchy | headline | rhetorical | engage | readership
+      passage: `that | can't | complex | exactly | appeal | after | set | alternate | when | If
 ---
-Writing an article for an exam like this requires a slightly different approach from an essay. Start with a ___ ___ that will immediately grab your ___'s attention.
+THE SILENT HOUR by Meryem Aksoy — ★★★★☆
 
-Begin your article with a strong ___ — perhaps a surprising fact, a short personal ___, or an interesting question — to ___ your readers from the very first line.
+Few debut novels manage to combine a gripping plot with genuine emotional depth, but Meryem Aksoy's The Silent Hour does ___ that.
 
-You can use ___ questions throughout the article to keep readers thinking and involved. Using headings or a ___ can also help organise longer articles into clear sections.
+The story is ___ in a small coastal town in the Aegean, where a fishing boat disappears during a storm with three men on board. Twenty years later, Nur, the daughter of one of the missing fishermen, returns to the town ___ her mother's death. While clearing out the family home, she discovers a bundle of letters ___ suggest the boat's disappearance was no accident.
 
-Since articles are usually less formal than essays, feel free to use a more ___ and conversational tone, as if you're speaking directly to the reader.
+What makes the novel stand out is its structure. Chapters ___ between Nur's investigation in the present and her father's final weeks in the past, gradually revealing the truth from two directions. Aksoy handles this skilfully, and the moment ___ the two timelines finally meet is genuinely shocking.
 
-Finally, ___ up your article with a memorable final thought or a call to action that leaves a lasting impression.`,
+The characters are richly drawn. Nur, in particular, is a ___ heroine: determined and brave, but also stubborn and, at times, unfair to those who try to help her.
+
+___ I have one criticism, it is that the middle section moves rather slowly, with a few too many descriptions of the landscape. Some readers may also find the ending a little too neat.
+
+Nevertheless, this is a beautifully written and thought-provoking novel about grief, secrets and the price of silence. It would ___ to anyone who enjoys literary mysteries, and I ___ wait to see what Aksoy writes next.`,
       questions: [
-        ['Blank 1', 'catchy', "'a catchy headline' = dikkat çekici bir başlık."],
-        ['Blank 2', 'headline', "'headline' = başlık."],
-        ['Blank 3', 'readership', "'your readership' = okuyucu kitlen."],
-        ['Blank 4', 'hook', "'a strong hook' = güçlü bir giriş cümlesi (dikkat çekici)."],
-        ['Blank 5', 'anecdote', "'a personal anecdote' = kişisel bir anekdot."],
-        ['Blank 6', 'engage', "'engage your readers' = okuyucularını ilgilendirmek."],
-        ['Blank 7', 'rhetorical', "'rhetorical questions' = retorik sorular."],
-        ['Blank 8', 'subheading', "'a subheading' = alt başlık."],
-        ['Blank 9', 'informal', "'a more informal tone' = daha samimi bir üslup."],
-        ['Blank 10', 'wrap', "'wrap up' = toparlamak."],
+        ['Blank 1', "exactly", "'exactly that' = tam olarak bunu."],
+        ['Blank 2', "set", "'be set in' = ... de geçmek."],
+        ['Blank 3', "after", "'after her mother's death' = annesinin ölümünden sonra."],
+        ['Blank 4', "that", "İlgi zamiri: 'letters that suggest' ."],
+        ['Blank 5', "alternate", "'alternate between' = arasında gidip gelmek."],
+        ['Blank 6', "when", "Zaman bildiren ilgi zamiri."],
+        ['Blank 7', "complex", "'complex' = karmaşık, çok boyutlu."],
+        ['Blank 8', "If", "Koşul: 'If I have one criticism' kalıbı."],
+        ['Blank 9', "appeal", "'appeal to' = hitap etmek."],
+        ['Blank 10', "can't", "'can't wait to' = sabırsızlanmak."],
       ],
     },
     {
-      title: 'Writing an Email Cover Letter',
+      title: "A Letter of Recommendation",
       instructions: 'Complete the text below with the words in the box.',
-      passage: `proficient | forefront | aligns | portfolio | proactive | esteemed | endorse | articulate | spearheaded | exceeding
+      passage: `proved | managed | contribution | contact | willing | hesitation | recall | for | however | popular
 ---
-Dear Hiring Committee,
+To whom it may concern,
 
-I am writing to express my strong interest in the Senior Marketing Manager position at your ___ organisation.
+I am writing to recommend Ms Selin Aydın for the position of Assistant Event Manager at your company. I have known Selin ___ three years, during which time she worked as an event coordinator in my team at Blue Sky Events.
 
-In my current role, I have ___ several successful campaigns that increased brand engagement by over forty percent, consistently ___ targets set by senior management.
+From the moment she joined us, Selin ___ to be an exceptionally organised and reliable member of staff. She was responsible for planning a wide range of events, from small business lunches to international conferences with over five hundred guests. Her attention to detail was outstanding, and I cannot ___ a single occasion on which she missed a deadline.
 
-I am highly ___ in data analysis tools and have built a strong ___ of projects demonstrating measurable results.
+What impressed me most, ___, was her ability to remain calm under pressure. On one occasion, the main speaker at a conference cancelled just two hours before he was due to appear. Selin ___ to find a replacement, reorganise the programme and inform all the guests, without any disruption to the event.
 
-I believe my experience closely ___ with the requirements outlined in your job posting, and I am confident I could keep your brand at the ___ of industry trends.
+Selin also has excellent interpersonal skills. She is ___ with both colleagues and clients, and she is always ___ to help others. Her fluent English and good knowledge of German were a great asset when dealing with international clients.
 
-I have always been a ___ professional, actively seeking new challenges rather than waiting for opportunities to arise.
+I have no ___ in recommending Selin for this position. I am confident that she would make a valuable ___ to your organisation.
 
-I would be delighted to ___ further how my skills could benefit your team, and I am happy to provide references who can ___ my work ethic and achievements.
+Please do not hesitate to ___ me if you require any further information.
 
-Kind regards,
-Sofia Reyes`,
+Yours faithfully,
+Ahmet Koç
+Events Director, Blue Sky Events`,
       questions: [
-        ['Blank 1', 'esteemed', "'your esteemed organisation' = saygın kuruluşunuz (resmi)."],
-        ['Blank 2', 'spearheaded', "'have spearheaded' = öncülük ettim/yönettim."],
-        ['Blank 3', 'exceeding', "'exceeding targets' = hedefleri aşmak."],
-        ['Blank 4', 'proficient', "'highly proficient in' = son derece yetkin."],
-        ['Blank 5', 'portfolio', "'a portfolio of projects' = proje portföyü."],
-        ['Blank 6', 'aligns', "'aligns with' = ile örtüşür/uyumludur."],
-        ['Blank 7', 'forefront', "'at the forefront of' = ön saflarında."],
-        ['Blank 8', 'proactive', "'a proactive professional' = proaktif bir profesyonel."],
-        ['Blank 9', 'articulate', "'articulate further' = daha ayrıntılı açıklamak."],
-        ['Blank 10', 'endorse', "'endorse my work ethic' = çalışma etiğimi onaylamak/desteklemek."],
+        ['Blank 1', "for", "Süre: 'for three years' ."],
+        ['Blank 2', "proved", "'prove to be' = ... olduğunu kanıtlamak."],
+        ['Blank 3', "recall", "'recall' = hatırlamak (resmi)."],
+        ['Blank 4', "however", "Cümle içi zıtlık: ', however,' ."],
+        ['Blank 5', "managed", "'manage to' = başarmak."],
+        ['Blank 6', "popular", "'popular with' = ... arasında sevilen."],
+        ['Blank 7', "willing", "'willing to' = istekli."],
+        ['Blank 8', "hesitation", "'I have no hesitation in...' = hiç tereddüt etmeden."],
+        ['Blank 9', "contribution", "'contribution to' = katkı."],
+        ['Blank 10', "contact", "'contact me' = benimle iletişime geçmek."],
+      ],
+    },
+    {
+      title: "An Article: The Art of Doing Nothing",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `harm | wander | seen | Start | to | discover | Unlike | urge | without | turns
+---
+THE ART OF DOING NOTHING
+
+When did you last do absolutely nothing? Not scrolling, not listening to a podcast, not planning tomorrow's tasks — just sitting, staring out of the window and letting your mind ___? If you can't remember, you're far from alone.
+
+In a culture that values productivity above almost everything else, doing nothing has come to be ___ as laziness. We fill every spare moment, convinced that time not spent achieving something is time wasted. Yet a growing body of research suggests that this constant activity may be doing us more ___ than good.
+
+When we stop focusing on specific tasks, a network of brain regions becomes active that is linked ___ creativity, memory and self-reflection. It's no coincidence that so many people report having their best ideas in the shower or on a long walk. Rest, it ___ out, is not the opposite of productivity but an essential part of it.
+
+The Dutch even have a word for it: niksen, the practice of deliberately doing nothing. ___ meditation, it has no rules or goals. You simply allow yourself to be idle, ___ feeling guilty.
+
+So how can we bring a little more nothing into our lives? ___ small. Leave your phone in another room for twenty minutes. Sit on a park bench and resist the ___ to check your messages. Look at the clouds.
+
+It may feel uncomfortable at first. But you might ___ that doing nothing is one of the most useful things you can do.`,
+      questions: [
+        ['Blank 1', "wander", "'let your mind wander' = zihnini serbest bırakmak."],
+        ['Blank 2', "seen", "'be seen as' = olarak görülmek."],
+        ['Blank 3', "harm", "'do more harm than good' = yarardan çok zarar vermek."],
+        ['Blank 4', "to", "'linked to' = ile bağlantılı."],
+        ['Blank 5', "turns", "'it turns out' = ortaya çıkıyor ki."],
+        ['Blank 6', "Unlike", "'Unlike' = -in aksine."],
+        ['Blank 7', "without", "'without feeling guilty' = suçlu hissetmeden."],
+        ['Blank 8', "Start", "Emir kipi: 'Start small' = küçük başla."],
+        ['Blank 9', "urge", "'resist the urge' = dürtüye direnmek."],
+        ['Blank 10', "discover", "'discover' = keşfetmek."],
+      ],
+    },
+    {
+      title: "A Report on Workplace Wellbeing",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `In | checking | source | into | However | realistic | concern | much | sets | side
+---
+Report: Staff wellbeing at Nova Software
+
+Introduction
+This report ___ out to assess the current level of staff wellbeing at Nova Software and to recommend measures to improve it. It is based on an anonymous online survey completed by 120 employees (76% of staff) in September.
+
+Main findings
+Overall, the results were mixed. On the positive ___, 78% of respondents said they enjoyed their work and felt that their colleagues were supportive. Flexible working hours were particularly appreciated.
+
+___, a significant number of employees reported high levels of stress. Almost half (47%) said they regularly worked more than ten hours a day, and 38% admitted ___ work emails at weekends. Many respondents felt that deadlines were often unrealistic and that meetings took up too ___ of their time.
+
+The office environment was another ___ of dissatisfaction. Employees complained about noise in the open-plan area and a lack of quiet spaces for concentrated work.
+
+Recommendations
+___ light of these findings, it is recommended that:
+• a policy be introduced discouraging emails outside working hours;
+• managers review project timelines with their teams to ensure they are ___;
+• the number of meetings be reduced, and no meetings be scheduled on Friday afternoons;
+• two meeting rooms be converted ___ quiet working areas.
+
+Conclusion
+Although staff are generally positive about their work, the current levels of stress are a cause for ___. If the measures above are implemented, we can expect improvements in both wellbeing and productivity.`,
+      questions: [
+        ['Blank 1', "sets", "'set out to' = ... amaçlamak."],
+        ['Blank 2', "side", "'On the positive side' = olumlu tarafta."],
+        ['Blank 3', "However", "Zıtlık: 'However' = ancak."],
+        ['Blank 4', "checking", "'admit + fiil-ing' = itiraf etmek."],
+        ['Blank 5', "much", "Sayılamayan isimle 'too much time' ."],
+        ['Blank 6', "source", "'a source of' = ... kaynağı."],
+        ['Blank 7', "In", "'In light of these findings' = bu bulgular ışığında."],
+        ['Blank 8', "realistic", "'realistic' = gerçekçi."],
+        ['Blank 9', "into", "'convert into' = -e dönüştürmek."],
+        ['Blank 10', "concern", "'a cause for concern' = endişe sebebi."],
+      ],
+    },
+    {
+      title: "A Letter to the Editor About Tourism",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `What | Having | outlined | where | reconsider | beyond | throughout | appreciate | those | replaced
+---
+Dear Editor,
+
+I read with great interest your recent article, 'Tourism: Our Town's Golden Future', in which the mayor ___ plans to double the number of visitors to Kaş over the next five years. While I ___ the economic benefits tourism brings, I believe these plans are short-sighted and could seriously damage the very things that make our town special.
+
+___ lived in Kaş for over thirty years, I have witnessed enormous changes. Tourism has undoubtedly created jobs and improved local services. However, it has also pushed house prices ___ the reach of many young families, and in summer our narrow streets and small beaches are already overcrowded.
+
+___ concerns me most is the environmental impact. The proposed new hotel complex would be built on one of the last undeveloped stretches of coastline, an area ___ endangered sea turtles lay their eggs. Once this land is lost, it can never be ___.
+
+Rather than simply attracting more tourists, the council should focus on attracting the right kind of tourism: visitors who stay longer, respect the local environment and spend money in locally owned businesses. Spreading visits more evenly ___ the year would also reduce pressure on the town in July and August.
+
+I urge the council to ___ its plans and to hold a public consultation before any final decision is made. Our town's future should be decided by ___ who live here, not only by those who profit from it.
+
+Yours faithfully,
+Hülya Arslan`,
+      questions: [
+        ['Blank 1', "outlined", "'outline' = ana hatlarıyla anlatmak."],
+        ['Blank 2', "appreciate", "'appreciate' = takdir etmek, anlamak."],
+        ['Blank 3', "Having", "'Having lived here...' = ... yaşamış biri olarak."],
+        ['Blank 4', "beyond", "'beyond the reach of' = ulaşılamayacak kadar."],
+        ['Blank 5', "What", "'What concerns me most is...' kalıbı."],
+        ['Blank 6', "where", "Yer bildiren ilgi zamiri."],
+        ['Blank 7', "replaced", "Edilgen: 'can never be replaced' ."],
+        ['Blank 8', "throughout", "'throughout the year' = yıl boyunca."],
+        ['Blank 9', "reconsider", "'reconsider' = yeniden düşünmek."],
+        ['Blank 10', "those", "'those who live here' = burada yaşayanlar."],
+      ],
+    },
+    {
+      title: "A Problem-Solution Essay: Food Waste",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `depending | due | significantly | However | when | that | while | instead | requires | what
+---
+It is estimated that around one third of all the food produced in the world is lost or wasted. At a time ___ millions of people go hungry, this is not only an economic problem but also a moral and environmental one. This essay will examine the main causes of food waste and suggest some possible solutions.
+
+The causes of the problem vary ___ on the region. In developing countries, much food is lost before it even reaches consumers, ___ to poor storage facilities and inadequate transport. In wealthier countries, by contrast, the majority of waste occurs in shops and households. Supermarkets often reject fruit and vegetables that are perfectly edible but do not look perfect, ___ consumers buy more than they need and throw away food that has passed its 'best before' date, even when it is still safe to eat.
+
+Tackling this issue ___ action at several levels. Governments could invest in better storage and refrigeration in developing countries, which would allow farmers to sell more of ___ they produce. In richer nations, supermarkets should be encouraged — or even required by law, as in France — to donate unsold food to charities ___ of throwing it away.
+
+Individuals, too, have an important role to play. Planning meals, writing shopping lists and understanding the difference between 'use by' and 'best before' dates could ___ reduce household waste.
+
+In conclusion, food waste is a complex problem with no single solution. ___, if governments, businesses and consumers all take responsibility, it is a problem ___ can be dramatically reduced.`,
+      questions: [
+        ['Blank 1', "when", "Zaman bildiren ilgi zamiri: 'At a time when' ."],
+        ['Blank 2', "depending", "'depending on' = -e bağlı olarak."],
+        ['Blank 3', "due", "'due to' = nedeniyle."],
+        ['Blank 4', "while", "Karşıtlık: 'while' = -ken, oysa."],
+        ['Blank 5', "requires", "'requires' = gerektirir."],
+        ['Blank 6', "what", "'what they produce' = ürettikleri şey."],
+        ['Blank 7', "instead", "'instead of' = yerine."],
+        ['Blank 8', "significantly", "'significantly' = önemli ölçüde."],
+        ['Blank 9', "However", "Zıtlık: 'However' = ancak."],
+        ['Blank 10', "that", "İlgi zamiri: 'a problem that can be...' ."],
+      ],
+    },
+    {
+      title: "A Narrative: A Turning Point",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `before | finally | take | company | expected | unlikely | surprise | as | by | witnessing
+---
+I had always believed that I would become a lawyer, like my father and his father before him. It was simply what was ___ of me, and I had never seriously questioned it. Then, in the summer I turned nineteen, everything changed.
+
+I had taken a summer job at a hospital in Ankara, mainly to earn some money ___ starting university. My task was to help in the children's ward — reading stories, playing games and keeping young patients ___.
+
+That was where I met Ela. She was eight years old, had been in hospital for months, and had a way of looking at you ___ if she could see straight through you. On my first day, she beat me at chess three times in a row and then told me, quite seriously, that I was 'too nervous to be a good player'.
+
+Over the following weeks, we became ___ friends. I watched the doctors and nurses who cared for her, and I was struck ___ the way they combined scientific knowledge with endless patience and kindness. For the first time in my life, I felt I was ___ work that truly mattered to me.
+
+On my last day, Ela gave me a drawing of the two of us playing chess. Underneath, in careful letters, she had written: 'Dr Emre'.
+
+That evening, I told my parents I wanted to study medicine. My father was silent for a long time. Then, to my ___, he smiled. 'I wondered how long it would ___ you,' he said.
+
+Ela made a full recovery. I still have her drawing on my wall — and twelve years later, I ___ deserve the title she gave me.`,
+      questions: [
+        ['Blank 1', "expected", "Edilgen: 'was expected' = beklenen."],
+        ['Blank 2', "before", "'before starting university' ."],
+        ['Blank 3', "company", "'keep someone company' = birine eşlik etmek."],
+        ['Blank 4', "as", "'as if' = sanki."],
+        ['Blank 5', "unlikely", "'unlikely friends' = beklenmedik dostlar."],
+        ['Blank 6', "by", "'be struck by' = ... den etkilenmek."],
+        ['Blank 7', "witnessing", "Past continuous: 'I was witnessing' = tanık oluyordum."],
+        ['Blank 8', "surprise", "'to my surprise' = şaşırtıcı biçimde."],
+        ['Blank 9', "take", "'how long it would take' = ne kadar süreceği."],
+        ['Blank 10', "finally", "'finally' = sonunda."],
+      ],
+    },
+    {
+      title: "A Speech Welcoming New Students",
+      instructions: 'Complete the text below with the words in the box.',
+      passage: `me | wait | and | than | quickest | Finally | behalf | cleverer | of | afraid
+---
+Good morning, everyone, and welcome to Kent College!
+
+My name is Deniz, and I'm the president of the Student Council. On ___ of all the students here, I'd like to say how delighted we are to have you with us.
+
+I remember sitting exactly where you are now, three years ago, feeling a mixture ___ excitement and terror. I didn't know anyone, I was worried about getting lost — which I did, several times — and I was convinced that everyone else was ___ than me. If you're feeling the same way, let me reassure you: it's completely normal, and it doesn't last long.
+
+So, what advice can I give you? First, get involved. We have over forty clubs and societies, from robotics to rock climbing. Joining one is the ___ way to make friends who share your interests.
+
+Second, don't be ___ to ask for help. Your teachers are here to support you, ___ so are we. The Student Council office is on the ground floor, and our door is always open.
+
+Third — and this is the one I wish someone had told ___ — don't try to be perfect. You will make mistakes. You'll get a bad mark or two. That's how you learn, and it's not the end of the world.
+
+___, enjoy it. These years will go by faster ___ you think, and one day you might be standing up here giving this speech yourself.
+
+Once again, welcome. We can't ___ to get to know you. Thank you!`,
+      questions: [
+        ['Blank 1', "behalf", "'On behalf of' = adına."],
+        ['Blank 2', "of", "'a mixture of' = ... karışımı."],
+        ['Blank 3', "cleverer", "Karşılaştırma: 'cleverer than me' ."],
+        ['Blank 4', "quickest", "Üstünlük: 'the quickest way' = en hızlı yol."],
+        ['Blank 5', "afraid", "'afraid to' = ... korkmak."],
+        ['Blank 6', "and", "Ekleme: 'and' bağlacı."],
+        ['Blank 7', "me", "Nesne zamiri: 'told me' ."],
+        ['Blank 8', "Finally", "Son maddeyi başlatır: 'Finally' = son olarak."],
+        ['Blank 9', "than", "Karşılaştırma: 'faster than you think' ."],
+        ['Blank 10', "wait", "'can't wait to' = sabırsızlanmak."],
       ],
     },
   ],
 };
 
-module.exports = { WRITING_DATA };
+module.exports = { WRITING_DATA, WRITING_IMAGES_PENDING };

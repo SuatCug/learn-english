@@ -5,6 +5,9 @@
 // - başlık: uygulamada görünen konu başlığı
 // - kaynak: içeriği (sorular + Explanation sekmesi) bu yeni konuya taşınan ESKİ konu, `SEVIYE::Eski başlık`.
 //   null ise konu yeni; henüz sorusu ve açıklaması yok.
+// - seçenekler (isteğe bağlı 4. eleman):
+//   { imageLevel: 'A1' } → konu başka seviyeye taşındı; kart resmi eski seviyenin klasöründe/ID'sinde kalıyor.
+//   { image: false }     → konunun henüz kart resmi yok (frontend kategori illüstrasyonunu gösterir).
 const GRAMMAR_CURRICULUM = {
   A1: [
     ['01-subject-pronouns', 'Subject pronouns: I, you, he, she, it, we, they', null],
@@ -27,6 +30,7 @@ const GRAMMAR_CURRICULUM = {
     ['18-question-words', 'Question words: what, where, who, when...', 'A1::Questions: Word order and question words'],
     ['19-basic-question-forms', 'Basic question forms', 'A2::Asking questions in English: Question forms'],
     ['20-can-cant', "Can / can't", "A1::Can, can't: Ability, possibility, permission"],
+    ['would-like-would-you-like', 'Would like / Would you like?', null],
     ['21-imperatives', "Imperatives: Sit down! Don't talk!", "A1::The imperative: Sit down! Don't talk!"],
     ['22-prepositions-of-time', 'Prepositions of time: at, in, on', 'A1::At, in, on: Prepositions of time'],
     ['23-prepositions-of-place', 'Prepositions of place: at, in, on', 'A1::At, in, on: Prepositions of place'],
@@ -34,10 +38,6 @@ const GRAMMAR_CURRICULUM = {
     ['25-adjectives', 'Adjectives: old, interesting, expensive...', 'A1::Adjectives: Old, interesting, expensive, etc.'],
     ['26-and-but-or-because', 'And, but, or, because', 'A1::Conjunctions: And, but, or, so, because'],
     ['27-basic-word-order', 'Basic word order', 'A1::Basic word order in English'],
-    // "Ekstra" klasöründeki kartlar — A1'in sonuna eklendi.
-    ['a-an-the', 'A / an, the or no article', 'A1::A/an, the, no article: The use of articles in English'],
-    ['there-or-it', 'There or it?', 'A1::There or It'],
-    ['this-vs-it', "This vs it: What's the difference?", "A1::The difference between 'this' and 'it'"],
   ],
   A2: [
     ['01-past-simple-regular-irregular', 'Past simple: Regular and irregular verbs', 'A1::Past simple: Regular/irregular verbs'],
@@ -46,49 +46,49 @@ const GRAMMAR_CURRICULUM = {
     ['04-past-continuous', 'Past continuous', null],
     ['05-past-simple-vs-past-continuous', 'Past simple vs past continuous', 'A2::Past continuous and past simple'],
     ['06-present-perfect', 'Present perfect', 'A2::Present perfect: Form and use'],
-    ['07-present-perfect-vs-past-simple', 'Present perfect vs past simple', 'A2::Present perfect or past simple?'],
     ['08-present-perfect-for-since', 'Present perfect with for and since', "B1::For, since, from: What's the difference?"],
     ['09-already-yet-just', 'Already, yet, just', null],
     ['10-will-predictions-decisions', 'Will: Predictions and decisions', "A1::'Will' and 'shall': Future"],
     ['11-be-going-to', 'Be going to: Plans and predictions', 'A1::Be going to: Plans and predictions'],
     ['12-present-continuous-for-future', 'Present continuous for future arrangements', 'A2::Present continuous for future arrangements'],
+    ['lets-shall-we', "Let's / Shall we?", null],
     ['13-must-mustnt', "Must / mustn't", null],
     ['14-have-to-dont-have-to', "Have to / don't have to", "A2::Have to, don't have to, must, mustn't"],
     ['15-should-shouldnt', "Should / shouldn't: Advice", "A2::Should, shouldn't"],
     ['16-might-might-not', 'Might / might not: Possibility', 'A2::Might, might not: Possibility'],
     ['17-could-ability-possibility', 'Could: Ability and possibility', 'B1::Can, could, be able to: Ability and possibility'],
+    ['be-able-to', 'Be able to', null],
     ['18-countable-and-uncountable-nouns', 'Countable and uncountable nouns', 'A1::A, some, any: Countable and uncountable nouns'],
+    ['a-an-the', 'A / an, the or no article', 'A1::A/an, the, no article: The use of articles in English', { imageLevel: 'A1' }],
+    ['there-or-it', 'There or it?', 'A1::There or It', { imageLevel: 'A1' }],
+    ['this-vs-it', "This vs it: What's the difference?", "A1::The difference between 'this' and 'it'", { imageLevel: 'A1' }],
     ['19-some-any-no', 'Some, any, no', 'B1::Any, no, none: Quantifiers'],
     ['20-much-many-a-lot-of', 'Much, many, a lot of', 'A1::Much, many, a lot of, a little, a few'],
     ['21-a-few-a-little', 'A few, a little', 'A2::Much, many, little, few, some, any: Quantifiers'],
     ['22-too-too-much-too-many-enough', 'Too, too much, too many, enough', 'A2::Too, too much, too many, enough'],
     ['23-something-anything-nothing-everything', 'Something, anything, nothing, everything', 'A2::Something, anything, nothing, etc.'],
     ['24-each-every-all', 'Each, every, all', 'B1::All, both: Quantifiers'],
-    ['25-both-either-neither', 'Both, either, neither', 'B1::Both, either, neither: Quantifiers'],
     ['26-reflexive-pronouns', 'Reflexive pronouns: myself, yourself...', 'B1::Reflexive pronouns: Myself, yourself, etc.'],
     ['27-comparative-adjectives', 'Comparative adjectives: older than, more important than', 'A1::Comparative adjectives: Older than, more important than, etc.'],
     ['28-superlative-adjectives', 'Superlative adjectives: the oldest, the most important', 'A1::Superlative adjectives: The oldest, the most important, etc.'],
     ['29-adverbs-of-manner', 'Adverbs of manner: slowly, carefully...', 'A1::Adverbs of manner (slowly) or adjectives (slow)?'],
     ['30-adverbs-of-degree', 'Adverbs of degree: very, quite, really...', null],
-    ['31-comparative-superlative-adverbs', 'Comparative and superlative adverbs', 'A2::Comparative and superlative adjectives and adverbs'],
     ['32-first-conditional', 'First conditional', 'A2::First conditional and future time clauses'],
     ['33-zero-conditional', 'Zero conditional', null],
     ['34-relative-clauses-basic', 'Relative clauses: who, which, that, where', 'A2::Defining relative clauses: Who, which, that, where'],
     ['35-verb-patterns-basic', 'Verb patterns: want to do, enjoy doing', 'A1::Verbs + to + infinitive and verbs + -ing'],
-    ['36-used-to', "Used to / didn't use to", "A2::Used to, didn't use to: Past habits and states"],
     ['37-prepositions-of-movement', 'Prepositions of movement: along, across, over...', 'A2::Prepositions of movement: Along, across, over, etc.'],
     ['38-although-however-so', 'Although, however, so', 'A2::However, although, because, so, and time connectors'],
     ['39-time-connectors', 'Time connectors: first, then, after that...', null],
-    ['40-basic-question-tags', "Question tags: isn't it? don't you?", null],
   ],
   B1: [
+    ['07-present-perfect-vs-past-simple', 'Present perfect vs past simple', 'A2::Present perfect or past simple?', { imageLevel: 'A2' }],
     ['01-present-perfect-continuous', 'Present perfect continuous', null],
     ['02-present-perfect-simple-vs-continuous', 'Present perfect simple vs continuous', 'B1::Present perfect simple and present perfect continuous'],
     ['03-past-perfect', 'Past perfect', 'A2::Past perfect'],
     ['04-past-perfect-vs-past-simple', 'Past perfect vs past simple', null],
     ['05-past-continuous-vs-past-perfect', 'Past simple, past continuous, past perfect', 'B1::Past simple, past continuous, past perfect'],
-    ['06-future-continuous', 'Future continuous', null],
-    ['07-future-perfect', 'Future perfect', null],
+    ['future-time-clauses-when-until-as-soon-as', 'Future time clauses: when, until, as soon as', null],
     ['08-review-of-all-verb-tenses', 'Review of all verb tenses', 'B1::Review of all intermediate verb tenses (CEFR B1)'],
     ['09-must-have-to-should-advanced', 'Must, have to, should: Obligation and advice', 'B1::Have to, must, should: Obligation, prohibition, necessity, advice'],
     ['10-may-might-could-possibility', 'May, might, could: Possibility', "A2::May and might: What's the difference?"],
@@ -99,7 +99,6 @@ const GRAMMAR_CURRICULUM = {
     ['15-second-conditional', 'Second conditional', 'B1::Second conditional: Unreal situations'],
     ['16-third-conditional-introduction', 'Third conditional: Introduction', 'B1::Third conditional: Past unreal situations'],
     ['17-unless-as-long-as-provided-that', 'Unless, as long as, provided that', 'B2::Unless, even if, provided, as long as, etc.: Other expressions in conditionals'],
-    ['18-mixed-conditional-introduction', 'Mixed conditionals: Introduction', null],
     ['19-present-simple-passive', 'Present simple passive', "A2::Present and past simple passive: 'be' + past participle"],
     ['20-past-simple-passive', 'Past simple passive', null],
     ['21-present-perfect-passive', 'Present perfect passive', null],
@@ -111,21 +110,26 @@ const GRAMMAR_CURRICULUM = {
     ['27-reporting-verbs', 'Reporting verbs', null],
     ['28-gerunds-vs-infinitives', 'Gerunds vs infinitives', 'B1::Gerund or infinitive: Do, to do, doing'],
     ['29-verb-patterns-advanced', 'Verb patterns', 'A2::Infinitives and gerunds: Verb patterns'],
+    ['make-let-allow', 'Make, let, allow', null],
     ['30-expressing-purpose', 'Expressing purpose: to, for, so that', "A2::Expressing purpose with 'to' and 'for'"],
     ['31-defining-relative-clauses', 'Defining relative clauses', 'B1::Defining and non-defining relative clauses'],
     ['32-non-defining-relative-clauses', 'Non-defining relative clauses', null],
     ['33-relative-pronouns-and-adverbs', 'Relative pronouns and adverbs', null],
-    ['34-participle-clauses-introduction', 'Participle clauses: Introduction', null],
+    ['31-comparative-superlative-adverbs', 'Comparative and superlative adverbs', 'A2::Comparative and superlative adjectives and adverbs', { imageLevel: 'A2' }],
     ['35-stative-vs-dynamic-verbs', 'Stative vs dynamic verbs', 'A2::Stative vs dynamic verbs (or non-action vs action verbs)'],
+    ['36-used-to', "Used to / didn't use to", "A2::Used to, didn't use to: Past habits and states", { imageLevel: 'A2' }],
     ['36-used-to-be-used-to-get-used-to', 'Used to, be used to, get used to', 'B1::Usually, used to, be used to, get used to'],
     ['37-phrasal-verbs-separable-inseparable', 'Phrasal verbs: Separable and inseparable', 'A2::Phrasal verbs: Transitive / intransitive, separable / inseparable'],
+    ['25-both-either-neither', 'Both, either, neither', 'B1::Both, either, neither: Quantifiers', { imageLevel: 'A2' }],
     ['38-so-neither-either', 'So, neither, either: So do I, neither do I', 'A2::So, neither: So am I, neither do I, etc.'],
     ['39-question-tags', 'Question tags', "B1::Question tags: Aren't you? don't you?"],
     ['40-indirect-questions', 'Indirect questions', null],
-    ['41-causative-have', 'Causative have: have something done', null],
     ['42-despite-in-spite-of-therefore-however', 'Despite, in spite of, therefore, however', 'B1::Clauses of contrast, purpose and reason'],
+    ['so-and-such', 'So and such: so tired, such a nice day', null],
   ],
   B2: [
+    ['06-future-continuous', 'Future continuous', null, { imageLevel: 'B1' }],
+    ['07-future-perfect', 'Future perfect', null, { imageLevel: 'B1' }],
     ['01-future-perfect-continuous', 'Future perfect continuous', null],
     ['02-future-in-the-past', 'Future in the past', 'B2::Future in the past'],
     ['03-advanced-present-perfect-vs-past-simple', 'Present perfect vs past simple: Advanced', 'B1::Past simple or present perfect?'],
@@ -158,8 +162,10 @@ const GRAMMAR_CURRICULUM = {
     ['30-inversion', 'Inversion: Never have I...', 'B2::Inversion with negative adverbials: Adding emphasis'],
     ['31-cleft-sentences', 'Cleft sentences', 'B2::Cleft sentences: Adding emphasis'],
     ['32-emphasis-and-fronting', 'Emphasis and fronting', null],
+    ['advanced-word-order', 'Advanced word order', null],
     ['33-ellipsis-and-substitution', 'Ellipsis and substitution', 'B2::Ellipsis and substitution: Omitting or replacing words'],
     ['34-advanced-question-structures', 'Advanced question structures', null],
+    ['whatever-whoever-wherever', 'Whatever, whoever, wherever...', null],
     ['35-perfect-gerunds-and-infinitives', 'Perfect gerunds and infinitives', 'B2::Gerunds and infinitives: Complex forms'],
     ['36-passive-infinitives', 'Passive infinitives', null],
     ['37-advanced-verb-patterns', 'Advanced verb patterns', 'B2::Verb + object + infinitive/gerund: Verb patterns'],
@@ -176,15 +182,18 @@ const GRAMMAR_CURRICULUM = {
 
 const grammarImageId = (level, file) => `topics/grammar/${level.toLowerCase()}/${file}`;
 
+// Satırın kart resmi için kullanılacak seviye (taşınan konularda eski seviye); resmi yoksa null.
+const grammarImageLevel = (level, options = {}) => (options.image === false ? null : options.imageLevel ?? level);
+
 // Seed'in kullandığı düz liste: { title, category, level, image, source }
 const grammarTopics = Object.entries(GRAMMAR_CURRICULUM).flatMap(([level, rows]) =>
-  rows.map(([file, title, source]) => ({
+  rows.map(([file, title, source, options]) => ({
     title,
     category: 'grammar',
     level,
-    image: grammarImageId(level, file),
+    image: grammarImageLevel(level, options) ? grammarImageId(grammarImageLevel(level, options), file) : null,
     source,
   }))
 );
 
-module.exports = { GRAMMAR_CURRICULUM, grammarTopics, grammarImageId };
+module.exports = { GRAMMAR_CURRICULUM, grammarTopics, grammarImageId, grammarImageLevel };

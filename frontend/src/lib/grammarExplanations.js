@@ -10,7 +10,574 @@
 //   notes?: string[],       // tablolardan sonra, keyPoint'ten önce ek paragraflar
 //   keyPoint?: { title: string, lines: string[] },
 // }
+import { B1_EXPLANATIONS } from './grammarExplanationsB1';
+import { B2_EXPLANATIONS } from './grammarExplanationsB2';
+
 export const GRAMMAR_EXPLANATIONS = {
+  "A1::Subject pronouns: I, you, he, she, it, we, they": {
+    heading: 'Subject Pronouns: I, you, he, she, it, we, they',
+    intro: [
+      'A subject pronoun replaces a noun that is the **subject** of the sentence — the person or thing that does the action. It usually comes **before the verb**.',
+      'We use pronouns so we don\'t repeat names: **Emma** is a teacher. **She** works in a school.',
+    ],
+    tables: [
+      {
+        heading: 'Singular',
+        columns: ['Pronoun', 'Used for', 'Example'],
+        rows: [
+          ['**I**', 'the speaker (me)', '**I** am a student.'],
+          ['**you**', 'the person I am talking to', '**You** are my friend.'],
+          ['**he**', 'one man or boy', 'Tom is 12. **He** likes football.'],
+          ['**she**', 'one woman or girl', 'Anna is a doctor. **She** works in a hospital.'],
+          ['**it**', 'one thing, animal or place', 'I have a cat. **It** is black.'],
+        ],
+      },
+      {
+        heading: 'Plural',
+        columns: ['Pronoun', 'Used for', 'Example'],
+        rows: [
+          ['**we**', 'the speaker + other people', 'Ali and I are friends. **We** play tennis.'],
+          ['**you**', 'two or more people I am talking to', 'Ben and you are late. **You** are always late!'],
+          ['**they**', 'other people, things or animals', 'My parents are at home. **They** are tired.'],
+        ],
+      },
+    ],
+    notes: [
+      '**I** is always written with a capital letter, even in the middle of a sentence: My sister and **I** are tall.',
+      '**You** is the same in the singular and the plural.',
+      '**It** is for things, animals and places: The car is new. **It** is fast. (For a pet we know well, we can also use he or she.)',
+      '**They** is for people **and** things in the plural: The shoes are new. **They** are nice.',
+      'A sentence in English always needs a subject: **It** is cold. (not: Is cold.)',
+    ],
+    keyPoint: {
+      title: 'Key Point: How to choose the pronoun',
+      lines: [
+        'One man → **he**  |  One woman → **she**  |  One thing / animal → **it**',
+        'Me + other people → **we**  |  Other people / things → **they**',
+        'Subject pronouns come **before the verb**: **She** is happy. (not: Her is happy.)',
+      ],
+    },
+  },
+
+  "A1::'To be': Positive, negative and questions": {
+    heading: "'To be': Positive, Negative and Questions",
+    intro: [
+      "The verb 'to be' has three forms in the present: **am**, **is**, **are**. We use the same verb to make positive sentences, negative sentences and questions — we don't need 'do' or 'does'.",
+      "**Negative:** add **not** after am / is / are. **Question:** put am / is / are **before** the subject.",
+    ],
+    tables: [
+      {
+        heading: 'Positive',
+        columns: ['Full form', 'Short form', 'Example'],
+        rows: [
+          ['I **am**', "I**'m**", "I**'m** a student."],
+          ['He / She / It **is**', "He**'s** / She**'s** / It**'s**", "She**'s** from Spain."],
+          ['We / You / They **are**', "We**'re** / You**'re** / They**'re**", "They**'re** at home."],
+        ],
+      },
+      {
+        heading: 'Negative',
+        columns: ['Full form', 'Short form', 'Example'],
+        rows: [
+          ['I **am not**', "I**'m not**", "I**'m not** tired."],
+          ['He / She / It **is not**', "He **isn't** / He**'s not**", "It **isn't** cold today."],
+          ['We / You / They **are not**', "We **aren't** / We**'re not**", "They **aren't** here."],
+        ],
+      },
+      {
+        heading: 'Questions',
+        columns: ['Question', 'Example'],
+        rows: [
+          ['**Am** I ...?', '**Am** I late?'],
+          ['**Is** he / she / it ...?', '**Is** she your sister?'],
+          ['**Are** we / you / they ...?', '**Are** you hungry?'],
+          ['Question word + **am / is / are** ...?', 'Where **is** the station? How old **are** you?'],
+        ],
+      },
+      {
+        heading: 'Short Answers',
+        columns: ['Question', 'Yes', 'No'],
+        rows: [
+          ['Are you a student?', 'Yes, I **am**.', "No, I**'m not**."],
+          ['Is he Turkish?', 'Yes, he **is**.', "No, he **isn't**."],
+          ['Are they friends?', 'Yes, they **are**.', "No, they **aren't**."],
+        ],
+      },
+    ],
+    notes: [
+      "There is **no** short form 'amn't'. Use **I'm not**: I'm not ready. (not: I amn't ready.)",
+      "Don't use short forms in **positive short answers**: Yes, I **am**. (not: Yes, I'm.) / Yes, she **is**. (not: Yes, she's.)",
+      "Don't use 'do' with 'to be': **Are** you happy? (not: Do you are happy?) / She **isn't** here. (not: She doesn't is here.)",
+      "Singular noun → **is**: My car **is** red. Plural noun → **are**: My shoes **are** new.",
+    ],
+    keyPoint: {
+      title: 'Key Point: Word order',
+      lines: [
+        'Positive: Subject + **am/is/are** — She **is** happy.',
+        'Negative: Subject + **am/is/are + not** — She **is not (isn\'t)** happy.',
+        'Question: **Am/Is/Are** + subject? — **Is** she happy? — Yes, she is. / No, she isn\'t.',
+      ],
+    },
+  },
+
+  "A1::Articles: a / an": {
+    heading: 'Articles: a / an',
+    intro: [
+      'We use **a** or **an** before a **singular countable noun** when we talk about one thing or person for the first time, or when it is not a specific one: I have **a** brother. She eats **an** apple.',
+      'The choice between a and an depends on the **sound** at the start of the next word, not the letter.',
+    ],
+    tables: [
+      {
+        heading: 'a + consonant sound',
+        columns: ['Rule', 'Example'],
+        rows: [
+          ['b, c, d, f, g... sounds', '**a** book, **a** cat, **a** dog'],
+          ['h that we pronounce', '**a** house, **a** horse'],
+          ['u / eu with a "you" /ju:/ sound', '**a** university, **a** uniform, **a** European city'],
+        ],
+      },
+      {
+        heading: 'an + vowel sound',
+        columns: ['Rule', 'Example'],
+        rows: [
+          ['a, e, i, o, u sounds', '**an** apple, **an** egg, **an** island, **an** orange, **an** umbrella'],
+          ['silent h', '**an** hour, **an** honest man'],
+          ['adjective starting with a vowel sound', '**an** old car, **an** interesting book'],
+        ],
+      },
+      {
+        heading: 'When we use a / an',
+        columns: ['Use', 'Example'],
+        rows: [
+          ['one thing or person (singular)', 'I need **a** pen.'],
+          ['jobs', 'She is **a** teacher. He is **an** engineer.'],
+          ['saying what something is', "It's **an** animal. That's **a** bus."],
+          ['with There is', 'There is **a** park near my house.'],
+        ],
+      },
+    ],
+    notes: [
+      "Don't use a / an with **plural** nouns: I have two **cats**. (not: two a cats)",
+      "Don't use a / an with **uncountable** nouns: I drink **water**. (not: a water)",
+      'If there is an **adjective** before the noun, look at the adjective: **a** big apple / **an** old book.',
+      "Don't forget a / an with jobs: She is **a** nurse. (not: She is nurse.)",
+    ],
+    keyPoint: {
+      title: 'Key Point: Listen to the first sound',
+      lines: [
+        'Consonant sound → **a**: a dog, a house, a university',
+        'Vowel sound → **an**: an egg, an hour, an old man',
+      ],
+    },
+  },
+
+  "A1::Present simple: Negatives and questions": {
+    heading: 'Present Simple: Negatives and Questions',
+    intro: [
+      "In the present simple we use the helping verb **do / does** to make negatives and questions. After do / does / don't / doesn't, the main verb is always in the **base form** (no -s).",
+    ],
+    tables: [
+      {
+        heading: 'Negative',
+        columns: ['Subject', 'do / does + not', 'Example'],
+        rows: [
+          ['I / You / We / They', "**don't** (do not)", "I **don't like** coffee."],
+          ['He / She / It', "**doesn't** (does not)", "She **doesn't eat** meat."],
+        ],
+      },
+      {
+        heading: 'Questions',
+        columns: ['do / does', 'Subject + verb', 'Example'],
+        rows: [
+          ['**Do**', 'I / you / we / they + verb', '**Do** you **speak** English?'],
+          ['**Does**', 'he / she / it + verb', '**Does** he **work** in a bank?'],
+          ['Question word + **do / does**', 'subject + verb', 'Where **do** you **live**? What time **does** it **start**?'],
+        ],
+      },
+      {
+        heading: 'Short Answers',
+        columns: ['Question', 'Yes', 'No'],
+        rows: [
+          ['Do you like tea?', 'Yes, I **do**.', "No, I **don't**."],
+          ['Does she drive?', 'Yes, she **does**.', "No, she **doesn't**."],
+          ['Do they live here?', 'Yes, they **do**.', "No, they **don't**."],
+        ],
+      },
+    ],
+    notes: [
+      "The **-s** goes on does / doesn't, not on the main verb: She **doesn't work**. (not: She doesn't works.) / **Does** he **play**? (not: Does he plays?)",
+      "In short answers we repeat **do / does**, not the main verb: Yes, I **do**. (not: Yes, I like.)",
+      "Don't use do / does with the verb 'to be': **Are** you happy? (not: Do you are happy?)",
+    ],
+    keyPoint: {
+      title: 'Key Point: Word order',
+      lines: [
+        "Negative: Subject + **don't / doesn't** + verb — He **doesn't play** tennis.",
+        'Question: **Do / Does** + subject + verb? — **Does** he **play** tennis?',
+        "Short answer: Yes, he **does**. / No, he **doesn't**.",
+      ],
+    },
+  },
+
+  "A1::Would like / Would you like?": {
+    heading: 'Would like / Would you like?',
+    intro: [
+      "**Would like** is a polite way to say **want**. We use it to ask for things, to offer things and to talk about wishes.",
+      "**I'd like** a coffee, please. (= I want a coffee.)  **Would you like** some cake? (= Do you want some cake?)",
+    ],
+    tables: [
+      {
+        heading: 'Positive and Negative',
+        columns: ['Form', 'Example'],
+        rows: [
+          ['Subject + **would like** + noun', "I **would like** (I**'d like**) a sandwich."],
+          ['Subject + **would like to** + verb', "She **would like to** visit Paris."],
+          ["Subject + **wouldn't like** (to)", "He **wouldn't like** to live there."],
+        ],
+      },
+      {
+        heading: 'Questions and Answers',
+        columns: ['Question', 'Answer'],
+        rows: [
+          ['**Would you like** a drink?', 'Yes, **please**. / No, **thank you**.'],
+          ['**Would you like to** come with us?', "Yes, I **would**. / No, I **wouldn't**. / I'd love to!"],
+          ['What **would you like** to eat?', "I**'d like** a pizza, please."],
+        ],
+      },
+      {
+        heading: 'like vs would like',
+        columns: ['', 'Meaning', 'Example'],
+        rows: [
+          ['**like**', 'enjoy, in general', 'I **like** coffee. (I always enjoy it.)'],
+          ['**would like**', 'want, now or in the future', "I**'d like** a coffee. (I want one now.)"],
+          ['**Do you like...?**', 'asking about general taste', '**Do you like** cats? — Yes, I do.'],
+          ['**Would you like...?**', 'offering something', '**Would you like** a cat? — Yes, please!'],
+        ],
+      },
+    ],
+    notes: [
+      "The short form of I would is **I'd**: I'd like, you'd like, he'd like, we'd like, they'd like.",
+      "After would like, use **to + verb**: I'd like **to go**. (not: I'd like go.)",
+      'Would like does not change: He **would like**. (not: He would likes.)',
+      "Don't use the short form in a positive short answer: Yes, I **would**. (not: Yes, I'd.)",
+      "**I want** can sound rude in shops and restaurants. **I'd like** is more polite.",
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        "Asking politely: **I'd like** + noun / **to** + verb.",
+        'Offering: **Would you like** + noun / **to** + verb?',
+        'Answering: **Yes, please.** / **No, thank you.**',
+      ],
+    },
+  },
+
+  "A2::Past continuous": {
+    heading: 'Past Continuous',
+    intro: [
+      'We use the past continuous for an action that was **in progress** at a specific time in the past: At 8 pm yesterday, I **was having** dinner.',
+      'It is also used for a longer action that was interrupted by a shorter one (past simple): I **was cooking** when the phone **rang**.',
+    ],
+    tables: [
+      {
+        heading: 'Positive',
+        columns: ['Subject', 'was / were + verb-ing', 'Example'],
+        rows: [
+          ['I / He / She / It', '**was** + verb-ing', 'She **was reading** at 10 pm.'],
+          ['We / You / They', '**were** + verb-ing', 'They **were watching** TV.'],
+        ],
+      },
+      {
+        heading: 'Negative',
+        columns: ['Subject', "wasn't / weren't + verb-ing", 'Example'],
+        rows: [
+          ['I / He / She / It', "**wasn't** (was not)", "He **wasn't listening**."],
+          ['We / You / They', "**weren't** (were not)", "We **weren't sleeping**."],
+        ],
+      },
+      {
+        heading: 'Questions',
+        columns: ['Question', 'Example'],
+        rows: [
+          ['**Was** I / he / she / it + verb-ing?', '**Was** it **raining**?'],
+          ['**Were** we / you / they + verb-ing?', '**Were** you **working** at 9?'],
+          ['Question word + was / were ...?', 'What **were** you **doing** at midnight?'],
+        ],
+      },
+      {
+        heading: 'Short Answers',
+        columns: ['Question', 'Yes', 'No'],
+        rows: [
+          ['Was she cooking?', 'Yes, she **was**.', "No, she **wasn't**."],
+          ['Were they playing?', 'Yes, they **were**.', "No, they **weren't**."],
+        ],
+      },
+    ],
+    notes: [
+      'Common time expressions: **at 8 o\'clock yesterday**, **at that time**, **all morning**, **when** + past simple, **while** + past continuous.',
+      'Spelling of -ing: make → **making**, run → **running**, study → **studying**.',
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        'was / were + verb-ing = an action **in progress** in the past.',
+        'Long action (past continuous) + short action (past simple): I **was walking** home when I **saw** Tom.',
+      ],
+    },
+  },
+
+  "A2::Already, yet, just": {
+    heading: 'Already, Yet, Just',
+    intro: 'We often use **already**, **yet** and **just** with the **present perfect** (have / has + past participle) to talk about time.',
+    tables: [
+      {
+        columns: ['Word', 'Meaning', 'Sentence type', 'Position', 'Example'],
+        rows: [
+          ['**just**', 'a very short time ago', 'positive', 'between have/has and the verb', "I've **just** finished."],
+          ['**already**', 'earlier than expected / before now', 'positive', 'between have/has and the verb', "She's **already** left."],
+          ['**yet**', 'until now (we expect it to happen)', 'negative & questions', 'at the end of the sentence', "I haven't eaten **yet**. / Have you finished **yet**?"],
+        ],
+      },
+    ],
+    notes: [
+      "Don't use **yet** in positive sentences: I've **already** done it. (not: I've done it yet.)",
+      "**Already** in a question shows surprise: Have you **already** finished? That was quick!",
+      "Short forms are common: I've, you've, he's, she's, we've, they've.",
+    ],
+    keyPoint: {
+      title: 'Key Point: Word order',
+      lines: [
+        'have / has + **just / already** + past participle: We have **just** arrived.',
+        "haven't / hasn't + past participle + ... + **yet**: He hasn't called **yet**.",
+      ],
+    },
+  },
+
+  "A2::Let's / Shall we?": {
+    heading: "Let's / Shall we? / Shall I?",
+    intro: "We use **Let's** and **Shall we...?** to make suggestions, and **Shall I...?** to offer help. After all of them we use the **base form** of the verb (no 'to').",
+    tables: [
+      {
+        columns: ['Form', 'Use', 'Example'],
+        rows: [
+          ["**Let's** + verb", 'suggestion (you and me)', "**Let's go** to the beach."],
+          ["**Let's not** + verb", 'negative suggestion', "**Let's not be** late."],
+          ['**Shall we** + verb?', 'suggestion as a question', '**Shall we watch** a film?'],
+          ['**Shall I** + verb?', 'offering to help', '**Shall I open** the window?'],
+          ['What / Where **shall we** + verb?', 'asking for ideas', 'What **shall we do** tonight?'],
+          ["Let's ..., **shall we?**", 'question tag after Let\'s', "Let's meet at 7, **shall we**?"],
+        ],
+      },
+      {
+        heading: 'Answering',
+        columns: ['Suggestion', 'Yes', 'No'],
+        rows: [
+          ['Shall we go out?', "Yes, **let's**! / Good idea!", "No, **let's not**. / I'd rather not."],
+          ['Shall I help you?', 'Yes, **please**.', "No, **thanks**. I'm OK."],
+        ],
+      },
+    ],
+    notes: [
+      "**Let's** = Let **us**. We don't use the long form in everyday English.",
+      "Negative is **Let's not**, not Don't let's (that is very informal) and never Let's don't.",
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        "Let's / Shall we / Shall I + **base verb**: Let's **eat**. (not: Let's to eat / Let's eating)",
+      ],
+    },
+  },
+
+  "A2::Must / mustn't": {
+    heading: "Must / Mustn't",
+    intro: [
+      'We use **must** to say that something is **necessary** or a **rule**: You **must** wear a seatbelt.',
+      "We use **mustn't** to say that something is **not allowed** (prohibited): You **mustn't** smoke here.",
+    ],
+    tables: [
+      {
+        columns: ['Form', 'Meaning', 'Example'],
+        rows: [
+          ['**must** + verb', 'it is necessary / a rule', 'Students **must** wear a uniform.'],
+          ['**must** + verb', 'I think it is important (personal)', 'I **must** call my mum tonight.'],
+          ["**mustn't** + verb", "don't do it! / it is not allowed", "You **mustn't** touch that. It's hot!"],
+        ],
+      },
+      {
+        heading: 'Form',
+        columns: ['Subject', 'Positive', 'Negative'],
+        rows: [
+          ['I / You / He / She / It / We / They', '**must** go', "**mustn't** (must not) go"],
+        ],
+      },
+    ],
+    notes: [
+      'Must is the same for every subject: He **must** go. (not: He musts go.)',
+      'After must / mustn\'t, use the **base form** without to: You must **wait**. (not: must to wait)',
+      "Don't use do / does with must: You **mustn't** park here. (not: You don't must park here.)",
+      "**Mustn't** ≠ **don't have to**: You **mustn't** go (= it is not allowed). You **don't have to** go (= it is not necessary).",
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        'must = necessary / a rule  |  mustn\'t = prohibited',
+        'must / mustn\'t + **base verb** (no -s, no to)',
+      ],
+    },
+  },
+
+  "A2::Be able to": {
+    heading: 'Be Able To',
+    intro: [
+      '**Be able to** means the same as **can**: it talks about **ability** or **possibility**. I **can** swim = I **am able to** swim.',
+      "We need **be able to** when we can't use can: after **will**, after **to**, and in the **present perfect**.",
+    ],
+    tables: [
+      {
+        columns: ['Tense', 'Form', 'Example'],
+        rows: [
+          ['Present', '**am / is / are able to**', 'She **is able to** speak three languages.'],
+          ['Past', '**was / were able to**', 'We **were able to** find the hotel.'],
+          ['Future', '**will be able to**', "I'll **be able to** help you tomorrow."],
+          ['Present perfect', '**have / has been able to**', "I **haven't been able to** sleep this week."],
+          ['After "to"', '**to be able to**', "I'd like **to be able to** play the guitar."],
+        ],
+      },
+      {
+        heading: 'Negatives and Questions',
+        columns: ['Form', 'Example'],
+        rows: [
+          ["isn't / wasn't / weren't able to", "They **weren't able to** come."],
+          ["won't be able to", "He **won't be able to** win."],
+          ['Are you able to ...? / Will you be able to ...?', '**Will** you **be able to** come?'],
+        ],
+      },
+    ],
+    notes: [
+      "There is no future or infinitive of can: **will be able to** (not: will can) / **to be able to** (not: to can).",
+      'After able, always use **to + base verb**: able **to open** (not: able open).',
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        'can → be able to: will **be able to** / want **to be able to** / have **been able to**',
+      ],
+    },
+  },
+
+  "A2::Adverbs of degree: very, quite, really...": {
+    heading: 'Adverbs of Degree: very, quite, really, too, enough...',
+    intro: 'Adverbs of degree tell us **how much** — they make an adjective or adverb stronger or weaker: It\'s **very** cold. / It\'s **a bit** cold.',
+    tables: [
+      {
+        heading: 'Strong → weak',
+        columns: ['Adverb', 'Meaning', 'Example'],
+        rows: [
+          ['**extremely**', 'very, very', "I'm **extremely** tired."],
+          ['**really / very**', 'a lot', 'The film was **really** good. / It\'s **very** hot.'],
+          ['**quite**', 'more than a little, but not very', 'The test was **quite** easy.'],
+          ['**a bit / a little**', 'a small amount', 'The soup is **a bit** salty.'],
+        ],
+      },
+      {
+        heading: 'Too and enough',
+        columns: ['Form', 'Meaning', 'Example'],
+        rows: [
+          ['**too** + adjective', 'more than we want (a problem)', "It's **too** expensive. I can't buy it."],
+          ['**too** + adjective + **to** + verb', '', 'The coffee is **too hot to drink**.'],
+          ['adjective + **enough**', 'as much as we need', 'The room is **big enough**.'],
+          ["**not** + adjective + **enough** + **to** + verb", 'less than we need', "He isn't **old enough to drive**."],
+        ],
+      },
+    ],
+    notes: [
+      'Most adverbs of degree go **before** the adjective: **very** nice, **really** big. But **enough** goes **after** it: big **enough**.',
+      '**Very** ≠ **too**: It\'s **very** hot (but OK). It\'s **too** hot (a problem — I can\'t go out).',
+      "With verbs, use **very much** / **a lot** at the end: I like it **very much**. (not: I very like it.)",
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        'very / really / quite / a bit / too + **adjective**',
+        'adjective + **enough**',
+      ],
+    },
+  },
+
+  "A2::Zero conditional": {
+    heading: 'Zero Conditional',
+    intro: 'We use the zero conditional for things that are **always true**: facts, science and general habits. The result **always** happens when the condition happens.',
+    tables: [
+      {
+        columns: ['If clause', 'Main clause', 'Example'],
+        rows: [
+          ['If + **present simple**', '**present simple**', 'If you **heat** ice, it **melts**.'],
+          ['If + **present simple**', '**present simple**', "If I **drink** coffee at night, I **don't sleep**."],
+          ['**When** + present simple', '**present simple**', 'When it **rains**, the grass **gets** wet.'],
+        ],
+      },
+      {
+        heading: 'Questions',
+        columns: ['Form', 'Example'],
+        rows: [
+          ['What happens if ...?', 'What **happens** if you **mix** oil and water?'],
+          ['Do / Does ... if ...?', '**Do** plants **die** if they **don\'t get** water?'],
+        ],
+      },
+    ],
+    notes: [
+      'The if-clause can come first or second. When it comes first, use a **comma**: If it rains, I take a bus. / I take a bus **if** it rains.',
+      'In the zero conditional, **if** and **when** mean almost the same.',
+      "Don't use **will** in the zero conditional: If you heat water, it **boils**. (not: it will boil — that is the first conditional for one specific situation.)",
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        'If + present simple, present simple → a general truth.',
+        'If you **freeze** water, it **becomes** ice.',
+      ],
+    },
+  },
+
+  "A2::Time connectors: first, then, after that...": {
+    heading: 'Time Connectors: first, then, after that, finally...',
+    intro: 'Time connectors show the **order** of events. We use them in stories, instructions and when we describe our day.',
+    tables: [
+      {
+        heading: 'Order of events',
+        columns: ['Connector', 'Use', 'Example'],
+        rows: [
+          ['**First / First of all**', 'the first step', '**First**, I wake up at 7.'],
+          ['**Then / Next**', 'the next step', '**Then** I have a shower. **Next**, I get dressed.'],
+          ['**After that**', 'the next step', '**After that**, I have breakfast.'],
+          ['**Finally**', 'the last step', '**Finally**, I leave the house.'],
+        ],
+      },
+      {
+        heading: 'Before / after',
+        columns: ['Form', 'Example'],
+        rows: [
+          ['**before** + clause', 'I brush my teeth **before** I go to bed.'],
+          ['**after** + noun', '**After** dinner, we watched a film.'],
+          ['**after** + verb-ing', '**After** eating, she washed the dishes.'],
+          ['**before** + verb-ing', 'Read the question **before** answering.'],
+        ],
+      },
+    ],
+    notes: [
+      'We usually put a **comma** after First, Next, After that and Finally at the start of a sentence: **First,** cut the bread.',
+      "**Then** is often used with and: I had lunch **and then** I went home.",
+      "**After** needs a noun or -ing (after **lunch**); **after that** stands alone (After that, we left). Don't say: After, we left.",
+    ],
+    keyPoint: {
+      title: 'Key Point',
+      lines: [
+        'First → Then / Next → After that → Finally',
+      ],
+    },
+  },
+
   "A1::The verb 'to be': am, is, are": {
     heading: "Present Simple: 'to be' (am, is, are)",
     intro: "In English, the verb 'to be' (am, is, are) is used to describe or identify people, places, and things.",
@@ -448,7 +1015,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A1::There or it?": {
+  "A2::There or it?": {
     heading: "There or It",
     intro: "We use 'there' to say something exists, and 'it' for weather, time, distance, and identifying things.",
     tables: [
@@ -586,7 +1153,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A1::A / an, the or no article": {
+  "A2::A / an, the or no article": {
     heading: 'Articles: A/An, The, or No Article',
     intro: "We use 'a/an' the first time we mention something, 'the' for something specific or already known, and no article for general plural or uncountable nouns.",
     tables: [
@@ -639,7 +1206,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A1::This vs it: What's the difference?": {
+  "A2::This vs it: What's the difference?": {
     heading: "This or It",
     intro: "We use 'this' to introduce or point to something new or nearby, and 'it' to refer back to something already mentioned.",
     tables: [
@@ -778,7 +1345,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A2::Present perfect vs past simple": {
+  "B1::Present perfect vs past simple": {
     heading: 'Present Perfect or Past Simple?',
     intro: 'The past simple is for finished actions at a definite past time; the present perfect is for past actions without a stated time, or that connect to now.',
     tables: [
@@ -808,7 +1375,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A2::Comparative and superlative adverbs": {
+  "B1::Comparative and superlative adverbs": {
     heading: 'Comparative and Superlative Adjectives and Adverbs',
     intro: 'We use comparatives to compare two things and superlatives to compare one thing with a whole group.',
     tables: [
@@ -957,7 +1524,7 @@ export const GRAMMAR_EXPLANATIONS = {
     },
   },
 
-  "A2::Used to / didn't use to": {
+  "B1::Used to / didn't use to": {
     heading: 'Used To',
     intro: "'Used to' describes past habits or states that are no longer true.",
     tables: [
@@ -1391,7 +1958,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
-  "A2::Both, either, neither": {
+  "B1::Both, either, neither": {
     heading: 'Both, Either, Neither',
     intro: "These quantifiers refer to two things: 'both' means the two together, 'either' means one of two, and 'neither' means not one nor the other.",
     tables: [
@@ -1797,4 +2364,7 @@ export const GRAMMAR_EXPLANATIONS = {
     ],
   },
 
+  // B1/B2 konularının bir kısmı ayrı dosyalarda (dosya boyutu için).
+  ...B1_EXPLANATIONS,
+  ...B2_EXPLANATIONS,
 };

@@ -126,9 +126,10 @@ function InlineQuestionField({ question, value, onChange, disabled, theme }) {
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className={`mx-1.5 inline-block rounded border border-gray-300 bg-white px-2.5 py-1.5 text-base text-gray-900 focus:outline-none focus:ring-2 ${theme.ring} disabled:bg-gray-50`}
+        className={`mx-1.5 inline-block min-w-[6rem] rounded border border-gray-300 bg-white px-2.5 py-1.5 text-base text-gray-900 focus:outline-none focus:ring-2 ${theme.ring} disabled:bg-gray-50`}
       >
-        <option value="">...</option>
+        {/* Boş başlangıç değeri: kutuda boş görünür, açılan listede seçenek olarak çıkmaz. */}
+        <option value="" disabled hidden></option>
         {question.options.map((option) => (
           <option key={option} value={option}>
             {option}

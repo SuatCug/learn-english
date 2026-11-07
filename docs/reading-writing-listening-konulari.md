@@ -1,192 +1,172 @@
 # Reading, Writing ve Listening Konuları
 
-**Toplam:** Reading: 102 · Writing: 38 · Listening: 20
+**Toplam:** Reading: 80 · Writing: 40 · Listening: 20
 
 Uygulamadaki güncel konu listesi (seviye ve kart sırasıyla). Kart resmi hazırlayacaksan **Dosya adı** sütunundaki isimleri kullan; gramer ve kelime zip'leriyle aynı yapı: `<Kategori>/<Seviye klasörü>/<dosya adı>.png`, 1200×630.
 
-## Reading (102 konu)
+## Reading (80 konu)
 
-### A1 — klasör: `Reading/A1-Beginner/` (26 konu)
-
-| # | Konu | Dosya adı |
-|---|---|---|
-| 1 | Guess Who? | `01-guess-who.png` |
-| 2 | About My Family (Describing People) | `02-about-my-family-describing-people.png` |
-| 3 | My Neighborhood | `03-my-neighborhood.png` |
-| 4 | The British Ways | `04-the-british-ways.png` |
-| 5 | My Life Abroad | `05-my-life-abroad.png` |
-| 6 | Top Things That I Do | `06-top-things-that-i-do.png` |
-| 7 | A Day in the Life of an Airline Pilot | `07-a-day-in-the-life-of-an-airline-pilot.png` |
-| 8 | The Daily Routines of a Sportswoman | `08-the-daily-routines-of-a-sportswoman.png` |
-| 9 | What Do You Do With Your Free Time? | `09-what-do-you-do-with-your-free-time.png` |
-| 10 | Memories of My First Day at School | `10-memories-of-my-first-day-at-school.png` |
-| 11 | Email to a Friend: I'm Confined at Home | `11-email-to-a-friend-im-confined-at-home.png` |
-| 12 | Traditions Around the World | `12-traditions-around-the-world.png` |
-| 13 | Thanksgiving | `13-thanksgiving.png` |
-| 14 | Pancake Day (British Traditions) | `14-pancake-day-british-traditions.png` |
-| 15 | What Is Wearable Technology? | `15-what-is-wearable-technology.png` |
-| 16 | Going to the Mall | `16-going-to-the-mall.png` |
-| 17 | Tips for Travelling Alone | `17-tips-for-travelling-alone.png` |
-| 18 | Famous People's First Jobs | `18-famous-peoples-first-jobs.png` |
-| 19 | Three American Festivals | `19-three-american-festivals.png` |
-| 20 | A Trip Around the USA | `20-a-trip-around-the-usa.png` |
-| 21 | My Next Summer Holiday Plan | `21-my-next-summer-holiday-plan.png` |
-| 22 | Where Are You Going to Shop? | `22-where-are-you-going-to-shop.png` |
-| 23 | Future Retirement Plans | `23-future-retirement-plans.png` |
-| 24 | Online Shopping | `24-online-shopping.png` |
-| 25 | Looking for the Perfect Home | `25-looking-for-the-perfect-home.png` |
-| 26 | Tips for Visiting London with Young Children | `26-tips-for-visiting-london-with-young-children.png` |
-
-### A2 — klasör: `Reading/A2-Elementary/` (26 konu)
+### A1 — klasör: `Reading/A1-Beginner/` (20 konu)
 
 | # | Konu | Dosya adı |
 |---|---|---|
-| 1 | Should I Tell My Neighbour? | `01-should-i-tell-my-neighbour.png` |
-| 2 | The Girl Who Saved 100 Lives | `02-the-girl-who-saved-100-lives.png` |
-| 3 | Living in a Small Town vs a Big City | `03-living-in-a-small-town-vs-a-big-city.png` |
-| 4 | What Rainbows Mean Around the World | `04-what-rainbows-mean-around-the-world.png` |
-| 5 | Should Kids Help with Household Chores? | `05-should-kids-help-with-household-chores.png` |
-| 6 | Three Popular Inventions from the 1920s | `06-three-popular-inventions-from-the-1920s.png` |
-| 7 | A Really Popular Summer Festival in the UK | `07-a-really-popular-summer-festival-in-the-uk.png` |
-| 8 | Three Experiences I've Had | `08-three-experiences-ive-had.png` |
-| 9 | How My Life Has Changed | `09-how-my-life-has-changed.png` |
-| 10 | Hobbies: Why Do People Collect? | `10-hobbies-why-do-people-collect.png` |
-| 11 | The Man with the Most World Records | `11-the-man-with-the-most-world-records.png` |
-| 12 | Why Aren't Babies Born on Certain Days? | `12-why-arent-babies-born-on-certain-days.png` |
-| 13 | Diva of Magic | `13-diva-of-magic.png` |
-| 14 | How Will Life Be Different After Covid-19? | `14-how-will-life-be-different-after-covid-19.png` |
-| 15 | Frogs in Love: Romeo and Juliet | `15-frogs-in-love-romeo-and-juliet.png` |
-| 16 | Ancient Robots | `16-ancient-robots.png` |
-| 17 | How to Play Carrom | `17-how-to-play-carrom.png` |
-| 18 | Travel: The Rock Garden of Chandigarh | `18-travel-the-rock-garden-of-chandigarh.png` |
-| 19 | Growing Up Poor | `19-growing-up-poor.png` |
-| 20 | Accommodation | `20-accommodation.png` |
-| 21 | It's in the News | `21-its-in-the-news.png` |
-| 22 | Chinese New Year | `22-chinese-new-year.png` |
-| 23 | Black Friday | `23-black-friday.png` |
-| 24 | Mummy of a Lost Egyptian Queen Identified | `24-mummy-of-a-lost-egyptian-queen-identified.png` |
-| 25 | The Benefits of Nuts | `25-the-benefits-of-nuts.png` |
-| 26 | How to Buy Tickets for Glastonbury Festival | `26-how-to-buy-tickets-for-glastonbury-festival.png` |
+| 1 | Hello, I'm Leo! | `01-hello-im-leo.png` |
+| 2 | My Family Photo | `02-my-family-photo.png` |
+| 3 | An Email to My New Pen Friend | `03-an-email-to-my-new-pen-friend.png` |
+| 4 | My Favourite Day: Saturday | `04-my-favourite-day-saturday.png` |
+| 5 | Our New Flat | `05-our-new-flat.png` |
+| 6 | Green Park Sports Centre | `06-green-park-sports-centre.png` |
+| 7 | Menu: Rosa's Café | `07-menu-rosas-cafe.png` |
+| 8 | What's in My Bag? | `08-whats-in-my-bag.png` |
+| 9 | My Best Friend, Sam | `09-my-best-friend-sam.png` |
+| 10 | Party Invitation: Emma Is Ten! | `10-party-invitation-emma-is-ten.png` |
+| 11 | The Weather Around the World | `11-the-weather-around-the-world.png` |
+| 12 | A Day at My School | `12-a-day-at-my-school.png` |
+| 13 | A Postcard from the Seaside | `13-a-postcard-from-the-seaside.png` |
+| 14 | Shopping at the Market | `14-shopping-at-the-market.png` |
+| 15 | My Pet Rabbit, Coco | `15-my-pet-rabbit-coco.png` |
+| 16 | Job Advert: Helper at the Pet Shop | `16-job-advert-helper-at-the-pet-shop.png` |
+| 17 | Meet Mr Brown, the Bus Driver | `17-meet-mr-brown-the-bus-driver.png` |
+| 18 | Rules at the Swimming Pool | `18-rules-at-the-swimming-pool.png` |
+| 19 | Text Messages: Meeting at the Cinema | `19-text-messages-meeting-at-the-cinema.png` |
+| 20 | Four Seasons in My Country | `20-four-seasons-in-my-country.png` |
 
-### B1 — klasör: `Reading/B1-Intermediate/` (25 konu)
+### A2 — klasör: `Reading/A2-Elementary/` (20 konu)
 
 | # | Konu | Dosya adı |
 |---|---|---|
-| 1 | Travel Around Europe in 5 Stops | `01-travel-around-europe-in-5-stops.png` |
-| 2 | Why Your Coworkers Hate You | `02-why-your-coworkers-hate-you.png` |
-| 3 | Unusual and Wonderful Jobs | `03-unusual-and-wonderful-jobs.png` |
-| 4 | How LED Lights Can Save Sea Turtles' Lives | `04-how-led-lights-can-save-sea-turtles-lives.png` |
-| 5 | Underwater Search for Lost Love | `05-underwater-search-for-lost-love.png` |
-| 6 | Actors Who Died on Set | `06-actors-who-died-on-set.png` |
-| 7 | A Town That Lives in One Building | `07-a-town-that-lives-in-one-building.png` |
-| 8 | Different Family Types | `08-different-family-types.png` |
-| 9 | Adopting a Child | `09-adopting-a-child.png` |
-| 10 | The Arm of Liberty | `10-the-arm-of-liberty.png` |
-| 11 | The Unhealthiest Places in the World | `11-the-unhealthiest-places-in-the-world.png` |
-| 12 | Cheating in Sports | `12-cheating-in-sports.png` |
-| 13 | How Sleep Transformed Professional Football | `13-how-sleep-transformed-professional-football.png` |
-| 14 | Memorabilia: What's the Thrill? | `14-memorabilia-whats-the-thrill.png` |
-| 15 | Learning English Forum. Your Answer! | `15-learning-english-forum-your-answer.png` |
-| 16 | SpeedFlatmating (Accommodation) | `16-speedflatmating-accommodation.png` |
-| 17 | Chocolate Town for Chocolate Workers | `17-chocolate-town-for-chocolate-workers.png` |
-| 18 | Five Restaurant Reviews | `18-five-restaurant-reviews.png` |
-| 19 | Active Villagers | `19-active-villagers.png` |
-| 20 | eBay Tips for Selling Successfully | `20-ebay-tips-for-selling-successfully.png` |
-| 21 | The Ig Nobel Prizes | `21-the-ig-nobel-prizes.png` |
-| 22 | Welcome to the Home of the Future | `22-welcome-to-the-home-of-the-future.png` |
-| 23 | Child Marriage in Nepal | `23-child-marriage-in-nepal.png` |
-| 24 | Hotel Leaflet | `24-hotel-leaflet.png` |
-| 25 | Curriculum Vitaes: Tips That Can Help | `25-curriculum-vitaes-tips-that-can-help.png` |
+| 1 | An Email from a New City | `01-an-email-from-a-new-city.png` |
+| 2 | My Best Holiday Ever | `02-my-best-holiday-ever.png` |
+| 3 | Tom's Diary: A Terrible Monday | `03-toms-diary-a-terrible-monday.png` |
+| 4 | How I Learned to Cook | `04-how-i-learned-to-cook.png` |
+| 5 | News: Local Teenager Saves a Dog | `05-news-local-teenager-saves-a-dog.png` |
+| 6 | Interview with a Zookeeper | `06-interview-with-a-zookeeper.png` |
+| 7 | Advert: Summer Courses at Brookfield College | `07-advert-summer-courses-at-brookfield-college.png` |
+| 8 | Then and Now: My Grandfather's Childhood | `08-then-and-now-my-grandfathers-childhood.png` |
+| 9 | Review: The Green Garden Café | `09-review-the-green-garden-cafe.png` |
+| 10 | A Story: The Lost Phone | `10-a-story-the-lost-phone.png` |
+| 11 | Blog: Living Without a Car for a Year | `11-blog-living-without-a-car-for-a-year.png` |
+| 12 | A Letter to My Future Self | `12-a-letter-to-my-future-self.png` |
+| 13 | How to Have a Picnic in the Park | `13-how-to-have-a-picnic-in-the-park.png` |
+| 14 | My First Week as a Volunteer | `14-my-first-week-as-a-volunteer.png` |
+| 15 | Two Cities, Two Lives | `15-two-cities-two-lives.png` |
+| 16 | The History of the Bicycle | `16-the-history-of-the-bicycle.png` |
+| 17 | A Message from Your New Neighbour | `17-a-message-from-your-new-neighbour.png` |
+| 18 | Why I Love Running | `18-why-i-love-running.png` |
+| 19 | An Unusual School | `19-an-unusual-school.png` |
+| 20 | Online Forum: Help! What Present Should I Buy? | `20-online-forum-help-what-present-should-i-buy.png` |
 
-### B2 — klasör: `Reading/B2-Upper-Intermediate/` (25 konu)
+### B1 — klasör: `Reading/B1-Intermediate/` (20 konu)
 
 | # | Konu | Dosya adı |
 |---|---|---|
-| 1 | Is Overtourism Pricing Locals Out? | `01-is-overtourism-pricing-locals-out.png` |
-| 2 | Coolcationing: A New Travel Trend | `02-coolcationing-a-new-travel-trend.png` |
-| 3 | Using AI to Talk to the Deceased | `03-using-ai-to-talk-to-the-deceased.png` |
-| 4 | Regulating Deepfakes | `04-regulating-deepfakes.png` |
-| 5 | Climate Migrants | `05-climate-migrants.png` |
-| 6 | Am I in a Toxic Relationship? | `06-am-i-in-a-toxic-relationship.png` |
-| 7 | The Most Unusual Tourist Attractions | `07-the-most-unusual-tourist-attractions.png` |
-| 8 | Weak Ties: The Power of Acquaintances | `08-weak-ties-the-power-of-acquaintances.png` |
-| 9 | The Most Sought-After Company Benefits | `09-the-most-sought-after-company-benefits.png` |
-| 10 | Finding Calm in Cities | `10-finding-calm-in-cities.png` |
-| 11 | Second-Hand Fashion | `11-second-hand-fashion.png` |
-| 12 | Fatphobia: The Stigma of Being Fat | `12-fatphobia-the-stigma-of-being-fat.png` |
-| 13 | Do We Really Need Cash Anymore? | `13-do-we-really-need-cash-anymore.png` |
-| 14 | Crypto Addicts | `14-crypto-addicts.png` |
-| 15 | Personality and Health | `15-personality-and-health.png` |
-| 16 | Teenage Social Media Millionaires | `16-teenage-social-media-millionaires.png` |
-| 17 | Is Banning Single-Use Plastic the Right Option? | `17-is-banning-single-use-plastic-the-right-option.png` |
-| 18 | UK Students Protest Covid-19 Measures | `18-uk-students-protest-covid-19-measures.png` |
-| 19 | Learning from Penguin Poop | `19-learning-from-penguin-poop.png` |
-| 20 | Why Are So Many Men Secret Dieters? | `20-why-are-so-many-men-secret-dieters.png` |
-| 21 | 10 Things You Should Never Do When Starting a New Job | `21-10-things-you-should-never-do-when-starting-a-new-job.png` |
-| 22 | Egypt Travel Guide | `22-egypt-travel-guide.png` |
-| 23 | Have We Taken Security Too Far? | `23-have-we-taken-security-too-far.png` |
-| 24 | How to Stay Fit, Happy and Healthy | `24-how-to-stay-fit-happy-and-healthy.png` |
-| 25 | The Principles of the New High Protein Diet | `25-the-principles-of-the-new-high-protein-diet.png` |
+| 1 | The Four-Day Working Week: Is It the Future? | `01-the-four-day-working-week-is-it-the-future.png` |
+| 2 | Interview: Life as a Wildlife Photographer | `02-interview-life-as-a-wildlife-photographer.png` |
+| 3 | Why We Should All Learn to Be Bored | `03-why-we-should-all-learn-to-be-bored.png` |
+| 4 | Dear Ellie: My Best Friend Has Changed | `04-dear-ellie-my-best-friend-has-changed.png` |
+| 5 | The Woman Who Walked Across Japan | `05-the-woman-who-walked-across-japan.png` |
+| 6 | Fast Fashion: The True Cost of Cheap Clothes | `06-fast-fashion-the-true-cost-of-cheap-clothes.png` |
+| 7 | How Bees Keep the World Fed | `07-how-bees-keep-the-world-fed.png` |
+| 8 | A Short Story: The Last Train Home | `08-a-short-story-the-last-train-home.png` |
+| 9 | Report: Students and Part-Time Jobs | `09-report-students-and-part-time-jobs.png` |
+| 10 | Smartphones in Schools: For and Against | `10-smartphones-in-schools-for-and-against.png` |
+| 11 | Blog: My Year Living in a Tiny House | `11-blog-my-year-living-in-a-tiny-house.png` |
+| 12 | The Secret Life of Sleep | `12-the-secret-life-of-sleep.png` |
+| 13 | Film Review: Beyond the Ice | `13-film-review-beyond-the-ice.png` |
+| 14 | Volunteering Abroad: Help or Harm? | `14-volunteering-abroad-help-or-harm.png` |
+| 15 | The Town That Said No to Cars | `15-the-town-that-said-no-to-cars.png` |
+| 16 | Email: A Problem with My Holiday | `16-email-a-problem-with-my-holiday.png` |
+| 17 | How Music Affects Our Mood | `17-how-music-affects-our-mood.png` |
+| 18 | Growing Food in the City | `18-growing-food-in-the-city.png` |
+| 19 | The Best Mistake I Ever Made | `19-the-best-mistake-i-ever-made.png` |
+| 20 | Five Myths About Learning a Language | `20-five-myths-about-learning-a-language.png` |
 
-## Writing (38 konu)
+### B2 — klasör: `Reading/B2-Upper-Intermediate/` (20 konu)
+
+| # | Konu | Dosya adı |
+|---|---|---|
+| 1 | The Hidden Cost of Free Apps | `01-the-hidden-cost-of-free-apps.png` |
+| 2 | Why Do We Believe Fake News? | `02-why-do-we-believe-fake-news.png` |
+| 3 | Interview: The Doctor Who Prescribes Nature | `03-interview-the-doctor-who-prescribes-nature.png` |
+| 4 | Is Tourism Destroying the Places We Love? | `04-is-tourism-destroying-the-places-we-love.png` |
+| 5 | The Psychology of Procrastination | `05-the-psychology-of-procrastination.png` |
+| 6 | Should Zoos Still Exist? | `06-should-zoos-still-exist.png` |
+| 7 | The Gig Economy: Freedom or Insecurity? | `07-the-gig-economy-freedom-or-insecurity.png` |
+| 8 | A Short Story: The Inheritance | `08-a-short-story-the-inheritance.png` |
+| 9 | Does Your Language Shape How You Think? | `09-does-your-language-shape-how-you-think.png` |
+| 10 | Lab-Grown Meat: Dinner of the Future? | `10-lab-grown-meat-dinner-of-the-future.png` |
+| 11 | The Loneliness Epidemic | `11-the-loneliness-epidemic.png` |
+| 12 | Book Review: The Glass Orchard | `12-book-review-the-glass-orchard.png` |
+| 13 | Remote Work: Five Years On | `13-remote-work-five-years-on.png` |
+| 14 | The Science of Happiness | `14-the-science-of-happiness.png` |
+| 15 | Letter to the Editor: Save Our Library | `15-letter-to-the-editor-save-our-library.png` |
+| 16 | The Rise and Fall of a Start-Up | `16-the-rise-and-fall-of-a-start-up.png` |
+| 17 | Should Voting Be Compulsory? | `17-should-voting-be-compulsory.png` |
+| 18 | Rewilding: Letting Nature Take Back Control | `18-rewilding-letting-nature-take-back-control.png` |
+| 19 | The Quiet Power of Introverts | `19-the-quiet-power-of-introverts.png` |
+| 20 | Can We Slow Down Ageing? | `20-can-we-slow-down-ageing.png` |
+
+## Writing (40 konu)
 
 ### A1 — klasör: `Writing/A1-Beginner/` (10 konu)
 
 | # | Konu | Dosya adı |
 |---|---|---|
-| 1 | Writing About My Family | `01-writing-about-my-family.png` |
-| 2 | Writing About My Daily Routine | `02-writing-about-my-daily-routine.png` |
-| 3 | My Hobby | `03-my-hobby.png` |
-| 4 | Essay About My Neighbourhood | `04-essay-about-my-neighbourhood.png` |
-| 5 | A Description of My House | `05-a-description-of-my-house.png` |
-| 6 | How to Write a Personal Profile | `06-how-to-write-a-personal-profile.png` |
-| 7 | How to Write an Invitation | `07-how-to-write-an-invitation.png` |
-| 8 | Describing a Photograph | `08-describing-a-photograph.png` |
-| 9 | Writing an Email Giving Instructions | `09-writing-an-email-giving-instructions.png` |
-| 10 | My Weekend Plans | `10-my-weekend-plans.png` |
+| 1 | An Email Introducing Yourself | `01-an-email-introducing-yourself.png` |
+| 2 | A Note to Your Neighbour | `02-a-note-to-your-neighbour.png` |
+| 3 | My Favourite Place in Town | `03-my-favourite-place-in-town.png` |
+| 4 | A Text Message Changing Plans | `04-a-text-message-changing-plans.png` |
+| 5 | My Best Friend | `05-my-best-friend.png` |
+| 6 | A Lost Pet Poster | `06-a-lost-pet-poster.png` |
+| 7 | A Birthday Card | `07-a-birthday-card.png` |
+| 8 | My Favourite Food | `08-my-favourite-food.png` |
+| 9 | An Online Advert: Selling My Bike | `09-an-online-advert-selling-my-bike.png` |
+| 10 | A Diary Entry: My Sunday | `10-a-diary-entry-my-sunday.png` |
 
 ### A2 — klasör: `Writing/A2-Elementary/` (10 konu)
 
 | # | Konu | Dosya adı |
 |---|---|---|
-| 1 | Writing and Responding to an Informal Email Invitation | `01-writing-and-responding-to-an-informal-email-invitation.png` |
-| 2 | My Last Holiday | `02-my-last-holiday.png` |
-| 3 | Writing an Essay About Someone's Job | `03-writing-an-essay-about-someones-job.png` |
-| 4 | Writing a Postcard | `04-writing-a-postcard.png` |
-| 5 | How to Write an Application Letter for a Summer Job | `05-how-to-write-an-application-letter-for-a-summer-job.png` |
-| 6 | How to Write an Email to Book a Hotel Room | `06-how-to-write-an-email-to-book-a-hotel-room.png` |
-| 7 | How to Write an Opinion Essay | `07-how-to-write-an-opinion-essay.png` |
-| 8 | A Thank-You Email | `08-a-thank-you-email.png` |
-| 9 | A Biography of Someone You Know | `09-a-biography-of-someone-you-know.png` |
-| 10 | My Favourite Photograph | `10-my-favourite-photograph.png` |
+| 1 | An Email Asking a Friend for Advice | `01-an-email-asking-a-friend-for-advice.png` |
+| 2 | A Story: A Terrible Morning | `02-a-story-a-terrible-morning.png` |
+| 3 | A Restaurant Review | `03-a-restaurant-review.png` |
+| 4 | An Apology Message to a Friend | `04-an-apology-message-to-a-friend.png` |
+| 5 | A Blog Post: My First Week at a New School | `05-a-blog-post-my-first-week-at-a-new-school.png` |
+| 6 | A Notice: Lost Property | `06-a-notice-lost-property.png` |
+| 7 | An Email to a Teacher Explaining an Absence | `07-an-email-to-a-teacher-explaining-an-absence.png` |
+| 8 | Describing a Festival in My Country | `08-describing-a-festival-in-my-country.png` |
+| 9 | Then and Now: How My Town Has Changed | `09-then-and-now-how-my-town-has-changed.png` |
+| 10 | Instructions: A Simple Recipe | `10-instructions-a-simple-recipe.png` |
 
-### B1 — klasör: `Writing/B1-Intermediate/` (9 konu)
-
-| # | Konu | Dosya adı |
-|---|---|---|
-| 1 | Writing an Opinion Essay | `01-writing-an-opinion-essay.png` |
-| 2 | How to Write an Email to a Friend Giving News | `02-how-to-write-an-email-to-a-friend-giving-news.png` |
-| 3 | How to Write a Past Story from a Given Sentence | `03-how-to-write-a-past-story-from-a-given-sentence.png` |
-| 4 | How to Write a Hotel Review After a Stay | `04-how-to-write-a-hotel-review-after-a-stay.png` |
-| 5 | How to Write an Article | `05-how-to-write-an-article.png` |
-| 6 | Email Making Plans for a Visit | `06-email-making-plans-for-a-visit.png` |
-| 7 | How to Write an Email Cover Letter | `07-how-to-write-an-email-cover-letter.png` |
-| 8 | A Product Review | `08-a-product-review.png` |
-| 9 | Describing Your Home | `09-describing-your-home.png` |
-
-### B2 — klasör: `Writing/B2-Upper-Intermediate/` (9 konu)
+### B1 — klasör: `Writing/B1-Intermediate/` (10 konu)
 
 | # | Konu | Dosya adı |
 |---|---|---|
-| 1 | Formal Email or Letter Asking for Information | `01-formal-email-or-letter-asking-for-information.png` |
-| 2 | Writing Formal Letter of Complaint | `02-writing-formal-letter-of-complaint.png` |
-| 3 | Writing a Discussion Essay: Discuss Two Views and Give Your Opinion | `03-writing-a-discussion-essay-discuss-two-views-and-give-your-opinion.png` |
-| 4 | Opinion Essay – Agree or Disagree with a Statement | `04-opinion-essay-agree-or-disagree-with-a-statement.png` |
-| 5 | A Formal Letter of Apology | `05-a-formal-letter-of-apology.png` |
-| 6 | A Report | `06-a-report.png` |
-| 7 | A Film Review | `07-a-film-review.png` |
-| 8 | Writing an Article for the First Exam | `08-writing-an-article-for-the-first-exam.png` |
-| 9 | Writing an Email Cover Letter | `09-writing-an-email-cover-letter.png` |
+| 1 | A Story Ending with 'I'll Never Forget That Day' | `01-a-story-ending-with-ill-never-forget-that-day.png` |
+| 2 | A Formal Email to a Language School | `02-a-formal-email-to-a-language-school.png` |
+| 3 | A For and Against Essay: Homework | `03-a-for-and-against-essay-homework.png` |
+| 4 | A Review of a Mobile App | `04-a-review-of-a-mobile-app.png` |
+| 5 | An Article: The Perfect Day Off | `05-an-article-the-perfect-day-off.png` |
+| 6 | A Letter to a Newspaper About Local Parks | `06-a-letter-to-a-newspaper-about-local-parks.png` |
+| 7 | An Informal Email Giving Advice | `07-an-informal-email-giving-advice.png` |
+| 8 | A Report on a School Trip | `08-a-report-on-a-school-trip.png` |
+| 9 | A Biography: Marie Curie | `09-a-biography-marie-curie.png` |
+| 10 | A Job Application Email: Summer Volunteer | `10-a-job-application-email-summer-volunteer.png` |
+
+### B2 — klasör: `Writing/B2-Upper-Intermediate/` (10 konu)
+
+| # | Konu | Dosya adı |
+|---|---|---|
+| 1 | A Proposal for Improving Your Town | `01-a-proposal-for-improving-your-town.png` |
+| 2 | An Essay: Should Public Transport Be Free? | `02-an-essay-should-public-transport-be-free.png` |
+| 3 | A Book Review | `03-a-book-review.png` |
+| 4 | A Letter of Recommendation | `04-a-letter-of-recommendation.png` |
+| 5 | An Article: The Art of Doing Nothing | `05-an-article-the-art-of-doing-nothing.png` |
+| 6 | A Report on Workplace Wellbeing | `06-a-report-on-workplace-wellbeing.png` |
+| 7 | A Letter to the Editor About Tourism | `07-a-letter-to-the-editor-about-tourism.png` |
+| 8 | A Problem-Solution Essay: Food Waste | `08-a-problem-solution-essay-food-waste.png` |
+| 9 | A Narrative: A Turning Point | `09-a-narrative-a-turning-point.png` |
+| 10 | A Speech Welcoming New Students | `10-a-speech-welcoming-new-students.png` |
 
 ## Listening (20 konu)
 

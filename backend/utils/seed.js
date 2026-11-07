@@ -1,12 +1,15 @@
 // Veritabanına örnek konu, soru ve rozet verisi yükler. Çalıştırmak için: npm run seed
 require('dotenv').config();
+const path = require('path');
+const { pathToFileURL } = require('url');
 const connectDB = require('../config/db');
 const { Topic, Question, Badge } = require('../models');
 const { grammarTopics } = require('../data/grammarCurriculum');
+const { GRAMMAR_EXERCISES } = require('../data/grammarExercises');
 const { vocabularyTopics: vocabularyCurriculumTopics } = require('../data/vocabularyCurriculum');
 const { topicImageId } = require('../data/topicImages');
-const { READING_DATA } = require('../data/readingData');
-const { WRITING_DATA } = require('../data/writingData');
+const { READING_DATA, READING_IMAGES_PENDING } = require('../data/readingData');
+const { WRITING_DATA, WRITING_IMAGES_PENDING } = require('../data/writingData');
 const { LISTENING_DATA, listeningAudioId, buildTranscript, withSpreadAnswers } = require('../data/listeningData');
 
 const topics = [
@@ -24,7 +27,7 @@ const writingTopics = Object.entries(WRITING_DATA).flatMap(([level, items]) =>
     level,
     description: instructions,
     passage,
-    image: topicImageId('writing', level, index, title),
+    image: WRITING_IMAGES_PENDING.includes(level) ? null : topicImageId('writing', level, index, title),
   }))
 );
 const readingTopics = Object.entries(READING_DATA).flatMap(([level, items]) =>
@@ -34,7 +37,7 @@ const readingTopics = Object.entries(READING_DATA).flatMap(([level, items]) =>
     level,
     description: `${title} başlıklı okuma parçası ve anlama soruları.`,
     passage,
-    image: topicImageId('reading', level, index, title),
+    image: READING_IMAGES_PENDING.includes(level) ? null : topicImageId('reading', level, index, title),
   }))
 );
 // Listening: data/listeningData.js. passage = transkript (cevaplar kontrol edilince gösterilir),
@@ -473,6 +476,19 @@ const seed = async () => {
   const adjectivesTopic = findGrammar('A1', "Adjectives: old, interesting, expensive...");
   const questionsTopic = findGrammar('A1', "Question words: what, where, who, when...");
   const adverbsFreqTopic = findGrammar('A1', "Adverbs of frequency: always, usually, never...");
+  const subjectPronounsTopic = findGrammar('A1', "Subject pronouns: I, you, he, she, it, we, they");
+  const toBePosNegQTopic = findGrammar('A1', "'To be': Positive, negative and questions");
+  const articlesAAnTopic = findGrammar('A1', "Articles: a / an");
+  const presSimpleNegQTopic = findGrammar('A1', "Present simple: Negatives and questions");
+  const wouldLikeTopic = findGrammar('A1', "Would like / Would you like?");
+  const pastContTopic = findGrammar('A2', "Past continuous");
+  const alreadyYetJustTopic = findGrammar('A2', "Already, yet, just");
+  const letsShallTopic = findGrammar('A2', "Let's / Shall we?");
+  const mustMustntTopic = findGrammar('A2', "Must / mustn't");
+  const beAbleToTopic = findGrammar('A2', "Be able to");
+  const adverbsDegreeTopic = findGrammar('A2', "Adverbs of degree: very, quite, really...");
+  const zeroCondTopic = findGrammar('A2', "Zero conditional");
+  const timeConnectorsTopic = findGrammar('A2', "Time connectors: first, then, after that...");
   const objectPronounsTopic = findGrammar('A1', "Object pronouns: me, you, him, her...");
   const whoseTopic = findGrammar('A1', "Possessive 's: Mike's car");
 
@@ -488,7 +504,7 @@ const seed = async () => {
     const haveGotTopic = findGrammar('A1', "Have got / has got");
   const someAnyTopic = findGrammar('A2', "Countable and uncountable nouns");
   const thereIsAreTopic = findGrammar('A1', "There is / there are");
-  const thereItTopic = findGrammar('A1', "There or it?");
+  const thereItTopic = findGrammar('A2', "There or it?");
   const prepPlace2Topic = findGrammar('A1', "Next to, behind, under, between...");
   const muchManyTopic = findGrammar('A2', "Much, many, a lot of");
   const comparativeTopic = findGrammar('A2', "Comparative adjectives: older than, more important than");
@@ -496,10 +512,10 @@ const seed = async () => {
   const willShallTopic = findGrammar('A2', "Will: Predictions and decisions");
   const beGoingToTopic = findGrammar('A2', "Be going to: Plans and predictions");
   const adverbsMannerTopic = findGrammar('A2', "Adverbs of manner: slowly, carefully...");
-  const articlesTopic = findGrammar('A1', "A / an, the or no article");
+  const articlesTopic = findGrammar('A2', "A / an, the or no article");
   const conjunctionsTopic = findGrammar('A1', "And, but, or, because");
   const wordOrderTopic = findGrammar('A1', "Basic word order");
-  const thisItTopic = findGrammar('A1', "This vs it: What's the difference?");
+  const thisItTopic = findGrammar('A2', "This vs it: What's the difference?");
 
   const a2QuestionFormsTopic = findGrammar('A1', "Basic question forms");
         const a2PastContSimpleTopic = findGrammar('A2', "Past simple vs past continuous");
@@ -509,9 +525,9 @@ const seed = async () => {
     const a2PresContFutureTopic = findGrammar('A2', "Present continuous for future arrangements");
   const a2RelativeClausesTopic = findGrammar('A2', "Relative clauses: who, which, that, where");
   const a2PresPerfectTopic = findGrammar('A2', "Present perfect");
-  const a2PresPerfectPastTopic = findGrammar('A2', "Present perfect vs past simple");
+  const a2PresPerfectPastTopic = findGrammar('B1', "Present perfect vs past simple");
   const a2SomethingTopic = findGrammar('A2', "Something, anything, nothing, everything");
-  const a2CompSuperTopic = findGrammar('A2', "Comparative and superlative adverbs");
+  const a2CompSuperTopic = findGrammar('B1', "Comparative and superlative adverbs");
   const a2TooEnoughTopic = findGrammar('A2', "Too, too much, too many, enough");
   const a2QuantifiersTopic = findGrammar('A2', "A few, a little");
     const a2InfinitivesGerundsTopic = findGrammar('B1', "Verb patterns");
@@ -520,7 +536,7 @@ const seed = async () => {
   const a2FirstCondTopic = findGrammar('A2', "First conditional");
   const a2PronounsTopic = findGrammar('A1', "Whose? and possessive pronouns: mine, yours...");
     const a2PassiveTopic = findGrammar('B1', "Present simple passive");
-  const a2UsedToTopic = findGrammar('A2', "Used to / didn't use to");
+  const a2UsedToTopic = findGrammar('B1', "Used to / didn't use to");
   const a2MightTopic = findGrammar('A2', "Might / might not: Possibility");
   const a2PrepMovementTopic = findGrammar('A2', "Prepositions of movement: along, across, over...");
   const a2SoNeitherTopic = findGrammar('B1', "So, neither, either: So do I, neither do I");
@@ -548,7 +564,7 @@ const seed = async () => {
   const b1GerundInfTopic = findGrammar('B1', "Gerunds vs infinitives");
   const b1QuantifiersTopic = findGrammar('B2', "Determiners and quantifiers");
   const b1AllBothTopic = findGrammar('A2', "Each, every, all");
-  const b1BothEitherNeitherTopic = findGrammar('A2', "Both, either, neither");
+  const b1BothEitherNeitherTopic = findGrammar('B1', "Both, either, neither");
   const b1AnyNoNoneTopic = findGrammar('A2', "Some, any, no");
     const b1RelativeClausesTopic = findGrammar('B1', "Defining relative clauses");
   const b1QuestionTagsTopic = findGrammar('B1', "Question tags");
@@ -578,62 +594,51 @@ const seed = async () => {
   
   // Kelime konuları (yeni müfredat: data/vocabularyCurriculum.js). Değişken adları ve gruplama eski
   // konu listesinden kalma; findVocabulary her birini yeni müfredattaki (seviye, başlık) ile bulur.
-  const vocCommonThingsTopic = findVocabulary('A1', "Common Things");
-  const vocCommonVerbsTopic = findVocabulary('A1', "Common Verbs and Verb Phrases");
-  const vocFamilyRelativesTopic = findVocabulary('A1', "Family and Relatives");
-  const vocOppositeAdjTopic = findVocabulary('A1', "Opposite Adjectives");
+  const vocCommonVerbsTopic = findVocabulary('A1', "Common Verbs");
+  const vocFamilyRelativesTopic = findVocabulary('A1', "Family Members");
+  const vocOppositeAdjTopic = findVocabulary('A1', "Common Adjectives");
   const vocDailyRoutinesTopic = findVocabulary('A1', "Daily Routines");
   const vocDaysMonthsTopic = findVocabulary('A1', "Days, Months and Seasons");
-  const vocFoodMealsTopic = findVocabulary('A1', "Food and Meals");
+  const vocFoodMealsTopic = findVocabulary('A1', "Food and Drinks");
   const vocCountriesNatTopic = findVocabulary('A1', "Countries and Nationalities");
-  const vocShopsShoppingA1Topic = findVocabulary('A1', "Shops and Shopping");
+  const vocShopsShoppingA1Topic = findVocabulary('A2', "Shopping and Prices");
   const vocBodyPartsTopic = findVocabulary('A1', "Parts of the Body");
-  const vocClothesA1Topic = findVocabulary('A1', "Clothes");
-  const vocHouseRoomsTopic = findVocabulary('A1', "The House: Rooms and Things");
-  const vocPlacesTownTopic = findVocabulary('A1', "Places in a Town");
-  const vocRestaurantTopic = findVocabulary('A1', "At the Restaurant");
-  const vocUtensilsTopic = findVocabulary('A1', "Eating and Drinking Utensils");
-  const vocMovementVerbsTopic = findVocabulary('A1', "Movement Verbs");
-  const vocTimeWordsTopic = findVocabulary('A1', "Time Words");
-  const vocBasicPhrasalVerbsTopic = findVocabulary('A1', "Basic Phrasal Verbs");
-
-    const vocAppearanceTopic = findVocabulary('A2', "Describing People");
-  const vocPersonalityTopic = findVocabulary('B1', "Personality Adjectives");
-  const vocShopsShoppingA2Topic = findVocabulary('B1', "Shopping and Consumerism");
-        const vocCommonPhrasalVerbsTopic = findVocabulary('B1', "Common Phrasal Verbs");
-  const vocWeatherTopic = findVocabulary('A2', "The Weather");
-    const vocHobbiesTopic = findVocabulary('A2', "Free Time Activities");
-      const vocHolidaysTopic = findVocabulary('A2', "Holidays and Travel");
-  const vocCountrysideTopic = findVocabulary('A2', "Nature and Landscape");
-  const vocContainersTopic = findVocabulary('A2', "Containers and Quantities");
-  const vocTechnologyA2Topic = findVocabulary('A2', "Technology");
-  
-    const vocRelationshipsB1Topic = findVocabulary('B1', "Relationships");
-  const vocEducationTopic = findVocabulary('B1', "Education");
-  const vocMoneyTopic = findVocabulary('B1', "Money and Banking");
-  const vocWorkTopic = findVocabulary('B1', "Work and Careers");
-  const vocFoodCookingTopic = findVocabulary('B1', "Food and Cooking");
-  const vocHotelsAccommodationTopic = findVocabulary('B1', "Travel and Tourism");
-  const vocTransportTopic = findVocabulary('A2', "Transport");
-  const vocHousesBuildingsTopic = findVocabulary('B1', "Houses and Homes");
-    const vocSportTopic = findVocabulary('B1', "Sport and Competition");
+  const vocClothesA1Topic = findVocabulary('A1', "Clothes and Accessories");
+  const vocHouseRoomsTopic = findVocabulary('A1', "Rooms and Furniture");
+  const vocPlacesTownTopic = findVocabulary('A1', "Places in Town");
+  const vocRestaurantTopic = findVocabulary('A2', "Restaurants and Ordering Food");
+  const vocTimeWordsTopic = findVocabulary('A1', "Time and Dates");
+  const vocBasicPhrasalVerbsTopic = findVocabulary('A2', "Common Phrasal Verbs");
+    const vocAppearanceTopic = findVocabulary('A2', "Physical Appearance");
+  const vocPersonalityTopic = findVocabulary('A2', "Personality and Character");
+        const vocCommonPhrasalVerbsTopic = findVocabulary('B1', "Phrasal Verbs");
+  const vocWeatherTopic = findVocabulary('A1', "Weather");
+    const vocHobbiesTopic = findVocabulary('A1', "Hobbies and Free Time");
+      const vocHolidaysTopic = findVocabulary('A2', "Travel and Holidays");
+  const vocCountrysideTopic = findVocabulary('A2', "City and Countryside");
+  const vocTechnologyA2Topic = findVocabulary('A2', "Technology and Gadgets");
+    const vocRelationshipsB1Topic = findVocabulary('B1', "Relationships and Social Life");
+  const vocEducationTopic = findVocabulary('A2', "Education and Learning");
+  const vocMoneyTopic = findVocabulary('B1', "Money and Finance");
+  const vocWorkTopic = findVocabulary('A2', "Work and Workplace");
+  const vocFoodCookingTopic = findVocabulary('A2', "Cooking and Recipes");
+  const vocHotelsAccommodationTopic = findVocabulary('A2', "Accommodation and Hotels");
+  const vocTransportTopic = findVocabulary('A2', "Transportation");
+    const vocSportTopic = findVocabulary('A2', "Sports and Exercise");
     const vocNewsMediaB1Topic = findVocabulary('B1', "Media and News");
-  const vocAnimalsSoundsTopic = findVocabulary('A2', "Animals");
-  const vocMoviesTvTopic = findVocabulary('B1', "Entertainment");
-      const vocPollutionTopic = findVocabulary('B1', "The Environment");
-
-    const vocFeelingsEmotionsTopic = findVocabulary('B2', "Psychology and Emotions");
-  const vocNewsMediaB2Topic = findVocabulary('B2', "Media and Advertising");
-  const vocWarPeaceTopic = findVocabulary('B2', "Politics and Society");
-  const vocTourismTopic = findVocabulary('B2', "Travel and Culture");
-  const vocPollutionEnvTopic = findVocabulary('B2', "Climate Change");
-  const vocMoneyFinanceTopic = findVocabulary('B2', "Business and the Economy");
-  const vocCarsRoadsTrafficTopic = findVocabulary('B2', "Urban Life");
-  const vocHealthSicknessTopic = findVocabulary('B2', "Health and Medicine");
-  const vocWorkJobsTopic = findVocabulary('B2', "Work and Employment");
-  const vocEducationB2Topic = findVocabulary('B2', "Higher Education");
-          const vocTalkingMoviesTopic = findVocabulary('B2', "Arts and Literature");
-  const vocTechDevicesTopic = findVocabulary('B1', "Technology and the Internet");
+  const vocAnimalsSoundsTopic = findVocabulary('A1', "Animals");
+  const vocMoviesTvTopic = findVocabulary('A2', "Entertainment and Movies");
+      const vocPollutionTopic = findVocabulary('B1', "Environment and Climate Change");
+    const vocFeelingsEmotionsTopic = findVocabulary('B1', "Emotions and Reactions");
+  const vocNewsMediaB2Topic = findVocabulary('B2', "Media Influence and Advertising");
+  const vocWarPeaceTopic = findVocabulary('B1', "Global Issues");
+  const vocTourismTopic = findVocabulary('B1', "Travel Experiences");
+  const vocPollutionEnvTopic = findVocabulary('B2', "Environmental Challenges");
+  const vocMoneyFinanceTopic = findVocabulary('B1', "Business and Economy");
+  const vocHealthSicknessTopic = findVocabulary('B2', "Healthcare and Medical Developments");
+  const vocWorkJobsTopic = findVocabulary('B1', "Career and Professional Life");
+  const vocEducationB2Topic = findVocabulary('B1', "Education Systems");
+  const vocTechDevicesTopic = findVocabulary('B1', "Internet and Digital Life");
   const vocB2PhrasalVerbs1Topic = findVocabulary('B2', "Advanced Phrasal Verbs");
   
   const topicQuestions = [
@@ -1269,6 +1274,500 @@ const seed = async () => {
       ['We are happy. (usually) ⇒ We are ___ happy.', 'usually', "'To be' fiilinden sonra sıklık zarfı gelir."],
       ['He drinks tea. (never) ⇒ He ___ drinks tea.', 'never', "Sıklık zarfı ana fiilden önce gelir."],
       ['I walk to work. (often) ⇒ I ___ walk to work.', 'often', "Sıklık zarfı ana fiilden önce gelir."],
+    ]),
+
+    // --- Subject pronouns: I, you, he, she, it, we, they ---
+    ...buildMultipleChoice(subjectPronounsTopic, 1, [
+      ['My name is Ali. ___ am from Turkey.', ['I', 'He', 'We', 'It'], 'I', "Kendimizden bahsederken 'I' kullanılır."],
+      ['This is Emma. ___ is my sister.', ['He', 'She', 'It', 'They'], 'She', "Bir kadın/kız için 'she' kullanılır."],
+      ['This is Mr Brown. ___ is our teacher.', ['She', 'It', 'He', 'They'], 'He', "Bir erkek için 'he' kullanılır."],
+      ['I have a cat. ___ is black.', ['He', 'She', 'It', 'They'], 'It', "Hayvanlar ve nesneler için 'it' kullanılır."],
+      ['Tom and Lisa are at school. ___ are students.', ['We', 'They', 'You', 'He'], 'They', "Başka kişilerden (çoğul) bahsederken 'they' kullanılır."],
+      ['My brother and I are hungry. ___ want pizza.', ['They', 'You', 'We', 'I'], 'We', "'My brother and I' = 'we'."],
+      ['Hello, Sam! Are ___ OK?', ['you', 'he', 'it', 'they'], 'you', "Konuştuğumuz kişiye 'you' deriz."],
+      ['Look at the shoes. ___ are new.', ['It', 'They', 'We', 'She'], 'They', "Çoğul nesneler için 'they' kullanılır."],
+      ['The car is old, but ___ is fast.', ['he', 'she', 'it', 'they'], 'it', "Tekil nesneler için 'it' kullanılır."],
+      ['Anna and you are good friends. ___ are always together.', ['They', 'We', 'You', 'She'], 'You', "'Anna and you' = 'you' (çoğul)."],
+    ]),
+    ...buildMultipleChoice(subjectPronounsTopic, 2, [
+      ['Maria is a doctor. ___ works in a hospital.', ['She', 'He'], 'She', "'Maria' bir kadın → 'she'."],
+      ['David is ten. ___ likes football.', ['She', 'He'], 'He', "'David' bir erkek → 'he'."],
+      ['The book is on the table. ___ is red.', ['It', 'They'], 'It', "Tekil nesne → 'it'."],
+      ['The children are in the garden. ___ are happy.', ['It', 'They'], 'They', "'The children' çoğul → 'they'."],
+      ['Sara and I are cousins. ___ live in Ankara.', ['We', 'They'], 'We', "Kendimizi de içeren grup → 'we'."],
+      ['___ am tired today.', ['I', 'Me'], 'I', "Özne olarak 'I' kullanılır, 'me' değil."],
+      ['Is ___ your dog? Yes, it is.', ['it', 'he'], 'it', "Hayvanlar için genelde 'it' kullanılır."],
+      ['Where are my keys? ___ are in your bag.', ['It', 'They'], 'They', "'Keys' çoğul → 'they'."],
+      ['Mum is in the kitchen. ___ is cooking.', ['She', 'It'], 'She', "'Mum' bir kadın → 'she'."],
+      ['You and Ben are late! ___ are always late.', ['You', 'We'], 'You', "'You and Ben' = 'you'."],
+    ]),
+    ...buildFillInBlanks(subjectPronounsTopic, 3, [
+      ['John is my friend. ⇒ ___ is my friend.', 'He', "'John' bir erkek → 'he'."],
+      ['Kate is a nurse. ⇒ ___ is a nurse.', 'She', "'Kate' bir kadın → 'she'."],
+      ['The house is big. ⇒ ___ is big.', 'It', "Tekil nesne → 'it'."],
+      ['My parents are at home. ⇒ ___ are at home.', 'They', "'My parents' çoğul → 'they'."],
+      ['Ali and I play tennis. ⇒ ___ play tennis.', 'We', "'Ali and I' = 'we'."],
+      ['The dog is hungry. ⇒ ___ is hungry.', 'It', "Hayvanlar için 'it' kullanılır."],
+      ['The apples are green. ⇒ ___ are green.', 'They', "Çoğul nesneler → 'they'."],
+      ['You and your sister are tall. ⇒ ___ are tall.', 'You', "'You and your sister' = 'you'."],
+      ['My grandfather is 80. ⇒ ___ is 80.', 'He', "'My grandfather' bir erkek → 'he'."],
+      ['Emma and Lucy are students. ⇒ ___ are students.', 'They', "İki kişi (ben dahil değil) → 'they'."],
+    ]),
+
+    // --- 'To be': Positive, negative and questions ---
+    ...buildMultipleChoice(toBePosNegQTopic, 1, [
+      ['I ___ hungry. I just had lunch.', ["'m not", "isn't", "aren't", 'not'], "'m not", "'I' ile olumsuz: 'am not' ('m not)."],
+      ['She ___ at home. She is at work.', ["isn't", "aren't", "'m not", "don't"], "isn't", "He/she/it ile olumsuz: 'is not' (isn't)."],
+      ['We ___ late. We are early!', ["aren't", "isn't", "'m not", 'not'], "aren't", "We/you/they ile olumsuz: 'are not' (aren't)."],
+      ['___ you a student?', ['Are', 'Is', 'Am', 'Do'], 'Are', "Soru cümlesinde 'are' özneden önce gelir: Are you...?"],
+      ['___ he your brother?', ['Is', 'Are', 'Am', 'Does'], 'Is', "He/she/it ile soru: Is he...?"],
+      ['___ I right?', ['Am', 'Is', 'Are', 'Do'], 'Am', "'I' ile soru: Am I...?"],
+      ['Is it cold today? — Yes, it ___.', ['is', "it's", 'are', 'does'], 'is', "Kısa olumlu cevapta kısaltma yapılmaz: Yes, it is."],
+      ['Are they from Italy? — No, they ___.', ["aren't", "isn't", 'not', "don't"], "aren't", "Kısa olumsuz cevap: No, they aren't."],
+      ['Where ___ my glasses?', ['are', 'is', 'am', 'be'], 'are', "'My glasses' çoğul → 'are'."],
+      ['How old ___ your sister?', ['is', 'are', 'am', 'does'], 'is', "'Your sister' tekil → 'is'."],
+    ]),
+    ...buildMultipleChoice(toBePosNegQTopic, 2, [
+      ["My phone ___ new. It's very old.", ["isn't", "aren't"], "isn't", "'My phone' tekil → 'isn't'."],
+      ['The shops ___ open on Sunday.', ["isn't", "aren't"], "aren't", "'The shops' çoğul → 'aren't'."],
+      ['___ Paris in France?', ['Is', 'Are'], 'Is', "'Paris' tekil → 'Is'."],
+      ['___ your parents at home?', ['Is', 'Are'], 'Are', "'Your parents' çoğul → 'Are'."],
+      ["I ___ from London. I'm from Leeds.", ["'m not", "amn't"], "'m not", "'Amn't' diye bir kısaltma yoktur; 'I'm not' kullanılır."],
+      ['Are you tired? — Yes, I ___.', ['am', "'m"], 'am', "Kısa olumlu cevapta kısaltma yapılmaz: Yes, I am."],
+      ['Is Tom a doctor? — No, he ___.', ["isn't", "aren't"], "isn't", "'He' ile kısa olumsuz cevap: No, he isn't."],
+      ['___ we in the right room?', ['Are', 'Am'], 'Are', "'We' ile soru: Are we...?"],
+      ['What ___ your name?', ['is', 'are'], 'is', "'Your name' tekil → 'is'."],
+      ['The children ___ at school today. They are ill.', ["aren't", "isn't"], "aren't", "'The children' çoğul → 'aren't'."],
+    ]),
+    ...buildFillInBlanks(toBePosNegQTopic, 3, [
+      ['She is a teacher. (negative, short form) ⇒ She ___ a teacher.', "isn't", "He/she/it + is not (isn't)."],
+      ['They are happy. (negative, short form) ⇒ They ___ happy.', "aren't", "We/you/they + are not (aren't)."],
+      ['I am busy. (negative) ⇒ I ___ not busy.', 'am', "'I' ile olumsuz: I am not."],
+      ['It is expensive. (negative, short form) ⇒ It ___ expensive.', "isn't", "It + is not (isn't)."],
+      ['You are ready. (question) ⇒ ___ you ready?', 'Are', "Soru yaparken 'are' öznenin önüne gelir."],
+      ['He is at work. (question) ⇒ ___ he at work?', 'Is', "Soru yaparken 'is' öznenin önüne gelir."],
+      ['I am late. (question) ⇒ ___ I late?', 'Am', "Soru yaparken 'am' öznenin önüne gelir."],
+      ['The film is good. (question) ⇒ ___ the film good?', 'Is', "'The film' tekil → 'Is'."],
+      ['Is she your friend? — Yes, she ___.', 'is', "Kısa olumlu cevap: Yes, she is."],
+      ['Are you hungry? — No, I ___ not.', 'am', "Kısa olumsuz cevap: No, I am not (I'm not)."],
+    ]),
+
+    // --- Articles: a / an ---
+    ...buildMultipleChoice(articlesAAnTopic, 1, [
+      ['I have ___ dog.', ['a', 'an', '-', 'the'], 'a', "Ünsüz sesle başlayan tekil isimden önce 'a' kullanılır."],
+      ['She eats ___ apple every day.', ['a', 'an', '-', 'some'], 'an', "Ünlü sesle (a, e, i, o, u) başlayan kelimeden önce 'an' kullanılır."],
+      ['He is ___ engineer.', ['a', 'an', '-', 'the'], 'an', "Meslekten önce 'a/an' gelir; 'engineer' ünlü sesle başlar → 'an'."],
+      ['My father is ___ doctor.', ['a', 'an', '-', 'the'], 'a', "Meslekten önce 'a/an' gelir; 'doctor' ünsüz sesle başlar → 'a'."],
+      ['We are waiting for ___ hour.', ['a', 'an', '-', 'one'], 'an', "'Hour' kelimesinde 'h' okunmaz, ünlü sesle başlar → 'an'."],
+      ['It is ___ university in London.', ['a', 'an', '-', 'the'], 'a', "'University' /ju:/ (you) sesiyle başlar → 'a'."],
+      ['I have two ___.', ['a cat', 'an cats', 'cats', 'a cats'], 'cats', "Çoğul isimlerle 'a/an' kullanılmaz."],
+      ['That is ___ old house.', ['a', 'an', '-', 'the'], 'an', "'A/an' sıfatın ilk sesine göre seçilir: 'old' ünlü sesle başlar → 'an'."],
+      ['She has ___ big umbrella.', ['a', 'an', '-', 'the'], 'a', "'Big' ünsüz sesle başlar → 'a' (umbrella değil, big belirler)."],
+      ['Can I have ___ orange juice, please?', ['a', 'an', '-', 'the'], 'an', "'Orange' ünlü sesle başlar → 'an'."],
+    ]),
+    ...buildMultipleChoice(articlesAAnTopic, 2, [
+      ['___ egg', ['a', 'an'], 'an', "'Egg' ünlü sesle başlar → 'an'."],
+      ['___ banana', ['a', 'an'], 'a', "'Banana' ünsüz sesle başlar → 'a'."],
+      ['___ umbrella', ['a', 'an'], 'an', "'Umbrella' ünlü sesle başlar → 'an'."],
+      ['___ house', ['a', 'an'], 'a', "'House' kelimesinde 'h' okunur → 'a'."],
+      ['___ hour', ['a', 'an'], 'an', "'Hour' kelimesinde 'h' okunmaz → 'an'."],
+      ['___ uniform', ['a', 'an'], 'a', "'Uniform' /ju:/ (you) sesiyle başlar → 'a'."],
+      ['___ island', ['a', 'an'], 'an', "'Island' ünlü sesle başlar → 'an'."],
+      ['___ teacher', ['a', 'an'], 'a', "'Teacher' ünsüz sesle başlar → 'a'."],
+      ['___ interesting book', ['a', 'an'], 'an', "'Interesting' ünlü sesle başlar → 'an'."],
+      ['___ European city', ['a', 'an'], 'a', "'European' /ju:/ (you) sesiyle başlar → 'a'."],
+    ]),
+    ...buildFillInBlanks(articlesAAnTopic, 3, [
+      ['There is ___ cat in the garden. (a/an)', 'a', "'Cat' ünsüz sesle başlar → 'a'."],
+      ['I need ___ envelope. (a/an)', 'an', "'Envelope' ünlü sesle başlar → 'an'."],
+      ['He is ___ actor. (a/an)', 'an', "'Actor' ünlü sesle başlar → 'an'."],
+      ['My sister is ___ nurse. (a/an)', 'a', "'Nurse' ünsüz sesle başlar → 'a'."],
+      ['This is ___ easy question. (a/an)', 'an', "'Easy' ünlü sesle başlar → 'an'."],
+      ['I want ___ ice cream. (a/an)', 'an', "'Ice cream' ünlü sesle başlar → 'an'."],
+      ['She lives in ___ small flat. (a/an)', 'a', "'Small' ünsüz sesle başlar → 'a'."],
+      ['It takes ___ hour by bus. (a/an)', 'an', "'Hour' kelimesinde 'h' okunmaz → 'an'."],
+      ['He has ___ useful phone. (a/an)', 'a', "'Useful' /ju:/ (you) sesiyle başlar → 'a'."],
+      ['I eat ___ orange every morning. (a/an)', 'an', "'Orange' ünlü sesle başlar → 'an'."],
+    ]),
+
+    // --- Present simple: Negatives and questions ---
+    ...buildMultipleChoice(presSimpleNegQTopic, 1, [
+      ["I ___ like coffee.", ["don't", "doesn't", "isn't", "not"], "don't", "I/you/we/they ile olumsuz: don't + fiil."],
+      ["She ___ eat meat.", ["don't", "doesn't", "isn't", "not"], "doesn't", "He/she/it ile olumsuz: doesn't + fiil."],
+      ['___ you speak English?', ['Do', 'Does', 'Are', 'Is'], 'Do', "I/you/we/they ile soru: Do + özne + fiil?"],
+      ['___ he work in a bank?', ['Do', 'Does', 'Is', 'Are'], 'Does', "He/she/it ile soru: Does + özne + fiil?"],
+      ["He doesn't ___ TV in the morning.", ['watch', 'watches', 'watching', 'watched'], 'watch', "'Doesn't' sonrasında fiil yalın halde kullanılır (-s almaz)."],
+      ['Does she ___ in Istanbul?', ['live', 'lives', 'living', 'lived'], 'live', "'Does' ile soruda fiil yalın halde kullanılır."],
+      ['Do they play football? — Yes, they ___.', ['do', 'does', 'are', 'play'], 'do', "Kısa olumlu cevap: Yes, they do."],
+      ["Does your brother drive? — No, he ___.", ["doesn't", "don't", "isn't", "not"], "doesn't", "Kısa olumsuz cevap: No, he doesn't."],
+      ['Where ___ your parents live?', ['do', 'does', 'are', 'is'], 'do', "'Your parents' çoğul → 'do'."],
+      ['What time ___ the film start?', ['do', 'does', 'is', 'are'], 'does', "'The film' tekil → 'does'."],
+    ]),
+    ...buildMultipleChoice(presSimpleNegQTopic, 2, [
+      ['We ___ work on Sundays.', ["don't", "doesn't"], "don't", "'We' ile olumsuz: don't."],
+      ['My cat ___ like water.', ["don't", "doesn't"], "doesn't", "'My cat' (it) ile olumsuz: doesn't."],
+      ['___ Tom play the guitar?', ['Do', 'Does'], 'Does', "'Tom' (he) ile soru: Does."],
+      ['___ your friends like pizza?', ['Do', 'Does'], 'Do', "'Your friends' (they) ile soru: Do."],
+      ["She doesn't ___ French.", ['speak', 'speaks'], 'speak', "'Doesn't' sonrasında fiil yalın halde kullanılır."],
+      ['Do you ___ tea?', ['drink', 'drinks'], 'drink', "'Do' ile soruda fiil yalın halde kullanılır."],
+      ['Does it ___ a lot here in winter?', ['rain', 'rains'], 'rain', "'Does' sonrasında fiil -s almaz."],
+      ['Do you like music? — Yes, I ___.', ['do', 'like'], 'do', "Kısa cevapta ana fiil değil 'do' kullanılır: Yes, I do."],
+      ['Does Anna have a car? — No, she ___.', ["doesn't", "don't"], "doesn't", "'She' ile kısa olumsuz cevap: No, she doesn't."],
+      ['How ___ you go to school?', ['do', 'does'], 'do', "'You' ile soru: do."],
+    ]),
+    ...buildFillInBlanks(presSimpleNegQTopic, 3, [
+      ['I play tennis. (negative, short form) ⇒ I ___ play tennis.', "don't", "I + don't + fiil."],
+      ['She works here. (negative, short form) ⇒ She ___ work here.', "doesn't", "She + doesn't + yalın fiil (works → work)."],
+      ['They live in Paris. (negative, short form) ⇒ They ___ live in Paris.', "don't", "They + don't + fiil."],
+      ['He goes to the gym. (negative) ⇒ He doesn\'t ___ to the gym.', 'go', "'Doesn't' sonrasında yalın fiil: goes → go."],
+      ['You like chocolate. (question) ⇒ ___ you like chocolate?', 'Do', "'You' ile soru: Do + özne + fiil?"],
+      ['She reads books. (question) ⇒ ___ she read books?', 'Does', "'She' ile soru: Does + özne + yalın fiil?"],
+      ['It starts at 9. (question) ⇒ Does it ___ at 9?', 'start', "'Does' ile soruda fiil yalın halde: starts → start."],
+      ['We need help. (question) ⇒ ___ we need help?', 'Do', "'We' ile soru: Do."],
+      ['Do you know him? — Yes, I ___.', 'do', "Kısa olumlu cevap: Yes, I do."],
+      ['Does he smoke? — No, he ___.', "doesn't", "Kısa olumsuz cevap: No, he doesn't."],
+    ]),
+
+    // --- Would like / Would you like? ---
+    ...buildMultipleChoice(wouldLikeTopic, 1, [
+      ['I ___ a cup of tea, please.', ["'d like", 'like', 'would', 'want to'], "'d like", "Kibarca bir şey isterken 'I'd like' (I would like) kullanılır."],
+      ['___ some water?', ['Would you like', 'Do you like', 'You would like', 'Would like you'], 'Would you like', "Kibarca bir şey teklif ederken 'Would you like...?' kullanılır."],
+      ['She would like ___ a doctor.', ['to be', 'be', 'being', 'is'], 'to be', "'Would like' + to + fiil: would like to be."],
+      ['Would you like to come to my party? — Yes, I ___.', ['would', 'like', 'do', "'d"], 'would', "Kısa olumlu cevap: Yes, I would. (Kısaltma yapılmaz.)"],
+      ['Would you like a sandwich? — No, ___.', ['thank you', 'I not', "I don't would", 'I wouldn\'t like'], 'thank you', "Bir teklifi kibarca reddetmek için 'No, thank you.' denir."],
+      ['What ___ to drink?', ['would you like', 'you would like', 'do you would like', 'would like you'], 'would you like', "Soru kelimesi + would + özne + like: What would you like...?"],
+      ['We would like ___ a table for two.', ['to book', 'book', 'booking', 'books'], 'to book', "'Would like' sonrasında 'to + fiil' gelir."],
+      ["I'm hungry. I ___ a sandwich, please.", ["'d like", 'like', 'liked', 'am like'], "'d like", "'Like' = genel olarak sevmek; 'would like' = şimdi istemek."],
+      ['He ___ to visit Japan one day.', ["'d like", 'like', 'would likes', 'likes to would'], "'d like", "He would like (He'd like) + to + fiil. 'Would' sonrası fiil -s almaz."],
+      ['___ like a coffee, sir?', ['Would you', 'Do you', 'Are you', 'You would'], 'Would you', "Teklif: Would you like...?"],
+    ]),
+    ...buildMultipleChoice(wouldLikeTopic, 2, [
+      ['I ___ a glass of orange juice, please.', ["'d like", 'like'], "'d like", "Şu anki bir istek için 'I'd like' kullanılır."],
+      ['___ some cake?', ['Would you like', 'Do you like'], 'Would you like', "Teklif ederken 'Would you like...?' kullanılır."],
+      ['___ football? — Yes, I love it!', ['Do you like', 'Would you like'], 'Do you like', "Genel olarak sevip sevmediğini sorarken 'Do you like...?' kullanılır."],
+      ['She would like ___ home early.', ['to go', 'go'], 'to go', "'Would like' + to + fiil."],
+      ['Would you like a drink? — Yes, ___.', ['please', 'I like'], 'please', "Teklifi kabul ederken 'Yes, please.' denir."],
+      ['They ___ to see the museum.', ['would like', 'would likes'], 'would like', "'Would' sonrası fiil her zaman yalın halde: would like."],
+      ['Would he like some tea? — No, he ___.', ["wouldn't", "doesn't"], "wouldn't", "Kısa olumsuz cevap: No, he wouldn't."],
+      ['I ___ a single room for two nights.', ["'d like", 'want'], "'d like", "'Want' kaba gelebilir; kibar istek için 'I'd like' kullanılır."],
+      ['What would you like ___ eat?', ['to', 'for'], 'to', "'Would like' + to + fiil: would like to eat."],
+      ['___ like to sit here?', ['Would you', 'Do you'], 'Would you', "Kibar teklif: Would you like to...?"],
+    ]),
+    ...buildFillInBlanks(wouldLikeTopic, 3, [
+      ['I want a coffee. (polite) ⇒ I ___ like a coffee.', 'would', "Kibar istek: I would like..."],
+      ['Do you want some tea? (polite) ⇒ ___ you like some tea?', 'Would', "Kibar teklif: Would you like...?"],
+      ['She wants to learn Spanish. (polite) ⇒ She would like ___ learn Spanish.', 'to', "'Would like' + to + fiil."],
+      ['Would you like a biscuit? — Yes, ___.', 'please', "Kabul ederken: Yes, please."],
+      ['Would you like more soup? — No, thank ___.', 'you', "Reddederken: No, thank you."],
+      ['We want a table by the window. (polite) ⇒ We would ___ a table by the window.', 'like', "Kibar istek: We would like..."],
+      ['What do you want to drink? (polite) ⇒ What ___ you like to drink?', 'would', "Kibar soru: What would you like...?"],
+      ['Would they like to come? — Yes, they ___.', 'would', "Kısa olumlu cevap: Yes, they would."],
+      ["I'd like a tea. (full form) ⇒ I ___ like a tea.", 'would', "'I'd' = 'I would'."],
+      ['He wants to be a pilot. (polite) ⇒ He would like to ___ a pilot.', 'be', "'Would like to' sonrasında yalın fiil gelir: to be."],
+    ]),
+
+    // --- A2: Past continuous ---
+    ...buildMultipleChoice(pastContTopic, 1, [
+      ['At 8 pm yesterday, I ___ dinner.', ['was having', 'were having', 'had', 'am having'], 'was having', "Geçmişte belli bir anda devam eden eylem: I + was + fiil-ing."],
+      ['They ___ TV when I called.', ['were watching', 'was watching', 'watched', 'are watching'], 'were watching', "They + were + fiil-ing."],
+      ['She ___ a book at 10 o\'clock last night.', ['was reading', 'were reading', 'reads', 'is reading'], 'was reading', "She + was + fiil-ing."],
+      ['We ___ sleeping at midnight. We were still awake.', ["weren't", "wasn't", "didn't", "aren't"], "weren't", "We/you/they ile olumsuz: weren't + fiil-ing."],
+      ['___ you working at 9 am yesterday?', ['Were', 'Was', 'Did', 'Are'], 'Were', "'You' ile soru: Were + you + fiil-ing?"],
+      ['What ___ he doing at 7 pm?', ['was', 'were', 'did', 'is'], 'was', "'He' ile soru: What was he doing?"],
+      ['It ___ raining when we left the house.', ['was', 'were', 'did', 'is'], 'was', "'It' ile 'was' kullanılır."],
+      ['Were they playing football? — Yes, they ___.', ['were', 'was', 'did', 'are'], 'were', "Kısa olumlu cevap: Yes, they were."],
+      ['Was she cooking? — No, she ___.', ["wasn't", "weren't", "didn't", "isn't"], "wasn't", "Kısa olumsuz cevap: No, she wasn't."],
+      ["At 3 o'clock the children ___ in the garden.", ['were playing', 'was playing', 'are playing', 'play'], 'were playing', "'The children' çoğul → were + fiil-ing."],
+    ]),
+    ...buildMultipleChoice(pastContTopic, 2, [
+      ['I ___ walking home at 6 pm.', ['was', 'were'], 'was', "'I' ile 'was' kullanılır."],
+      ['You ___ talking on the phone.', ['were', 'was'], 'were', "'You' ile 'were' kullanılır."],
+      ['He was ___ for his exam all evening.', ['studying', 'studied'], 'studying', "Past continuous: was + fiil-ing."],
+      ['My parents ___ dinner at 8.', ['were having', 'was having'], 'were having', "'My parents' çoğul → were."],
+      ['___ it snowing this morning?', ['Was', 'Were'], 'Was', "'It' ile soru: Was it...?"],
+      ["We ___ listening. We were talking.", ["weren't", "wasn't"], "weren't", "'We' ile olumsuz: weren't."],
+      ['What were you ___ at midnight?', ['doing', 'did'], 'doing', "Soru da was/were + fiil-ing ile kurulur."],
+      ['The sun ___ shining.', ['was', 'were'], 'was', "'The sun' tekil → was."],
+      ['Was Tom driving? — Yes, he ___.', ['was', 'did'], 'was', "Kısa cevapta 'was/were' tekrarlanır: Yes, he was."],
+      ['They ___ waiting for the bus at 7:30.', ['were', 'was'], 'were', "'They' ile 'were' kullanılır."],
+    ]),
+    ...buildFillInBlanks(pastContTopic, 3, [
+      ['At 9 pm I ___ (watch) a film.', 'was watching', "I + was + watching."],
+      ['She ___ (sleep) at midnight.', 'was sleeping', "She + was + sleeping."],
+      ['They ___ (play) tennis at 4 pm.', 'were playing', "They + were + playing."],
+      ['It ___ (rain) all morning.', 'was raining', "It + was + raining."],
+      ['I ___ (cook) when the phone rang.', 'was cooking', "Uzun süren eylem past continuous: I was cooking."],
+      ['We were not working. (short form) ⇒ We ___ working.', "weren't", "were not → weren't."],
+      ['He was not listening. (short form) ⇒ He ___ listening.', "wasn't", "was not → wasn't."],
+      ['You were reading. (question) ⇒ ___ you reading?', 'Were', "Soru: Were + you + fiil-ing?"],
+      ['She was crying. (question) ⇒ ___ she crying?', 'Was', "Soru: Was + she + fiil-ing?"],
+      ['What ___ you doing at 8 o\'clock? (be)', 'were', "'You' ile 'were': What were you doing?"],
+    ]),
+
+    // --- A2: Already, yet, just ---
+    ...buildMultipleChoice(alreadyYetJustTopic, 1, [
+      ["I have ___ finished my homework. It's done!", ['already', 'yet', 'still', 'ever'], 'already', "'Already' = beklenenden önce, çoktan."],
+      ['Have you done your homework ___?', ['yet', 'just', 'still', 'never'], 'yet', "Sorularda 'yet' cümle sonunda kullanılır."],
+      ["She hasn't called me ___.", ['yet', 'already', 'just', 'ever'], 'yet', "Olumsuz cümlelerde 'yet' = henüz."],
+      ['They have ___ arrived — a minute ago!', ['just', 'yet', 'still', 'ever'], 'just', "'Just' = az önce."],
+      ["Is Tom here? — No, he hasn't come ___.", ['yet', 'already', 'just', 'ever'], 'yet', "Olumsuz cümlede 'yet' sonda gelir."],
+      ["We've ___ seen that film. Let's watch something else.", ['already', 'yet', 'ever', 'still'], 'already', "'Already' have ile fiil arasında gelir."],
+      ['The train has ___ left. You missed it by one minute!', ['just', 'yet', 'ever', 'still'], 'just', "Bir dakika önce olan eylem → 'just'."],
+      ['Has the film started ___?', ['yet', 'already', 'just', 'still'], 'yet', "Soru cümlesinde sonda 'yet'."],
+      ["I'm not hungry. I've ___ eaten.", ['already', 'yet', 'ever', 'still'], 'already', "'Already' = çoktan (yemek yedim bile)."],
+      ["Haven't you finished ___? It's late!", ['yet', 'already', 'just', 'ever'], 'yet', "Olumsuz soruda 'yet' sonda gelir."],
+    ]),
+    ...buildMultipleChoice(alreadyYetJustTopic, 2, [
+      ["I haven't seen it ___.", ['yet', 'already'], 'yet', "Olumsuz cümlede 'yet'."],
+      ["He's ___ gone home.", ['already', 'yet'], 'already', "Olumlu cümlede 'already', have/has ile fiil arasında."],
+      ['Have you met him ___?', ['yet', 'just'], 'yet', "Soru cümlesinde sonda 'yet'."],
+      ["She's ___ left — you just missed her.", ['just', 'yet'], 'just', "Az önce olan eylem → 'just'."],
+      ['I have ___ eaten.', ['just', 'yet'], 'just', "'Just' have ile fiil arasında gelir; 'yet' olumlu cümlede kullanılmaz."],
+      ["They haven't paid ___.", ['yet', 'already'], 'yet', "Olumsuz cümlede 'yet'."],
+      ["We've ___ booked the tickets, so don't worry.", ['already', 'yet'], 'already', "Olumlu cümlede 'already'."],
+      ['Has your sister arrived ___?', ['yet', 'already'], 'yet', "Soru cümlesinde 'yet'."],
+      ["I've ___ had a shower — my hair is still wet.", ['just', 'yet'], 'just', "Az önce olan eylem → 'just'."],
+      ["You can't go out. You haven't done your homework ___.", ['yet', 'already'], 'yet', "Olumsuz cümlede 'yet'."],
+    ]),
+    ...buildFillInBlanks(alreadyYetJustTopic, 3, [
+      ["I finished it a second ago. ⇒ I've ___ finished it.", 'just', "Az önce → 'just'."],
+      ["She hasn't replied. I'm still waiting. ⇒ She hasn't replied ___.", 'yet', "Olumsuz cümlede 'yet' sonda gelir."],
+      ["We did it earlier than we expected. ⇒ We've ___ done it.", 'already', "Beklenenden önce → 'already'."],
+      ['Has he arrived ___? (question)', 'yet', "Soru cümlesinde 'yet'."],
+      ['The film started one minute ago. ⇒ The film has ___ started.', 'just', "Bir dakika önce → 'just'."],
+      ["I don't need to buy milk. I've ___ bought some.", 'already', "Çoktan yapılmış → 'already'."],
+      ["They are still thinking. ⇒ They haven't decided ___.", 'yet', "Olumsuz cümlede 'yet'."],
+      ["Don't tell me the ending! I haven't seen it ___.", 'yet', "Olumsuz cümlede 'yet'."],
+      ['Look! It has ___ stopped raining.', 'just', "Az önce → 'just'."],
+      ["Wow, you've ___ finished? That was fast!", 'already', "Beklenenden önce → 'already'."],
+    ]),
+
+    // --- A2: Let's / Shall we? ---
+    ...buildMultipleChoice(letsShallTopic, 1, [
+      ["It's hot. ___ go to the beach!", ["Let's", 'Let', 'Shall', 'Why'], "Let's", "Öneri: Let's + yalın fiil."],
+      ['___ we go to the cinema tonight?', ['Shall', "Let's", 'Do', 'Are'], 'Shall', "Öneri sorusu: Shall we + yalın fiil?"],
+      ["Let's ___ a pizza.", ['order', 'to order', 'ordering', 'orders'], 'order', "'Let's' sonrasında yalın fiil gelir."],
+      ['Shall I ___ the window?', ['open', 'to open', 'opening', 'opens'], 'open', "'Shall I' sonrasında yalın fiil gelir."],
+      ["Let's not ___ late.", ['be', 'to be', 'being', 'are'], 'be', "Olumsuz öneri: Let's not + yalın fiil."],
+      ["I'm tired. ___ we stop for a coffee?", ['Shall', "Let's", 'Will', 'Are'], 'Shall', "Öneri sorusu: Shall we...?"],
+      ["Shall we go for a walk? — Yes, ___!", ["let's", 'shall', 'we do', 'we shall not'], "let's", "Öneriyi kabul ederken: Yes, let's!"],
+      ['___ I help you with your bags?', ['Shall', "Let's", 'Do', 'Am'], 'Shall', "Yardım teklifi: Shall I...?"],
+      ['What shall we ___ this weekend?', ['do', 'to do', 'doing', 'did'], 'do', "Soru kelimesi + shall we + yalın fiil."],
+      ["Let's meet at 7, ___?", ['shall we', 'will we', 'do we', 'let we'], 'shall we', "Let's... cümlesinin sonuna 'shall we?' eklenir."],
+    ]),
+    ...buildMultipleChoice(letsShallTopic, 2, [
+      ['___ have lunch together.', ["Let's", 'Shall we'], "Let's", "Nokta ile biten öneri: Let's..."],
+      ['___ go now?', ['Shall we', "Let's"], 'Shall we', "Soru işaretiyle biten öneri: Shall we...?"],
+      ["Let's ___ TV.", ['watch', 'watching'], 'watch', "'Let's' + yalın fiil."],
+      ['Shall I ___ you a taxi?', ['call', 'to call'], 'call', "'Shall I' + yalın fiil."],
+      ['___ I carry that for you?', ['Shall', "Let's"], 'Shall', "Teklif: Shall I...?"],
+      ["Let's ___ go out. It's raining.", ['not', "don't"], 'not', "Olumsuz öneri: Let's not..."],
+      ['Where shall we ___?', ['go', 'going'], 'go', "'Shall we' + yalın fiil."],
+      ['Shall we dance? — Yes, ___.', ["let's", 'shall'], "let's", "Kabul: Yes, let's."],
+      ["It's late. ___ go home.", ["Let's", 'Shall'], "Let's", "Öneri: Let's + yalın fiil."],
+      ["Let's ___ a break.", ['take', 'takes'], 'take', "'Let's' + yalın fiil."],
+    ]),
+    ...buildFillInBlanks(letsShallTopic, 3, [
+      ["I suggest we go to the park. ⇒ ___ go to the park.", "Let's", "Öneri: Let's + yalın fiil."],
+      ['Do you want us to play a game? ⇒ ___ we play a game?', 'Shall', "Öneri sorusu: Shall we...?"],
+      ['Do you want me to help? ⇒ Shall ___ help?', 'I', "Yardım teklifi: Shall I...?"],
+      ["Let's ___ (eat) out tonight.", 'eat', "'Let's' + yalın fiil."],
+      ["Let's ___ tell anyone. It's a secret.", 'not', "Olumsuz öneri: Let's not..."],
+      ['What ___ we do now?', 'shall', "Öneri sorusu: What shall we do?"],
+      ["Let's go to the museum, ___ we?", 'shall', "Let's... cümlesinin sonuna 'shall we?' eklenir."],
+      ["Shall we take the bus? — Yes, ___.", "let's", "Kabul: Yes, let's."],
+      ['Shall I ___ (make) some tea?', 'make', "'Shall I' + yalın fiil."],
+      ["It's cold. Shall I ___ (close) the door?", 'close', "'Shall I' + yalın fiil."],
+    ]),
+
+    // --- A2: Must / mustn't ---
+    ...buildMultipleChoice(mustMustntTopic, 1, [
+      ["You ___ wear a seatbelt in the car. It's the law.", ['must', "mustn't", 'can', "don't"], 'must', "Zorunluluk / kural → 'must'."],
+      ['You ___ smoke in the hospital.', ["mustn't", 'must', 'have', "don't must"], "mustn't", "Yasak → 'mustn't'."],
+      ['Students ___ be late for class.', ["mustn't", 'must', "don't", "aren't"], "mustn't", "Yasak → 'mustn't'."],
+      ["I ___ call my mum. It's her birthday!", ['must', "mustn't", 'musts', 'must to'], 'must', "Kişisel gereklilik → 'must'."],
+      ['She must ___ her homework tonight.', ['do', 'to do', 'does', 'doing'], 'do', "'Must' sonrasında yalın fiil gelir (to almaz)."],
+      ["You ___ touch that. It's very hot!", ["mustn't", 'must', "don't must", 'not must'], "mustn't", "Yasak / tehlike → 'mustn't'."],
+      ['We ___ forget our passports.', ["mustn't", 'must', "musn't to", "don't must"], "mustn't", "'Mustn't' + yalın fiil = yapmamalıyız."],
+      ['He must ___ more water.', ['drink', 'drinks', 'to drink', 'drinking'], 'drink', "'Must' sonrasında fiil -s almaz."],
+      ['You ___ stop at a red light.', ['must', "mustn't", "can't to", "don't"], 'must', "Kural → 'must'."],
+      ['Children ___ play with matches.', ["mustn't", 'must', 'musts', "don't must"], "mustn't", "Yasak → 'mustn't'."],
+    ]),
+    ...buildMultipleChoice(mustMustntTopic, 2, [
+      ["You ___ park here. It's a no-parking area.", ["mustn't", 'must'], "mustn't", "Yasak → 'mustn't'."],
+      ['I ___ study tonight. I have an exam tomorrow.', ['must', "mustn't"], 'must', "Gereklilik → 'must'."],
+      ["You ___ run by the pool. It's dangerous.", ["mustn't", 'must'], "mustn't", "Yasak → 'mustn't'."],
+      ['We ___ be quiet in the library.', ['must', "mustn't"], 'must', "Kural → 'must'."],
+      ['She must ___ early tomorrow.', ['get up', 'gets up'], 'get up', "'Must' + yalın fiil."],
+      ['You ___ use your phone during the exam.', ["mustn't", 'must'], "mustn't", "Yasak → 'mustn't'."],
+      ["He ___ go to the doctor. He's very ill.", ['must', "mustn't"], 'must', "Gereklilik → 'must'."],
+      ['You must ___ your hands before dinner.', ['wash', 'to wash'], 'wash', "'Must' sonrasında 'to' gelmez."],
+      ['Passengers ___ show their tickets.', ['must', "mustn't"], 'must', "Kural → 'must'."],
+      ['You ___ tell anyone my secret!', ["mustn't", 'must'], "mustn't", "Yasak → 'mustn't'."],
+    ]),
+    ...buildFillInBlanks(mustMustntTopic, 3, [
+      ["It's necessary to wear a helmet. ⇒ You ___ wear a helmet.", 'must', "Gereklilik → 'must'."],
+      ["Don't eat in the classroom. (rule) ⇒ You ___ eat in the classroom.", "mustn't", "Yasak → 'mustn't'."],
+      ["Don't be late! ⇒ You ___ be late.", "mustn't", "Yasak → 'mustn't'."],
+      ["It's important to listen to the teacher. ⇒ You ___ listen to the teacher.", 'must', "Gereklilik → 'must'."],
+      ['He must ___ (finish) the report today.', 'finish', "'Must' + yalın fiil."],
+      ["Don't cross the road here. ⇒ You ___ cross the road here.", "mustn't", "Yasak → 'mustn't'."],
+      ['I ___ remember to buy milk. (necessary)', 'must', "Kişisel gereklilik → 'must'."],
+      ["Don't feed the animals. ⇒ Visitors ___ feed the animals.", "mustn't", "Yasak → 'mustn't'."],
+      ['You must ___ (show) your ID at the door.', 'show', "'Must' + yalın fiil."],
+      ['Turn off your phone. (rule) ⇒ You ___ turn off your phone.', 'must', "Kural → 'must'."],
+    ]),
+
+    // --- A2: Be able to ---
+    ...buildMultipleChoice(beAbleToTopic, 1, [
+      ["I'd like to ___ swim.", ['be able to', 'can', 'able to', 'could'], 'be able to', "'Can' 'to'dan sonra kullanılamaz; 'be able to' kullanılır."],
+      ['She will ___ come tomorrow.', ['be able to', 'can', 'able', 'could to'], 'be able to', "Gelecek zamanda 'will can' olmaz → 'will be able to'."],
+      ['He ___ able to speak three languages.', ['is', 'can', 'does', 'are'], 'is', "Şimdiki zaman: He is able to..."],
+      ["We weren't ___ to find the hotel.", ['able', 'can', 'could', 'be able'], 'able', "Geçmiş: wasn't/weren't able to."],
+      ['Were you able ___ the tickets?', ['to buy', 'buy', 'buying', 'bought'], 'to buy', "'Able' sonrasında 'to + yalın fiil' gelir."],
+      ['I have ___ able to sleep well this week.', ['been', 'be', 'was', 'being'], 'been', "Present perfect: have been able to."],
+      ['They ___ able to come to the party last night.', ["weren't", "wasn't", "didn't", "aren't"], "weren't", "'They' ile geçmişte olumsuz: weren't able to."],
+      ['Will you ___ to help me?', ['be able', 'able', 'can', 'could'], 'be able', "Gelecek: Will you be able to...?"],
+      ["I can't swim, but I want to ___ swim.", ['be able to', 'can', 'able to', 'could'], 'be able to', "'Want to' sonrasında 'can' gelmez → 'be able to'."],
+      ["My brother ___ able to drive. He's only 12.", ["isn't", "can't", "doesn't", "aren't"], "isn't", "Olumsuz: isn't able to."],
+    ]),
+    ...buildMultipleChoice(beAbleToTopic, 2, [
+      ["I'll ___ finish it tomorrow.", ['be able to', 'can'], 'be able to', "'Will' sonrasında 'can' gelmez → 'be able to'."],
+      ['She ___ able to dance very well.', ['is', 'can'], 'is', "'Able to' 'be' fiiliyle kullanılır: is able to."],
+      ['We ___ able to see the sea from our room.', ['were', 'was'], 'were', "'We' ile geçmiş: were able to."],
+      ['I hope to ___ visit you soon.', ['be able to', 'can'], 'be able to', "'To' sonrasında 'can' gelmez."],
+      ['He was able ___ the door.', ['to open', 'open'], 'to open', "'Able' + to + yalın fiil."],
+      ['Are you able ___ tonight?', ['to come', 'come'], 'to come', "'Able' + to + yalın fiil."],
+      ['They ___ able to finish the test. It was too difficult.', ["weren't", "didn't"], "weren't", "Olumsuz: weren't able to."],
+      ["I'd love to ___ play the piano.", ['be able to', 'can'], 'be able to', "'To' sonrasında 'be able to' kullanılır."],
+      ['Was she able ___ the problem?', ['to solve', 'solving'], 'to solve', "'Able' + to + yalın fiil."],
+      ['Will they be able ___ us?', ['to help', 'help'], 'to help', "'Be able' + to + yalın fiil."],
+    ]),
+    ...buildFillInBlanks(beAbleToTopic, 3, [
+      ['I can swim. (future) ⇒ I will be ___ to swim.', 'able', "Gelecek: will be able to."],
+      ["She can't come. (past) ⇒ She ___ able to come.", "wasn't", "Geçmiş, olumsuz: wasn't able to."],
+      ['We can help. (past) ⇒ We ___ able to help.', 'were', "Geçmiş: were able to."],
+      ["They can't hear you. (past) ⇒ They ___ able to hear you.", "weren't", "Geçmiş, olumsuz: weren't able to."],
+      ['Can you come tomorrow? ⇒ Will you be able ___ come tomorrow?', 'to', "'Be able' + to + yalın fiil."],
+      ['I want to ___ able to speak English well.', 'be', "'Want to' + be able to."],
+      ['He can run fast. ⇒ He is able ___ run fast.', 'to', "'Able' + to + yalın fiil."],
+      ["I can't find my keys. (past) ⇒ I ___ able to find my keys.", "wasn't", "Geçmiş, olumsuz: wasn't able to."],
+      ['Can she drive? (future) ⇒ ___ she be able to drive?', 'Will', "Gelecek sorusu: Will + özne + be able to...?"],
+      ["They can't win. (future) ⇒ They won't be ___ to win.", 'able', "Gelecek, olumsuz: won't be able to."],
+    ]),
+
+    // --- A2: Adverbs of degree: very, quite, really... ---
+    ...buildMultipleChoice(adverbsDegreeTopic, 1, [
+      ["It's ___ cold today. Wear a coat!", ['very', 'very much', 'a lot', 'many'], 'very', "Sıfattan önce 'very' kullanılır: very cold."],
+      ['The film was ___ good. I loved it!', ['really', 'much', 'a lot', 'many'], 'really', "Sıfattan önce 'really' = çok."],
+      ["This bag is ___ heavy. I can't carry it.", ['too', 'enough', 'very much', 'a lot'], 'too', "'Too' = gereğinden fazla (olumsuz sonuç)."],
+      ["He isn't old ___ to drive.", ['enough', 'too', 'very', 'quite'], 'enough', "'Enough' sıfattan SONRA gelir: old enough."],
+      ['The test was ___ easy — not very easy, but easy.', ['quite', 'too', 'enough', 'extremely'], 'quite', "'Quite' = oldukça (very'den daha az)."],
+      ["I'm ___ tired. I can't keep my eyes open!", ['extremely', 'quite', 'a bit', 'enough'], 'extremely', "'Extremely' = son derece, çok çok."],
+      ['The soup is ___ hot. Wait a minute.', ['a bit', 'much', 'many', 'enough'], 'a bit', "'A bit' = biraz."],
+      ['She speaks English ___ well.', ['very', 'very much', 'much', 'a lot of'], 'very', "Zarftan önce 'very': very well."],
+      ["It's ___ expensive. I can't buy it.", ['too', 'enough', 'quite', 'a bit of'], 'too', "'Too' + sıfat = fazla (olumsuz sonuç)."],
+      ['I like football ___.', ['very much', 'very', 'too', 'enough'], 'very much', "Fiili güçlendirirken 'very much' cümle sonunda gelir; tek başına 'very' fiille kullanılmaz."],
+    ]),
+    ...buildMultipleChoice(adverbsDegreeTopic, 2, [
+      ['This coffee is ___ hot to drink.', ['too', 'very'], 'too', "'Too + sıfat + to' = ...mek için fazla."],
+      ['The room is big ___ for four people.', ['enough', 'too'], 'enough', "'Sıfat + enough' = yeterince."],
+      ['She is ___ nice.', ['very', 'very much'], 'very', "Sıfattan önce 'very'."],
+      ['I like chocolate ___.', ['very much', 'very'], 'very much', "Fiille 'very much' kullanılır."],
+      ["He's ___ tall. He's 2 metres!", ['really', 'a bit'], 'really', "'Really' = çok."],
+      ["It's ___ late to go out now.", ['too', 'enough'], 'too', "'Too late' = çok geç (fazla)."],
+      ['Is the water warm ___ to swim?', ['enough', 'too'], 'enough', "'Enough' sıfattan sonra gelir."],
+      ["I'm ___ hungry. Just a little.", ['a bit', 'extremely'], 'a bit', "'A bit' = biraz."],
+      ['The museum was ___ interesting.', ['really', 'enough'], 'really', "Sıfattan önce 'really'."],
+      ["You're not tall ___ to reach the shelf.", ['enough', 'too'], 'enough', "'Tall enough' = yeterince uzun."],
+    ]),
+    ...buildFillInBlanks(adverbsDegreeTopic, 3, [
+      ["It's 40°C. It's ___ hot to go outside. (too / enough)", 'too', "'Too + sıfat' = fazla."],
+      ["He is 17. He isn't old ___ to vote. (too / enough)", 'enough', "'Sıfat + enough' = yeterince."],
+      ['The box is ___ heavy for me to lift. (too / enough)', 'too', "'Too heavy' = fazla ağır."],
+      ['Is the room big ___ for the party? (too / enough)', 'enough', "'Big enough' = yeterince büyük."],
+      ["I'm a little cold. ⇒ I'm a ___ cold.", 'bit', "'A little' = 'a bit'."],
+      ['She sings well. (really) ⇒ She sings ___ well.', 'really', "'Really' zarftan/sıfattan önce gelir."],
+      ['I like this song. (very much) ⇒ I like this song very ___.', 'much', "Fiille 'very much' kullanılır."],
+      ["The shoes are too small. ⇒ The shoes aren't big ___.", 'enough', "'Too small' = 'not big enough'."],
+      ["The tea isn't cool enough. ⇒ The tea is ___ hot.", 'too', "'Not cool enough' = 'too hot'."],
+      ['The hotel was nice. (quite) ⇒ The hotel was ___ nice.', 'quite', "'Quite' sıfattan önce gelir."],
+    ]),
+
+    // --- A2: Zero conditional ---
+    ...buildMultipleChoice(zeroCondTopic, 1, [
+      ['If you heat ice, it ___.', ['melts', 'melt', 'will melts', 'melted'], 'melts', "Zero conditional: If + present simple, present simple."],
+      ['If it rains, the grass ___ wet.', ['gets', 'get', 'got', 'getting'], 'gets', "Her zaman doğru olan sonuç: present simple."],
+      ['If you ___ water to 100°C, it boils.', ['heat', 'heats', 'heated', 'heating'], 'heat', "'If' kısmında present simple: you heat."],
+      ["Plants die if they ___ water.", ["don't get", "doesn't get", "won't get", 'not get'], "don't get", "'They' ile olumsuz present simple: don't get."],
+      ["If I drink coffee at night, I ___ sleep.", ["can't", "couldn't", 'not', "don't can"], "can't", "Genel durum: present (can't)."],
+      ['When you mix red and blue, you ___ purple.', ['get', 'gets', 'got', 'getting'], 'get', "'When' de 'if' gibi kullanılabilir: present simple."],
+      ['If you ___ the button, the machine starts.', ['press', 'presses', 'pressed', 'pressing'], 'press', "'If' kısmında present simple."],
+      ['If babies are hungry, they ___.', ['cry', 'cries', 'cried', 'crying'], 'cry', "'They' ile present simple: cry."],
+      ['What ___ if you mix oil and water?', ['happens', 'happen', 'happened', 'happening'], 'happens', "Genel gerçek sorusu: What happens if...?"],
+      ['If my dog sees a cat, he ___ barking.', ['starts', 'start', 'started', 'starting'], 'starts', "Her seferinde olan sonuç: present simple."],
+    ]),
+    ...buildMultipleChoice(zeroCondTopic, 2, [
+      ['If you freeze water, it ___ ice.', ['becomes', 'become'], 'becomes', "'It' ile present simple: becomes."],
+      ["If people ___ enough, they get tired.", ["don't sleep", "doesn't sleep"], "don't sleep", "'People' çoğul → don't."],
+      ['If I ___ late, my boss gets angry.', ['am', 'will be'], 'am', "Zero conditional'da 'if' kısmında 'will' kullanılmaz."],
+      ['If you ___ ice in the sun, it melts.', ['leave', 'leaves'], 'leave', "'You' ile present simple: leave."],
+      ["When it's cold, I ___ a jacket.", ['wear', 'wore'], 'wear', "Genel alışkanlık: present simple."],
+      ['If you touch fire, you ___ burnt.', ['get', 'gets'], 'get', "'You' ile present simple: get."],
+      ['If she ___ tired, she goes to bed early.', ['is', 'are'], 'is', "'She' ile 'is'."],
+      ['Metal expands if you ___ it.', ['heat', 'heats'], 'heat', "'You' ile present simple: heat."],
+      ['If I eat too much, I ___ ill.', ['feel', 'feels'], 'feel', "'I' ile present simple: feel."],
+      ['If it ___ sunny, we eat outside.', ['is', 'will be'], 'is', "'If' kısmında present simple."],
+    ]),
+    ...buildFillInBlanks(zeroCondTopic, 3, [
+      ['If you ___ (heat) butter, it melts.', 'heat', "'If' + present simple."],
+      ['If it snows, the roads ___ (be) dangerous.', 'are', "'The roads' çoğul → are."],
+      ["If you don't water plants, they ___ (die).", 'die', "'They' ile present simple: die."],
+      ['If my sister ___ (drink) milk, she feels sick.', 'drinks', "'My sister' (she) → drinks."],
+      ['Ice ___ (float) if you put it in water.', 'floats', "'Ice' (it) → floats."],
+      ['If you ___ (mix) yellow and blue, you get green.', 'mix', "'You' ile present simple: mix."],
+      ['When the sun ___ (go) down, it gets dark.', 'goes', "'The sun' (it) → goes."],
+      ['If you press this button, the light ___ (turn) on.', 'turns', "'The light' (it) → turns."],
+      ["If I don't ___ (eat) breakfast, I get hungry.", 'eat', "'Don't' sonrasında yalın fiil."],
+      ['If people ___ (exercise), they stay healthy.', 'exercise', "'People' çoğul → exercise."],
+    ]),
+
+    // --- A2: Time connectors: first, then, after that... ---
+    ...buildMultipleChoice(timeConnectorsTopic, 1, [
+      ['___, I wake up at 7. Then I have breakfast.', ['First', 'Finally', 'After', 'Then'], 'First', "Sıralamanın ilk adımı → 'First'."],
+      ['First, I have a shower. ___, I get dressed.', ['Then', 'First', 'Before', 'Finally'], 'Then', "Sonraki adım → 'Then'."],
+      ['We visited the museum. ___ that, we had lunch.', ['After', 'Then', 'First', 'Finally'], 'After', "'After that' = ondan sonra."],
+      ["___, we went home. It was a great day!", ['Finally', 'First', 'Next to', 'Before'], 'Finally', "Son adım → 'Finally'."],
+      ['I brush my teeth ___ I go to bed.', ['before', 'first', 'then', 'finally'], 'before', "'Before' + cümle = ...meden önce."],
+      ['___ dinner, we watched a film.', ['After', 'Then', 'First', 'Finally'], 'After', "'After' + isim = ...den sonra."],
+      ['Mix the eggs and sugar. ___, add the flour.', ['Next', 'Before', 'First', 'After'], 'Next', "Sonraki adım → 'Next'."],
+      ['Wash your hands ___ you eat.', ['before', 'after that', 'then', 'finally'], 'before', "'Before' + cümle."],
+      ['I finished my homework and ___ I played games.', ['then', 'after', 'before', 'first'], 'then', "'And then' = ve sonra."],
+      ['___ eating, she washed the dishes.', ['After', 'Then', 'Finally', 'First'], 'After', "'After' + fiil-ing = ...dikten sonra."],
+    ]),
+    ...buildMultipleChoice(timeConnectorsTopic, 2, [
+      ['___, open the box. Then take out the phone.', ['First', 'Finally'], 'First', "İlk adım → 'First'."],
+      ['I had breakfast, and ___ I went to school.', ['then', 'first'], 'then', "'And then' = ve sonra."],
+      ['___ that, we went shopping.', ['After', 'Then'], 'After', "'After that' kalıbı; 'then that' olmaz."],
+      ['We walked for hours. ___, we arrived at the hotel.', ['Finally', 'First'], 'Finally', "Sonunda → 'Finally'."],
+      ['Read the question ___ you answer.', ['before', 'after that'], 'before', "'Before' + cümle."],
+      ['___ the film, we went for a pizza.', ['After', 'Then'], 'After', "'After' + isim; 'then' isimle kullanılmaz."],
+      ['Turn off the lights ___ you leave.', ['before', 'after that'], 'before', "'Before' + cümle."],
+      ['First, cut the bread. ___, put the cheese on it.', ['Next', 'Before'], 'Next', "Sonraki adım → 'Next'."],
+      ['___ school, I usually go to the park.', ['After', 'Then'], 'After', "'After' + isim."],
+      ['I cleaned my room. ___, I had a rest.', ['After that', 'Before that'], 'After that', "Temizlikten sonra dinlendim → 'After that'."],
+    ]),
+    ...buildFillInBlanks(timeConnectorsTopic, 3, [
+      ['___, put water in the kettle. (the first step)', 'First', "İlk adım → 'First'."],
+      ['First, I get up. ___ I have a shower. (the next step)', 'Then', "Sonraki adım → 'Then'."],
+      ['___ that, I make coffee.', 'After', "'After that' = ondan sonra."],
+      ['___, I leave the house at 8. (the last step)', 'Finally', "Son adım → 'Finally'."],
+      ['I always check my email ___ I start work.', 'before', "'Before' + cümle = ...meden önce."],
+      ['___ lunch, we went back to the office.', 'After', "'After' + isim."],
+      ['Boil the pasta. ___, add the sauce. (N...)', 'Next', "Sonraki adım → 'Next'."],
+      ['Think ___ you speak.', 'before', "'Before' + cümle."],
+      ['We played tennis, and ___ we had a drink.', 'then', "'And then' = ve sonra."],
+      ['___ the party, everyone helped to clean up.', 'After', "'After' + isim."],
     ]),
 
     // --- Object pronouns vs subject pronouns: Me or I, she or her? ---
@@ -4947,42 +5446,6 @@ const seed = async () => {
   ];
 
   const vocabQuestions1 = [
-    ...buildMultipleChoice(vocCommonThingsTopic, 1, [
-      ['I put my books in my ___.', ['bag', 'key'], 'bag', "'bag' = eşyaları taşımak için kullanılan çanta."],
-      ["I can't open the door without my ___.", ['key', 'bag'], 'key', "'key' = kapı açmak için kullanılan anahtar."],
-      ['My ___ is ringing; I should answer it.', ['phone', 'wallet'], 'phone', "'phone' = telefon."],
-      ['I keep my money and cards in my ___.', ['wallet', 'watch'], 'wallet', "'wallet' = para/kart taşınan cüzdan."],
-      ["It's raining, so take an ___.", ['umbrella', 'watch'], 'umbrella', "'umbrella' = şemsiye."],
-      ['I check the time on my ___.', ['watch', 'glasses'], 'watch', "'watch' = kol saati."],
-      ['She wears ___ to read.', ['glasses', 'pen'], 'glasses', "'glasses' = gözlük."],
-      ['I need a ___ to write this letter.', ['pen', 'book'], 'pen', "'pen' = kalem."],
-      ["I'm reading an interesting ___.", ['book', 'chair'], 'book', "'book' = kitap."],
-      ['Please sit on this ___.', ['chair', 'bag'], 'chair', "'chair' = sandalye."],
-    ]),
-    ...buildMultipleChoice(vocCommonThingsTopic, 2, [
-      ['A thing you carry your books or clothes in.', ['A bag', 'A key', 'A phone', 'A wallet'], 'A bag', "'bag' = eşya taşımak için kullanılan çanta."],
-      ['A small metal object used to open a lock.', ['A key', 'A bag', 'A watch', 'A pen'], 'A key', "'key' = kilit açan anahtar."],
-      ['A device you use to call people.', ['A phone', 'A book', 'A chair', 'A wallet'], 'A phone', "'phone' = telefon."],
-      ['A small case for carrying money and cards.', ['A wallet', 'A bag', 'A key', 'A watch'], 'A wallet', "'wallet' = cüzdan."],
-      ['Something you use to stay dry in the rain.', ['An umbrella', 'A book', 'A chair', 'A pen'], 'An umbrella', "'umbrella' = şemsiye."],
-      ['Something you wear on your wrist to tell the time.', ['A watch', 'Glasses', 'A pen', 'A key'], 'A watch', "'watch' = kol saati."],
-      ['Something you wear on your face to see better.', ['Glasses', 'A watch', 'A book', 'A bag'], 'Glasses', "'glasses' = gözlük."],
-      ['A tool used for writing.', ['A pen', 'A key', 'A phone', 'A chair'], 'A pen', "'pen' = kalem."],
-      ['Something you read with pages.', ['A book', 'A bag', 'A wallet', 'A watch'], 'A book', "'book' = kitap."],
-      ['A piece of furniture you sit on.', ['A chair', 'A bag', 'A key', 'An umbrella'], 'A chair', "'chair' = sandalye."],
-    ]),
-    ...buildFillInBlanks(vocCommonThingsTopic, 3, [
-      ["You need this to unlock your front door. ⇒ I can't find my ___.", 'key', "'key' = anahtar."],
-      ['It rings when someone calls you. ⇒ My ___ is in my pocket.', 'phone', "'phone' = telefon."],
-      ['You keep cash inside this. ⇒ I lost my ___ with all my money in it.', 'wallet', "'wallet' = cüzdan."],
-      ['You use this when it rains. ⇒ Don\'t forget your ___.', 'umbrella', "'umbrella' = şemsiye."],
-      ['You wear this to tell the time. ⇒ I bought a new ___.', 'watch', "'watch' = kol saati."],
-      ['You wear these to see better. ⇒ She can\'t read without her ___.', 'glasses', "'glasses' = gözlük."],
-      ['You write with this. ⇒ Can I borrow your ___?', 'pen', "'pen' = kalem."],
-      ['You read this for a story. ⇒ I finished reading the ___.', 'book', "'book' = kitap."],
-      ['You sit on this. ⇒ Please bring another ___.', 'chair', "'chair' = sandalye."],
-      ['You carry things in this. ⇒ I put my lunch in my ___.', 'bag', "'bag' = çanta."],
-    ]),
 
     ...buildMultipleChoice(vocCommonVerbsTopic, 1, [
       ['I ___ up at 7 o\'clock every day.', ['get', 'go'], 'get', "'get up' = kalkmak."],
@@ -5469,79 +5932,7 @@ const seed = async () => {
       ['This is booking a table in advance. ⇒ I made a ___ for 7pm.', 'reservation', "'reservation' = rezervasyon."],
     ]),
 
-    ...buildMultipleChoice(vocUtensilsTopic, 1, [
-      ['I eat pasta with a ___.', ['fork', 'spoon'], 'fork', "'fork' = çatal."],
-      ['I cut my steak with a ___.', ['knife', 'fork'], 'knife', "'knife' = bıçak."],
-      ['I eat soup with a ___.', ['spoon', 'fork'], 'spoon', "'spoon' = kaşık."],
-      ['My dinner is on a ___.', ['plate', 'cup'], 'plate', "'plate' = tabak."],
-      ['I drink tea from a ___.', ['cup', 'glass'], 'cup', "'cup' = fincan."],
-      ['I drink water from a ___.', ['glass', 'cup'], 'glass', "'glass' = bardak."],
-      ['I eat cereal from a ___.', ['bowl', 'plate'], 'bowl', "'bowl' = kase."],
-      ['I wiped my mouth with a ___.', ['napkin', 'bowl'], 'napkin', "'napkin' = peçete."],
-      ['I poured juice from the ___.', ['bottle', 'jug'], 'bottle', "'bottle' = şişe."],
-      ['She filled the ___ with water for the table.', ['jug', 'bottle'], 'jug', "'jug' = sürahi."],
-    ]),
-    ...buildMultipleChoice(vocUtensilsTopic, 2, [
-      ['What do you use to spear food like pasta?', ['A fork', 'A knife', 'A spoon', 'A plate'], 'A fork', "'fork' = çatal."],
-      ['What do you use to cut meat?', ['A knife', 'A fork', 'A spoon', 'A bowl'], 'A knife', "'knife' = bıçak."],
-      ['What do you use to eat soup?', ['A spoon', 'A fork', 'A knife', 'A glass'], 'A spoon', "'spoon' = kaşık."],
-      ['What do you put your food on?', ['A plate', 'A cup', 'A glass', 'A napkin'], 'A plate', "'plate' = tabak."],
-      ['What do you drink hot tea or coffee from, with a handle?', ['A cup', 'A glass', 'A bowl', 'A jug'], 'A cup', "'cup' = fincan."],
-      ['What do you drink cold water from, made of glass?', ['A glass', 'A cup', 'A bowl', 'A plate'], 'A glass', "'glass' = bardak."],
-      ['What do you eat cereal or soup from, a deep round dish?', ['A bowl', 'A plate', 'A cup', 'A glass'], 'A bowl', "'bowl' = kase."],
-      ['What do you use to wipe your mouth at the table?', ['A napkin', 'A fork', 'A spoon', 'A plate'], 'A napkin', "'napkin' = peçete."],
-      ['What container holds drinks, often plastic or glass, with a lid?', ['A bottle', 'A jug', 'A cup', 'A bowl'], 'A bottle', "'bottle' = şişe."],
-      ['What container do you use to pour water for several people at the table?', ['A jug', 'A bottle', 'A cup', 'A glass'], 'A jug', "'jug' = sürahi."],
-    ]),
-    ...buildFillInBlanks(vocUtensilsTopic, 3, [
-      ['I use this to spear my food. ⇒ Pass me a ___, please.', 'fork', "'fork' = çatal."],
-      ['I use this to cut my food. ⇒ I need a sharper ___.', 'knife', "'knife' = bıçak."],
-      ['I use this to eat soup. ⇒ Can I have a ___ for my soup?', 'spoon', "'spoon' = kaşık."],
-      ['My food goes on this. ⇒ Put the food on the ___.', 'plate', "'plate' = tabak."],
-      ['I drink hot drinks from this. ⇒ I filled my ___ with coffee.', 'cup', "'cup' = fincan."],
-      ['I drink cold drinks from this. ⇒ Fill my ___ with water, please.', 'glass', "'glass' = bardak."],
-      ['I eat cereal from this. ⇒ I poured milk into the ___.', 'bowl', "'bowl' = kase."],
-      ['I wipe my mouth with this. ⇒ Please pass me a ___.', 'napkin', "'napkin' = peçete."],
-      ['This holds my drink, often with a lid. ⇒ I bought a ___ of orange juice.', 'bottle', "'bottle' = şişe."],
-      ['This is used to pour water for everyone at the table. ⇒ Please refill the ___.', 'jug', "'jug' = sürahi."],
-    ]),
 
-    ...buildMultipleChoice(vocMovementVerbsTopic, 1, [
-      ['I ___ to school every day.', ['walk', 'fly'], 'walk', "'walk' = yürümek."],
-      ['He can ___ very fast.', ['run', 'swim'], 'run', "'run' = koşmak."],
-      ['The children ___ over the puddle.', ['jump', 'crawl'], 'jump', "'jump' = zıplamak."],
-      ['I like to ___ in the sea.', ['swim', 'fly'], 'swim', "'swim' = yüzmek."],
-      ['We ___ the mountain last summer.', ['climbed', 'drove'], 'climbed', "'climb' = tırmanmak."],
-      ['Birds ___ in the sky.', ['fly', 'swim'], 'fly', "'fly' = uçmak."],
-      ['I ___ my car to work every day.', ['drive', 'ride'], 'drive', "'drive' = araba sürmek."],
-      ['She likes to ___ her bicycle.', ['ride', 'drive'], 'ride', "'ride' = bisiklet sürmek."],
-      ['The baby began to ___ before he could walk.', ['crawl', 'fall'], 'crawl', "'crawl' = emeklemek."],
-      ['Be careful, or you might ___!', ['fall', 'climb'], 'fall', "'fall' = düşmek."],
-    ]),
-    ...buildMultipleChoice(vocMovementVerbsTopic, 2, [
-      ['What do you do with your legs to travel slowly on foot?', ['Walk', 'Run', 'Swim', 'Fly'], 'Walk', "'walk' = yürümek."],
-      ['What do you do to move quickly on foot?', ['Run', 'Walk', 'Climb', 'Drive'], 'Run', "'run' = koşmak."],
-      ['What do you do to move suddenly off the ground?', ['Jump', 'Crawl', 'Fall', 'Drive'], 'Jump', "'jump' = zıplamak."],
-      ['What do you do to move through water?', ['Swim', 'Fly', 'Walk', 'Ride'], 'Swim', "'swim' = yüzmek."],
-      ['What do you do to go up a mountain?', ['Climb', 'Fall', 'Crawl', 'Drive'], 'Climb', "'climb' = tırmanmak."],
-      ['What do birds and planes do in the sky?', ['Fly', 'Swim', 'Run', 'Walk'], 'Fly', "'fly' = uçmak."],
-      ['What do you do to control a car?', ['Drive', 'Ride', 'Fly', 'Walk'], 'Drive', "'drive' = araba sürmek."],
-      ['What do you do on a bicycle or a horse?', ['Ride', 'Drive', 'Run', 'Swim'], 'Ride', "'ride' = binmek."],
-      ['How do babies move before they can walk?', ['Crawl', 'Run', 'Jump', 'Fly'], 'Crawl', "'crawl' = emeklemek."],
-      ['What happens when you accidentally go down to the ground?', ['Fall', 'Climb', 'Jump', 'Swim'], 'Fall', "'fall' = düşmek."],
-    ]),
-    ...buildFillInBlanks(vocMovementVerbsTopic, 3, [
-      ['I move slowly on foot. ⇒ I ___ to work every day.', 'walk', "'walk' = yürümek."],
-      ['I move quickly on foot. ⇒ I ___ to catch the bus.', 'run', "'run' = koşmak."],
-      ['I move suddenly off the ground. ⇒ I ___ over the fence.', 'jump', "'jump' = zıplamak."],
-      ['I move through water. ⇒ I ___ in the pool every day.', 'swim', "'swim' = yüzmek."],
-      ['I go up a mountain. ⇒ We ___ the hill together.', 'climbed', "'climb' = tırmanmak."],
-      ['Birds do this in the sky. ⇒ The plane began to ___.', 'fly', "'fly' = uçmak."],
-      ['I control a car. ⇒ I ___ to work every morning.', 'drive', "'drive' = araba sürmek."],
-      ['I do this on a bicycle. ⇒ I ___ my bike to school.', 'ride', "'ride' = bisiklet sürmek."],
-      ['Babies do this before walking. ⇒ The baby started to ___.', 'crawl', "'crawl' = emeklemek."],
-      ['This happens when you lose balance. ⇒ Be careful not to ___.', 'fall', "'fall' = düşmek."],
-    ]),
 
     ...buildMultipleChoice(vocTimeWordsTopic, 1, [
       ['I have breakfast in the ___.', ['morning', 'evening'], 'morning', "'morning' = sabah."],
@@ -5694,42 +6085,6 @@ const seed = async () => {
       ["She's always nice and helpful. ⇒ She is very ___.", 'kind', "'kind' = nazik."],
     ]),
 
-    ...buildMultipleChoice(vocShopsShoppingA2Topic, 1, [
-      ['I bought clothes, shoes, and furniture all in one ___.', ['department store', 'changing room'], 'department store', "'department store' = büyük mağaza."],
-      ['There are many shops in the ___.', ['shopping centre', 'changing room'], 'shopping centre', "'shopping centre' = alışveriş merkezi."],
-      ['I tried on the dress in the ___.', ['changing room', 'sale'], 'changing room', "'changing room' = deneme kabini."],
-      ["Everything is 50% off; it's a big ___.", ['sale', 'refund'], 'sale', "'sale' = indirim dönemi."],
-      ['I got a 20% ___ on this jacket.', ['discount', 'exchange'], 'discount', "'discount' = indirim."],
-      ['The shirt did not fit, so I asked for a ___.', ['refund', 'size'], 'refund', "'refund' = para iadesi."],
-      ['I want to ___ this shirt for a bigger one.', ['exchange', 'fit'], 'exchange', "'exchange' = değiştirmek."],
-      ['Can I ___ this jacket before buying it?', ['try on', 'fit'], 'try on', "'try on' = üzerinde denemek."],
-      ['What ___ do you wear, small or medium?', ['size', 'discount'], 'size', "'size' = beden."],
-      ["These shoes don't ___ me well; they're too tight.", ['fit', 'size'], 'fit', "'fit' = uymak."],
-    ]),
-    ...buildMultipleChoice(vocShopsShoppingA2Topic, 2, [
-      ['Where can you buy clothes, furniture, and electronics all in one place?', ['A department store', 'A changing room', 'A sale', 'A discount'], 'A department store', "'department store' = büyük mağaza."],
-      ['What do you call a building with many different shops?', ['A shopping centre', 'A changing room', 'A refund', 'A size'], 'A shopping centre', "'shopping centre' = alışveriş merkezi."],
-      ['Where do you try on clothes before buying them?', ['The changing room', 'The department store', 'The sale', 'The discount'], 'The changing room', "'changing room' = deneme kabini."],
-      ['What do you call a period when prices are reduced?', ['A sale', 'A refund', 'A size', 'An exchange'], 'A sale', "'sale' = indirim dönemi."],
-      ['What is a reduction in price called?', ['A discount', 'A refund', 'A size', 'A sale'], 'A discount', "'discount' = indirim."],
-      ['What do you get back when you return an item and get your money?', ['A refund', 'A discount', 'A size', 'A sale'], 'A refund', "'refund' = para iadesi."],
-      ['What do you do when you swap an item for a different one?', ['Exchange it', 'Refund it', 'Fit it', 'Discount it'], 'Exchange it', "'exchange' = değiştirmek."],
-      ['What do you do to see if clothes look good before buying?', ['Try them on', 'Exchange them', 'Refund them', 'Discount them'], 'Try them on', "'try on' = üzerinde denemek."],
-      ['What word describes how big or small clothes are?', ['Size', 'Discount', 'Refund', 'Sale'], 'Size', "'size' = beden."],
-      ['What do you say when clothes are the right size for your body?', ['They fit', 'They discount', 'They refund', 'They exchange'], 'They fit', "'fit' = uymak."],
-    ]),
-    ...buildFillInBlanks(vocShopsShoppingA2Topic, 3, [
-      ['I bought everything in one big shop. ⇒ I went to the ___.', 'department store', "'department store' = büyük mağaza."],
-      ['Many shops are in one building. ⇒ I went shopping at the ___.', 'shopping centre', "'shopping centre' = alışveriş merkezi."],
-      ['I try clothes on here. ⇒ I used the ___ to try on the dress.', 'changing room', "'changing room' = deneme kabini."],
-      ['Prices are reduced during this period. ⇒ Everything is cheaper during the ___.', 'sale', "'sale' = indirim dönemi."],
-      ['I got a price reduction. ⇒ I got a 10% ___ on my purchase.', 'discount', "'discount' = indirim."],
-      ['I got my money back. ⇒ I asked for a ___ because the shirt was damaged.', 'refund', "'refund' = para iadesi."],
-      ['I swapped the item for another. ⇒ I went back to ___ the shoes for a bigger size.', 'exchange', "'exchange' = değiştirmek."],
-      ['I tried the clothes on before buying. ⇒ I ___ several dresses before choosing one.', 'tried on', "'try on' = üzerinde denemek."],
-      ['This tells you how big the clothes are. ⇒ What ___ do you need?', 'size', "'size' = beden."],
-      ["The clothes are the right size. ⇒ These trousers don't ___ me.", 'fit', "'fit' = uymak."],
-    ]),
 
 
   ];
@@ -5926,42 +6281,6 @@ const seed = async () => {
       ['This is the general view of the landscape. ⇒ The ___ was breathtaking.', 'scenery', "'scenery' = manzara."],
     ]),
 
-    ...buildMultipleChoice(vocContainersTopic, 1, [
-      ['I need ___ water.', ['a bottle of', 'a jar of'], 'a bottle of', "'a bottle of' = bir şişe."],
-      ['She bought ___ cola.', ['a can of', 'a packet of'], 'a can of', "'a can of' = bir kutu (teneke)."],
-      ['I need ___ crisps.', ['a packet of', 'a bowl of'], 'a packet of', "'a packet of' = bir paket."],
-      ['Can you buy ___ jam?', ['a jar of', 'a bag of'], 'a jar of', "'a jar of' = bir kavanoz."],
-      ['I need ___ rice.', ['a box of', 'a slice of'], 'a box of', "'a box of' = bir kutu."],
-      ['We bought ___ apples.', ['a bag of', 'a carton of'], 'a bag of', "'a bag of' = bir torba."],
-      ['She gave me ___ paper.', ['a piece of', 'a bottle of'], 'a piece of', "'a piece of' = bir parça."],
-      ['I would like ___ cake, please.', ['a slice of', 'a can of'], 'a slice of', "'a slice of' = bir dilim."],
-      ['He ate ___ soup.', ['a bowl of', 'a jar of'], 'a bowl of', "'a bowl of' = bir kase."],
-      ['I bought ___ milk.', ['a carton of', 'a piece of'], 'a carton of', "'a carton of' = bir kutu (karton)."],
-    ]),
-    ...buildMultipleChoice(vocContainersTopic, 2, [
-      ['What container word goes with water or juice?', ['A bottle of', 'A jar of', 'A packet of', 'A bowl of'], 'A bottle of', "'a bottle of' = bir şişe."],
-      ['What container word goes with fizzy drinks in metal containers?', ['A can of', 'A bag of', 'A box of', 'A slice of'], 'A can of', "'a can of' = bir kutu (teneke)."],
-      ['What container word goes with crisps or biscuits?', ['A packet of', 'A jar of', 'A bowl of', 'A carton of'], 'A packet of', "'a packet of' = bir paket."],
-      ['What container word goes with jam or honey?', ['A jar of', 'A can of', 'A bag of', 'A piece of'], 'A jar of', "'a jar of' = bir kavanoz."],
-      ['What container word goes with cereal or matches?', ['A box of', 'A bottle of', 'A bowl of', 'A slice of'], 'A box of', "'a box of' = bir kutu."],
-      ['What container word goes with fruit like apples?', ['A bag of', 'A jar of', 'A carton of', 'A slice of'], 'A bag of', "'a bag of' = bir torba."],
-      ['What quantity word goes with paper or cake as a single unit?', ['A piece of', 'A bottle of', 'A can of', 'A bag of'], 'A piece of', "'a piece of' = bir parça."],
-      ['What quantity word goes with bread or cake, cut thin?', ['A slice of', 'A jar of', 'A box of', 'A can of'], 'A slice of', "'a slice of' = bir dilim."],
-      ['What container word goes with soup?', ['A bowl of', 'A packet of', 'A bottle of', 'A bag of'], 'A bowl of', "'a bowl of' = bir kase."],
-      ['What container word goes with milk or juice in a paper box?', ['A carton of', 'A can of', 'A jar of', 'A piece of'], 'A carton of', "'a carton of' = bir kutu (karton)."],
-    ]),
-    ...buildFillInBlanks(vocContainersTopic, 3, [
-      ['This goes with water. ⇒ I need a ___ water.', 'bottle of', "'a bottle of' = bir şişe."],
-      ['This goes with fizzy drinks. ⇒ She bought a ___ cola.', 'can of', "'a can of' = bir kutu."],
-      ['This goes with crisps. ⇒ I need a ___ crisps.', 'packet of', "'a packet of' = bir paket."],
-      ['This goes with jam. ⇒ Can you buy a ___ jam?', 'jar of', "'a jar of' = bir kavanoz."],
-      ['This goes with rice. ⇒ I need a ___ rice.', 'box of', "'a box of' = bir kutu."],
-      ['This goes with apples. ⇒ We bought a ___ apples.', 'bag of', "'a bag of' = bir torba."],
-      ['This goes with paper. ⇒ She gave me a ___ paper.', 'piece of', "'a piece of' = bir parça."],
-      ['This goes with cake. ⇒ I would like a ___ cake.', 'slice of', "'a slice of' = bir dilim."],
-      ['This goes with soup. ⇒ He ate a ___ soup.', 'bowl of', "'a bowl of' = bir kase."],
-      ['This goes with milk. ⇒ I bought a ___ milk.', 'carton of', "'a carton of' = bir kutu."],
-    ]),
 
     ...buildMultipleChoice(vocTechnologyA2Topic, 1, [
       ['I typed the report on my ___.', ['laptop', 'charger'], 'laptop', "'laptop' = dizüstü bilgisayar."],
@@ -6265,42 +6584,6 @@ const seed = async () => {
       ['Leave the train at the next stop. ⇒ We need to ___ at the next stop.', 'get off', "'get off' = inmek."],
     ]),
 
-    ...buildMultipleChoice(vocHousesBuildingsTopic, 1, [
-      ['We live in a ___; it stands alone.', ['detached house', 'terraced house'], 'detached house', "'detached house' = müstakil ev."],
-      ['Our house shares one wall with the neighbour; it is ___.', ['semi-detached', 'detached'], 'semi-detached', "'semi-detached' = bitişik ikiz ev."],
-      ['They live in a ___ in a row of similar houses.', ['terraced house', 'detached house'], 'terraced house', "'terraced house' = sıra ev."],
-      ['We live on the fifth floor of a ___.', ['block of flats', 'cottage'], 'block of flats', "'block of flats' = apartman."],
-      ['We rented a small ___ in the countryside.', ['cottage', 'block of flats'], 'cottage', "'cottage' = kır evi."],
-      ['We took out a ___ to buy our house.', ['mortgage', 'deposit'], 'mortgage', "'mortgage' = konut kredisi."],
-      ['We ___ an apartment in the city centre.', ['rent', 'own'], 'rent', "'rent' = kiralamak."],
-      ['Our ___ increased the rent this year.', ['landlord', 'tenant'], 'landlord', "'landlord' = ev sahibi."],
-      ['The new ___ moved in last week.', ['tenant', 'landlord'], 'tenant', "'tenant' = kiracı."],
-      ['We contacted an ___ to find a new flat.', ['estate agent', 'tenant'], 'estate agent', "'estate agent' = emlakçı."],
-    ]),
-    ...buildMultipleChoice(vocHousesBuildingsTopic, 2, [
-      ['What do you call a house that stands completely alone?', ['A detached house', 'A semi-detached house', 'A terraced house', 'A block of flats'], 'A detached house', "'detached house' = müstakil ev."],
-      ['What do you call a house joined to one other house?', ['A semi-detached house', 'A detached house', 'A terraced house', 'A cottage'], 'A semi-detached house', "'semi-detached' = bitişik ikiz ev."],
-      ['What do you call a house in a row of similar joined houses?', ['A terraced house', 'A detached house', 'A cottage', 'A block of flats'], 'A terraced house', "'terraced house' = sıra ev."],
-      ['What do you call a building divided into apartments?', ['A block of flats', 'A cottage', 'A terraced house', 'A detached house'], 'A block of flats', "'block of flats' = apartman."],
-      ['What do you call a small house in the countryside?', ['A cottage', 'A block of flats', 'A terraced house', 'A detached house'], 'A cottage', "'cottage' = kır evi."],
-      ['What do you call a loan used to buy a house?', ['A mortgage', 'A deposit', 'A tenant', 'A landlord'], 'A mortgage', "'mortgage' = konut kredisi."],
-      ['What do you do when you pay to live in a place you don\'t own?', ['Rent', 'Own', 'Mortgage', 'Sell'], 'Rent', "'rent' = kiralamak."],
-      ['What do you call the person who owns and rents out a property?', ['A landlord', 'A tenant', 'An estate agent', 'A mortgage'], 'A landlord', "'landlord' = ev sahibi."],
-      ['What do you call the person who rents and lives in a property?', ['A tenant', 'A landlord', 'An estate agent', 'A mortgage'], 'A tenant', "'tenant' = kiracı."],
-      ['What do you call a professional who helps you buy or rent property?', ['An estate agent', 'A landlord', 'A tenant', 'A mortgage'], 'An estate agent', "'estate agent' = emlakçı."],
-    ]),
-    ...buildFillInBlanks(vocHousesBuildingsTopic, 3, [
-      ['This house stands alone. ⇒ We live in a ___.', 'detached house', "'detached house' = müstakil ev."],
-      ['This house shares one wall. ⇒ Our house is ___.', 'semi-detached', "'semi-detached' = bitişik ikiz ev."],
-      ['This house is in a row. ⇒ They live in a ___.', 'terraced house', "'terraced house' = sıra ev."],
-      ['This building has many apartments. ⇒ We live in a ___.', 'block of flats', "'block of flats' = apartman."],
-      ['This is a small countryside house. ⇒ We rented a ___.', 'cottage', "'cottage' = kır evi."],
-      ['This is a loan for buying a house. ⇒ We took out a ___.', 'mortgage', "'mortgage' = konut kredisi."],
-      ["I pay to live here but don't own it. ⇒ We ___ an apartment.", 'rent', "'rent' = kiralamak."],
-      ['This person owns the property. ⇒ Our ___ increased the rent.', 'landlord', "'landlord' = ev sahibi."],
-      ['This person rents and lives there. ⇒ The new ___ moved in.', 'tenant', "'tenant' = kiracı."],
-      ['This professional helps you find property. ⇒ We contacted an ___.', 'estate agent', "'estate agent' = emlakçı."],
-    ]),
 
 
     ...buildMultipleChoice(vocSportTopic, 1, [
@@ -6720,42 +7003,6 @@ const seed = async () => {
       ['He took a loan to buy a house. ⇒ He took out a ___.', 'mortgage', "'mortgage' = konut kredisi."],
     ]),
 
-    ...buildMultipleChoice(vocCarsRoadsTrafficTopic, 1, [
-      ['We drove fast on the ___.', ['motorway', 'pavement'], 'motorway', "'motorway' = otoyol."],
-      ['Watch the ___; it\'s 50 km/h here.', ['speed limit', 'roundabout'], 'speed limit', "'speed limit' = hız limiti."],
-      ['We went around the ___ twice by mistake.', ['roundabout', 'congestion'], 'roundabout', "'roundabout' = döner kavşak."],
-      ['Traffic ___ made the drive take twice as long.', ['congestion', 'a pedestrian crossing'], 'congestion', "'congestion' = trafik tıkanıklığı."],
-      ['Always slow down at a ___.', ['pedestrian crossing', 'toll'], 'pedestrian crossing', "'pedestrian crossing' = yaya geçidi."],
-      ['He decided to ___ the slow truck ahead.', ['overtake', 'tailgate'], 'overtake', "'overtake' = sollamak."],
-      ["Don't ___ the car in front; it's dangerous.", ['tailgate', 'overtake'], 'tailgate', "'tailgate' = çok yakın takip etmek."],
-      ['Our car had a ___ on the motorway.', ['breakdown', 'toll'], 'breakdown', "'breakdown' = arıza."],
-      ['We had to pay a ___ to use this road.', ['toll', 'breakdown'], 'toll', "'toll' = geçiş ücreti."],
-      ['Traffic is always bad during ___.', ['rush hour', 'the toll'], 'rush hour', "'rush hour' = yoğun trafik saati."],
-    ]),
-    ...buildMultipleChoice(vocCarsRoadsTrafficTopic, 2, [
-      ['What do you call a large road for fast, long-distance travel?', ['A motorway', 'A roundabout', 'A pedestrian crossing', 'A toll'], 'A motorway', "'motorway' = otoyol."],
-      ['What word describes the maximum speed allowed on a road?', ['Speed limit', 'Congestion', 'A toll', 'Rush hour'], 'Speed limit', "'speed limit' = hız limiti."],
-      ['What do you call a circular junction where roads meet?', ['A roundabout', 'A motorway', 'A pedestrian crossing', 'A toll'], 'A roundabout', "'roundabout' = döner kavşak."],
-      ['What word describes traffic being jammed and slow?', ['Congestion', 'A speed limit', 'A toll', 'A breakdown'], 'Congestion', "'congestion' = trafik tıkanıklığı."],
-      ['What do you call a marked place for people to cross the road?', ['A pedestrian crossing', 'A roundabout', 'A motorway', 'A toll'], 'A pedestrian crossing', "'pedestrian crossing' = yaya geçidi."],
-      ['What do you do to pass a slower vehicle?', ['Overtake it', 'Tailgate it', 'Toll it', 'Congest it'], 'Overtake it', "'overtake' = sollamak."],
-      ['What do you do when you drive too closely behind another car?', ['Tailgate', 'Overtake', 'Toll', 'Congest'], 'Tailgate', "'tailgate' = çok yakın takip etmek."],
-      ['What happens when a car suddenly stops working?', ['A breakdown', 'Congestion', 'A toll', 'Rush hour'], 'A breakdown', "'breakdown' = arıza."],
-      ['What do you call a fee paid to use certain roads?', ['A toll', 'A breakdown', 'Congestion', 'A speed limit'], 'A toll', "'toll' = geçiş ücreti."],
-      ['What term describes the busiest travel time of day?', ['Rush hour', 'A toll', 'A breakdown', 'A roundabout'], 'Rush hour', "'rush hour' = yoğun trafik saati."],
-    ]),
-    ...buildFillInBlanks(vocCarsRoadsTrafficTopic, 3, [
-      ['We drove fast on this large road. ⇒ We drove on the ___.', 'motorway', "'motorway' = otoyol."],
-      ['This is the maximum allowed speed. ⇒ Watch the ___ here.', 'speed limit', "'speed limit' = hız limiti."],
-      ['This is a circular road junction. ⇒ We went around the ___.', 'roundabout', "'roundabout' = döner kavşak."],
-      ['Traffic was jammed and slow. ⇒ Traffic ___ made the drive longer.', 'congestion', "'congestion' = trafik tıkanıklığı."],
-      ['This is a marked place to cross the road. ⇒ Slow down at a ___.', 'pedestrian crossing', "'pedestrian crossing' = yaya geçidi."],
-      ['He passed the slow truck ahead. ⇒ He decided to ___ it.', 'overtake', "'overtake' = sollamak."],
-      ['Driving too closely behind is dangerous. ⇒ Don\'t ___ the car in front.', 'tailgate', "'tailgate' = çok yakın takip etmek."],
-      ['The car suddenly stopped working. ⇒ Our car had a ___.', 'breakdown', "'breakdown' = arıza."],
-      ['We paid a fee to use this road. ⇒ We had to pay a ___.', 'toll', "'toll' = geçiş ücreti."],
-      ['Traffic is always bad during this busy time. ⇒ Traffic is bad during ___.', 'rush hour', "'rush hour' = yoğun trafik saati."],
-    ]),
 
     ...buildMultipleChoice(vocHealthSicknessTopic, 1, [
       ['Diabetes is a ___ that requires lifelong management.', ['chronic illness', 'symptom'], 'chronic illness', "'chronic illness' = kronik hastalık."],
@@ -6874,42 +7121,6 @@ const seed = async () => {
 
 
 
-    ...buildMultipleChoice(vocTalkingMoviesTopic, 1, [
-      ['The film was a huge success at the ___.', ['box office', 'premiere'], 'box office', "'box office' = gişe."],
-      ['Nobody expected the shocking ___ at the end.', ['plot twist', 'soundtrack'], 'plot twist', "'plot twist' = beklenmedik olay örgüsü dönüşü."],
-      ['The ___ of the movie was so beautiful I bought the album.', ['soundtrack', 'plot twist'], 'soundtrack', "'soundtrack' = film müziği."],
-      ['The ___ in this film looked incredibly realistic.', ['special effects', 'cast'], 'special effects', "'special effects' = özel efektler."],
-      ['The ___ includes several famous actors.', ['cast', 'sequel'], 'cast', "'cast' = oyuncu kadrosu."],
-      ['They are already filming the ___ to this movie.', ['sequel', 'cast'], 'sequel', "'sequel' = devam filmi."],
-      ['This summer\'s ___ broke box office records.', ['blockbuster', 'subtitle'], 'blockbuster', "'blockbuster' = büyük gişe filmi."],
-      ['The director\'s ___ made every scene feel like a painting.', ['cinematography', 'subtitle'], 'cinematography', "'cinematography' = sinematografi, görüntü yönetimi."],
-      ['I watched the film with English ___.', ['subtitles', 'a soundtrack'], 'subtitles', "'subtitle' = alt yazı."],
-      ['We attended the film\'s ___ last night.', ['premiere', 'box office'], 'premiere', "'premiere' = galası (ilk gösterim)."],
-    ]),
-    ...buildMultipleChoice(vocTalkingMoviesTopic, 2, [
-      ['What term describes the total money a film earns from tickets?', ['Box office', 'Soundtrack', 'Cast', 'Cinematography'], 'Box office', "'box office' = gişe."],
-      ['What do you call a sudden, unexpected turn in the story?', ['A plot twist', 'A soundtrack', 'A sequel', 'A premiere'], 'A plot twist', "'plot twist' = beklenmedik olay örgüsü dönüşü."],
-      ['What do you call the music composed for a film?', ['The soundtrack', 'The cast', 'The subtitle', 'The plot twist'], 'The soundtrack', "'soundtrack' = film müziği."],
-      ['What do you call computer-generated or physical visual tricks in a film?', ['Special effects', 'Cinematography', 'A sequel', 'A cast'], 'Special effects', "'special effects' = özel efektler."],
-      ['What word describes all the actors in a film?', ['The cast', 'The crew', 'The cinematography', 'The soundtrack'], 'The cast', "'cast' = oyuncu kadrosu."],
-      ['What do you call a film that continues the story of an earlier one?', ['A sequel', 'A premiere', 'A blockbuster', 'A subtitle'], 'A sequel', "'sequel' = devam filmi."],
-      ['What do you call a hugely popular, high-earning film?', ['A blockbuster', 'A sequel', 'A subtitle', 'A premiere'], 'A blockbuster', "'blockbuster' = büyük gişe filmi."],
-      ['What term describes the art of camera work and visual style in film?', ['Cinematography', 'Box office', 'A cast', 'A soundtrack'], 'Cinematography', "'cinematography' = sinematografi."],
-      ['What do you call the translated text shown at the bottom of a film?', ['Subtitles', 'The soundtrack', 'The cast', 'Cinematography'], 'Subtitles', "'subtitle' = alt yazı."],
-      ['What do you call the first public showing of a film?', ['The premiere', 'The box office', 'The sequel', 'The cast'], 'The premiere', "'premiere' = galası."],
-    ]),
-    ...buildFillInBlanks(vocTalkingMoviesTopic, 3, [
-      ['The film earned a lot in ticket sales. ⇒ It was a huge success at the ___.', 'box office', "'box office' = gişe."],
-      ['The story had an unexpected turn. ⇒ Nobody expected the shocking ___.', 'plot twist', "'plot twist' = beklenmedik olay örgüsü dönüşü."],
-      ['The film music was beautiful. ⇒ The ___ was so beautiful.', 'soundtrack', "'soundtrack' = film müziği."],
-      ['The visual tricks looked realistic. ⇒ The ___ looked incredibly realistic.', 'special effects', "'special effects' = özel efektler."],
-      ['These are the actors in the film. ⇒ The ___ includes famous actors.', 'cast', "'cast' = oyuncu kadrosu."],
-      ['This film continues the story. ⇒ They are filming the ___.', 'sequel', "'sequel' = devam filmi."],
-      ['This film was hugely popular and profitable. ⇒ This summer\'s ___ broke records.', 'blockbuster', "'blockbuster' = büyük gişe filmi."],
-      ["The camera work was beautiful. ⇒ The director's ___ made every scene stunning.", 'cinematography', "'cinematography' = sinematografi."],
-      ['I read the translated text at the bottom. ⇒ I watched with English ___.', 'subtitles', "'subtitle' = alt yazı."],
-      ['This was the film\'s first public showing. ⇒ We attended the film\'s ___.', 'premiere', "'premiere' = galası."],
-    ]),
 
     ...buildMultipleChoice(vocTechDevicesTopic, 1, [
       ['I did a ___ to fix my broken phone.', ['factory reset', 'sync'], 'factory reset', "'factory reset' = fabrika ayarlarına döndürme."],
@@ -6987,8 +7198,38 @@ const seed = async () => {
 
   ];
 
+  // data/grammarExercises.js: konu başına { 1: çoktan seçmeli (dropdown), 2: çoktan seçmeli (butonlar), 3: boşluk doldurma }.
+  const curriculumExerciseQuestions = Object.entries(GRAMMAR_EXERCISES).flatMap(([key, groups]) => {
+    const [level, ...rest] = key.split('::');
+    const topic = findGrammar(level, rest.join('::'));
+    if (!topic) throw new Error(`grammarExercises: müfredatta olmayan konu "${key}"`);
+    return [
+      ...buildMultipleChoice(topic, 1, groups[1]),
+      ...buildMultipleChoice(topic, 2, groups[2]),
+      ...buildFillInBlanks(topic, 3, groups[3]),
+    ];
+  });
+
+  // Kelime konuları: frontend/src/lib/vocabularyLessons.js (Explanation sekmesiyle aynı kaynak).
+  const { VOCABULARY_LESSONS, lessonExercises } = await import(
+    pathToFileURL(path.join(__dirname, '../../frontend/src/lib/vocabularyLessons.js')).href
+  );
+  const vocabularyLessonQuestions = Object.entries(VOCABULARY_LESSONS).flatMap(([key, lesson]) => {
+    const [level, ...rest] = key.split('::');
+    const topic = findVocabulary(level, rest.join('::'));
+    if (!topic) throw new Error(`vocabularyLessons: müfredatta olmayan konu "${key}"`);
+    const groups = lessonExercises(lesson);
+    return [
+      ...buildMultipleChoice(topic, 1, groups[1]),
+      ...buildMultipleChoice(topic, 2, groups[2]),
+      ...buildFillInBlanks(topic, 3, groups[3]),
+    ];
+  });
+
   await Question.insertMany([
     ...topicQuestions,
+    ...vocabularyLessonQuestions,
+    ...curriculumExerciseQuestions,
     ...extraGrammarQuestions,
     ...batch3GrammarQuestions,
     ...a2GrammarQuestions,
@@ -7028,6 +7269,8 @@ const seed = async () => {
 
   const totalQuestions =
     topicQuestions.length +
+    vocabularyLessonQuestions.length +
+    curriculumExerciseQuestions.length +
     extraGrammarQuestions.length +
     batch3GrammarQuestions.length +
     a2GrammarQuestions.length +
