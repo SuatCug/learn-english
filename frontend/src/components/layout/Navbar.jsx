@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, ClipboardCheck, Gauge } from 'lucide-react';
+import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, ClipboardCheck, Clipboard, Gauge } from 'lucide-react';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
 import { useGetTopicsQuery } from '@/services/topicsApi';
 import AvatarMenu from './AvatarMenu';
 import BrandMark from '@/components/BrandMark';
-import { EXAM_LEVEL_STYLES } from '@/lib/exams';
 
 // Açılır menüdeki seviye rozetlerinin rengi (ana sayfa kartlarıyla aynı kategori renkleri).
 const CATEGORY_COLORS = {
@@ -33,6 +32,10 @@ const CODE_OFFSET = {
   listening: 'translate-y-[4px]',
 };
 
+// Orta menü yazıları: normalde beyaza yakın, üzerine gelince ve açık sayfada tam beyaz.
+const navItemClass = (active) =>
+  `text-sm font-medium transition-colors py-2 ${active ? 'text-white' : 'text-gray-200 hover:text-white'}`;
+
 function LevelBadge({ code, color, slug }) {
   const Icon = CATEGORY_LEVEL_ICONS[slug] ?? Badge;
   return (
@@ -45,16 +48,14 @@ function LevelBadge({ code, color, slug }) {
   );
 }
 
-function CategoryMenu({ label, slug }) {
+function CategoryMenu({ label, slug, active }) {
   const color = CATEGORY_COLORS[slug] ?? '#50af31';
   return (
     <div className="relative group">
-      <button
-        type="button"
-        className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-      >
+      {/* Tıklayınca kategorinin seviye sayfasına gider; üzerine gelince seviye menüsü açılır. */}
+      <Link to={`/topics/${slug}`} className={navItemClass(active)}>
         {label}
-      </button>
+      </Link>
 
       <div className="absolute top-full left-0 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-150">
         <div
@@ -83,11 +84,9 @@ function ExamsMenu({ active }) {
     <div className="relative group">
       <Link
         to="/exams"
-        className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors py-2 ${
-          active ? 'text-white' : 'text-gray-300 hover:text-white'
-        }`}
+        className={`inline-flex items-center gap-1.5 ${navItemClass(active)}`}
       >
-        <ClipboardCheck size={16} strokeWidth={1.75} className="hidden lg:block" aria-hidden="true" /> Exams
+        Exams
       </Link>
 
       <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150">
@@ -96,13 +95,12 @@ function ExamsMenu({ active }) {
             <Link
               key={code}
               to={`/exams/${code}`}
-              className="flex items-center gap-2.5 px-4 py-2 whitespace-nowrap text-[15px] font-light text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-2.5 px-4 py-2 whitespace-nowrap text-[15px] font-light text-gray-500 hover:bg-gray-100 hover:text-[#50af31] transition-colors"
             >
-              <span
-                className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center text-[11px] font-bold text-white"
-                style={{ backgroundColor: EXAM_LEVEL_STYLES[code].dot }}
-              >
-                {code}
+              {/* Diğer menülerle aynı tarz: sınav altlığı (clipboard) ikonu içinde seviye kodu, marka yeşili. */}
+              <span className="relative w-9 h-9 shrink-0 flex items-center justify-center text-[#50af31]">
+                <Clipboard size={36} strokeWidth={1.1} className="absolute inset-0" aria-hidden="true" />
+                <span className="relative font-medium leading-none text-[10px] translate-y-[2px]">{code}</span>
               </span>
               {code} Exam · {name}
             </Link>
@@ -181,16 +179,19 @@ export default function Navbar() {
 
         <nav className="hidden md:flex flex-1 min-w-0 items-center justify-center gap-2.5 lg:gap-5 xl:gap-8">
           {CATEGORIES.map((category) => (
-            <CategoryMenu key={category.slug} label={category.label} slug={category.slug} />
+            <CategoryMenu
+              key={category.slug}
+              label={category.label}
+              slug={category.slug}
+              active={location.pathname.startsWith(`/topics/${category.slug}`)}
+            />
           ))}
           <ExamsMenu active={location.pathname.startsWith('/exams')} />
           <Link
             to="/placement-test"
-            className={`inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium transition-colors py-2 ${
-              location.pathname === '/placement-test' ? 'text-white' : 'text-gray-300 hover:text-white'
-            }`}
+            className={`inline-flex items-center gap-1.5 whitespace-nowrap ${navItemClass(location.pathname === '/placement-test')}`}
           >
-            <Gauge size={16} strokeWidth={1.75} className="hidden lg:block" aria-hidden="true" /> Level Test
+            Level Test
           </Link>
         </nav>
 
@@ -199,7 +200,7 @@ export default function Navbar() {
             to="/school"
             title="School Mode"
             className={`hidden sm:inline-flex items-center gap-2 rounded-md text-sm font-medium px-3 py-1.5 transition-colors ${
-              location.pathname === '/school' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+              location.pathname === '/school' ? 'bg-gray-800 text-white' : 'text-gray-200 hover:bg-gray-800 hover:text-white'
             }`}
           >
             <School size={17} strokeWidth={1.75} aria-hidden="true" />

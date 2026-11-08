@@ -12,6 +12,7 @@ import {
 } from '@/services/usersApi';
 import { setCredentials, logout } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import { validateNewPassword, PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 function SectionHeader({ icon: Icon, title, subtitle }) {
   return (
@@ -128,8 +129,9 @@ function ChangePasswordForm() {
     setError('');
     setSuccess(false);
 
-    if (newPassword.length < 6) {
-      setError('New password must be at least 6 characters.');
+    const passwordError = validateNewPassword(newPassword, 'en');
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -175,7 +177,7 @@ function ChangePasswordForm() {
         label="New Password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
-        placeholder="At least 6 characters"
+        placeholder={`At least ${PASSWORD_MIN_LENGTH} characters`}
         autoComplete="new-password"
       />
       <PasswordField

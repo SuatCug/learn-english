@@ -1,90 +1,86 @@
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Clock, ListChecks, Headphones, BookOpen, SpellCheck, Languages, PenLine, CheckCircle2, RotateCcw } from 'lucide-react';
+import { Timer, ListChecks, Trophy, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import ExamIllustration from '@/components/exams/ExamIllustration';
 import { useGetExamsQuery } from '@/services/examsApi';
 import { LEVELS } from '@/lib/constants';
-import { EXAM_LEVEL_STYLES, EXAM_SECTION_ICONS } from '@/lib/exams';
+import { EXAM_SECTION_ICONS } from '@/lib/exams';
 
-const SECTION_ICON_COMPONENTS = { Headphones, BookOpen, SpellCheck, Languages, PenLine };
-
-function SectionChip({ section }) {
-  const Icon = SECTION_ICON_COMPONENTS[EXAM_SECTION_ICONS[section.key]] ?? ListChecks;
+// Seviyeler renkle değil, zorluk çubuklarıyla ayrılır: A1 = 1 dolu, B2 = 4 dolu.
+function DifficultyBars({ filled, total = 4 }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-50 border border-gray-200 px-2.5 py-1 text-xs text-gray-600">
-      <Icon size={13} strokeWidth={2} aria-hidden="true" />
-      {section.label} · {section.questions}
+    <div className="flex items-end gap-1" aria-label={`Difficulty ${filled} of ${total}`}>
+      {Array.from({ length: total }, (_, i) => (
+        <span
+          key={i}
+          className={`w-1.5 rounded-full ${i < filled ? 'bg-emerald-600' : 'bg-gray-200'}`}
+          style={{ height: `${8 + i * 5}px` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ResultBadge({ result }) {
+  if (!result) {
+    return <span className="text-xs font-medium text-gray-400">Not taken yet</span>;
+  }
+  return result.passed ? (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+      <CheckCircle2 size={14} aria-hidden="true" /> Passed · {result.percent}%
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
+      <RotateCcw size={13} aria-hidden="true" /> Last try · {result.percent}%
     </span>
   );
 }
 
-function ExamCard({ exam, result }) {
+function ExamCard({ exam, index, result }) {
   const levelInfo = LEVELS.find((l) => l.code === exam.level);
-  const style = EXAM_LEVEL_STYLES[exam.level];
 
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-      <div className={`${style.banner} px-6 py-5 flex items-center gap-4`}>
-        <span className="w-14 h-14 shrink-0 rounded-xl bg-white/20 border border-white/40 flex items-center justify-center text-2xl font-extrabold text-white">
-          {exam.level}
+    <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-200">
+      <div className="flex items-start justify-between">
+        <span className="text-5xl font-extrabold tracking-tight text-emerald-600">{exam.level}</span>
+        <DifficultyBars filled={index + 1} />
+      </div>
+      <p className="mt-2 font-semibold text-gray-900">{levelInfo?.name}</p>
+      <p className="text-sm text-gray-500">Level exam</p>
+
+      <ul className="mt-5 space-y-2.5 border-t border-gray-100 pt-5 text-sm">
+        {exam.sections.map((section) => {
+          const Icon = EXAM_SECTION_ICONS[section.key] ?? ListChecks;
+          return (
+            <li key={section.key} className="flex items-center gap-3 text-gray-700">
+              <Icon size={17} className="shrink-0 text-emerald-600" aria-hidden="true" />
+              <span className="flex-1">{section.label}</span>
+              <span className="tabular-nums text-gray-400">{section.questions}</span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500">
+        <span>
+          {exam.durationMinutes} min · {exam.maxScore} questions
         </span>
-        <div className="min-w-0">
-          <p className="text-white/80 text-xs font-semibold uppercase tracking-wide">{levelInfo?.name}</p>
-          <h2 className="text-white text-lg font-bold">{exam.title}</h2>
-        </div>
+        <ResultBadge result={result} />
       </div>
 
-      <div className="flex-1 flex flex-col p-6">
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-600 mb-4">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock size={16} aria-hidden="true" /> {exam.durationMinutes} minutes
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <ListChecks size={16} aria-hidden="true" /> {exam.maxScore} questions
-          </span>
-        </div>
-
-        <div className="flex flex-wrap gap-2 mb-5">
-          {exam.sections.map((section) => (
-            <SectionChip key={section.key} section={section} />
-          ))}
-        </div>
-
-        {result ? (
-          <div
-            className={`flex items-start gap-3 rounded-xl border p-3 mb-5 text-sm ${
-              result.passed ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-amber-200 bg-amber-50 text-amber-800'
-            }`}
-          >
-            {result.passed ? (
-              <CheckCircle2 size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-            ) : (
-              <RotateCcw size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-            )}
-            <span>
-              Last result: <strong>{result.score} / {result.maxScore}</strong> ({result.percent}%) —{' '}
-              {result.passed ? 'Passed' : 'Not passed yet'}
-              {result.attempts > 1 && (
-                <span className="block text-xs opacity-80">
-                  Best score: {result.bestScore} / {result.maxScore} · {result.attempts} attempts
-                </span>
-              )}
-            </span>
-          </div>
-        ) : (
-          <p className="text-sm text-gray-500 mb-5">
-            You need {exam.passPercent}% or more to pass this exam.
-          </p>
-        )}
-
-        <Link
-          to={`/exams/${exam.level}`}
-          className={`mt-auto inline-flex justify-center rounded-lg ${style.button} text-white font-semibold px-6 py-3 transition-colors`}
-        >
-          {result ? 'Retake the exam' : 'Start the exam'}
-        </Link>
-      </div>
+      <Link
+        to={`/exams/${exam.level}`}
+        className={`mt-5 inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition-colors ${
+          result
+            ? 'border border-emerald-600 text-emerald-700 hover:bg-emerald-50'
+            : 'bg-emerald-600 text-white hover:bg-emerald-700'
+        }`}
+      >
+        {result ? 'Retake exam' : 'Start exam'}
+        <ArrowRight size={18} aria-hidden="true" />
+      </Link>
     </div>
   );
 }
@@ -94,34 +90,71 @@ export default function ExamsPage() {
   const { data, isLoading, isError } = useGetExamsQuery();
   const exams = data?.data?.exams ?? [];
   const results = user?.examResults ?? [];
+  const sample = exams[0];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
 
-      <div className="bg-emerald-600">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-          <p className="text-emerald-100 text-xs font-semibold uppercase tracking-widest mb-2">Exams</p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Level exams: A1 – B2</h1>
-          <p className="text-emerald-50 text-sm sm:text-base max-w-3xl leading-relaxed">
-            Check whether you have really mastered a level. Each exam has five parts — Listening, Reading, Grammar,
-            Vocabulary and Writing — and lasts {exams[0]?.durationMinutes ?? 85} minutes.
-          </p>
-        </div>
-      </div>
+      <section className="relative isolate overflow-hidden flex-1 bg-gradient-to-b from-emerald-50/80 via-white to-emerald-50/50">
+        <svg
+          className="absolute inset-x-0 bottom-0 -z-10 w-full h-24 sm:h-32 text-emerald-100/70"
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path fill="currentColor" d="M0 70c180-40 360-40 540-10s360 50 540 20 270-50 360-40v80H0Z" />
+        </svg>
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
-        {isLoading && <p className="text-center text-sm text-gray-400 py-10">Loading exams...</p>}
-        {isError && (
-          <p className="text-center text-sm text-rose-600 py-10">The exams couldn't be loaded. Please try again later.</p>
-        )}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-16 sm:pb-24">
+          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div>
+              <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900">
+                Level <span className="text-emerald-600">Exams</span>
+              </h1>
+              <p className="mt-3 max-w-2xl text-base sm:text-lg text-gray-600">
+                Check whether you've really mastered a level. Each exam covers Listening, Reading, Grammar, Vocabulary
+                and Writing.
+              </p>
+              {sample && (
+                <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3 text-sm text-gray-700">
+                  <span className="inline-flex items-center gap-2">
+                    <Timer size={20} className="text-emerald-600" aria-hidden="true" />
+                    <strong className="font-semibold text-gray-900">{sample.durationMinutes} minutes</strong>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <ListChecks size={20} className="text-emerald-600" aria-hidden="true" />
+                    <strong className="font-semibold text-gray-900">{sample.maxScore} questions</strong>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <Trophy size={20} className="text-emerald-600" aria-hidden="true" />
+                    <strong className="font-semibold text-gray-900">{sample.passPercent}% to pass</strong>
+                  </span>
+                </div>
+              )}
+            </div>
+            <ExamIllustration className="hidden lg:block w-full max-w-[320px] mx-auto" />
+          </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {exams.map((exam) => (
-            <ExamCard key={exam.level} exam={exam} result={results.find((r) => r.level === exam.level)} />
-          ))}
+          {isLoading && <p className="py-16 text-center text-sm text-gray-400">Loading exams...</p>}
+          {isError && (
+            <p className="py-16 text-center text-sm text-rose-600">
+              The exams couldn't be loaded. Please try again later.
+            </p>
+          )}
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {exams.map((exam, index) => (
+              <ExamCard
+                key={exam.level}
+                exam={exam}
+                index={index}
+                result={results.find((r) => r.level === exam.level)}
+              />
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
 
       <Footer />
     </div>

@@ -1,4 +1,5 @@
 const { body } = require('express-validator');
+const { newPasswordRule } = require('./password.rule');
 const { LEVEL_ORDER } = require('../utils/levelProgress.util');
 
 const progressRules = [
@@ -17,7 +18,7 @@ const updateProfileRules = [
 // Mevcut şifre, şifresi olan hesaplar için controller'da zorunlu tutulur (Google ile açılmış hesapların şifresi yoktur).
 const changePasswordRules = [
   body('currentPassword').optional().isString(),
-  body('newPassword').isLength({ min: 6 }).withMessage('Yeni şifre en az 6 karakter olmalıdır.'),
+  newPasswordRule('newPassword'),
 ];
 
 const deleteAccountRules = [body('password').optional().isString()];

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
+import BrandMark from '@/components/BrandMark';
 import PlanModal from './PlanModal';
 
 const SOCIAL_LINKS = [
@@ -69,7 +70,7 @@ export default function Footer() {
         <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-8 flex-1">
           <div>
             <Link to="/" className="flex items-center gap-2 w-fit mx-auto lg:mx-0">
-              <span className="text-2xl">🍃</span>
+              <BrandMark size={30} />
               <span className="text-lg font-bold text-white">
                 learnenglish
               </span>

@@ -7,6 +7,7 @@ import PasswordField from '@/components/auth/PasswordField';
 import VerifyCodeScreen from '@/components/auth/VerifyCodeScreen';
 import { useRegisterMutation } from '@/services/authApi';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import { validateNewPassword, PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -24,8 +25,9 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
 
-    if (password.length < 6) {
-      setError('Şifre en az 6 karakter olmalıdır.');
+    const passwordError = validateNewPassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     if (password !== confirmPassword) {
@@ -53,12 +55,12 @@ export default function RegisterPage() {
     <AuthLayout>
       <AuthBrand />
 
-      <h1 className="text-3xl font-bold text-gray-900 text-center">Kayıt Ol</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">Kayıt Ol</h1>
       <p className="text-sm text-gray-500 mt-2 text-center">Ücretsiz hesap oluşturarak öğrenmeye başla.</p>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-5 sm:mt-6 space-y-3 sm:space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
             Ad Soyad
           </label>
           <input
@@ -69,12 +71,12 @@ export default function RegisterPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Adın Soyadın"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 sm:py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
             E-posta
           </label>
           <input
@@ -85,7 +87,7 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="ornek@eposta.com"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 sm:py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
@@ -94,7 +96,7 @@ export default function RegisterPage() {
           label="Şifre"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="En az 6 karakter"
+          placeholder={`En az ${PASSWORD_MIN_LENGTH} karakter`}
           autoComplete="new-password"
         />
 
@@ -120,9 +122,9 @@ export default function RegisterPage() {
         </button>
       </form>
 
-      <GoogleSignInButton text="signup_with" />
+      <GoogleSignInButton label="Google ile kayıt ol" />
 
-      <p className="text-center text-sm text-gray-500 mt-6">
+      <p className="text-center text-sm text-gray-500 mt-4 sm:mt-6">
         Zaten hesabın var mı?{' '}
         <Link to="/login" className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold">
           Giriş Yap

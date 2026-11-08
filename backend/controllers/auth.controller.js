@@ -174,6 +174,25 @@ const googleClient = new OAuth2Client();
 // Google ile giriş/kayıt: frontend'deki Google butonundan gelen ID token (credential) doğrulanır.
 // - Google hesabı daha önce bağlanmışsa (googleId) veya aynı e-postayla kayıt varsa o hesapla giriş yapılır.
 // - Hiç kayıt yoksa yeni hesap açılır. Google e-postayı doğruladığı için ayrıca kod istenmez.
+// Kendi tasarımımız olan "Google ile devam et" butonu Google'ın OAuth popup'ını kullanır ve ID token yerine
+// access token verir. Token'ın bizim uygulamamız için verildiği (aud/azp = GOOGLE_CLIENT_ID) Google'ın
+// tokeninfo uç noktasıyla doğrulanır; sonra kullanıcı bilgileri userinfo'dan alınır. Başka bir uygulamanın
+// token'ı aud kontrolünde reddedilir.
+const profileFromAccessToken = async (accessToken, clientId) => {
+  const infoRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?access_token=${encodeURIComponent(accessToken)}`);
+  const info = await infoRes.json();
+  if (!infoRes.ok || (info.aud !== clientId && info.azp !== clientId) || Number(info.expires_in) <= 0) {
+    throw new Error('invalid access token');
+  }
+  const userRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!userRes.ok) throw new Error('userinfo failed');
+  const profile = await userRes.json();
+  if (profile.sub !== info.sub) throw new Error('subject mismatch');
+  return profile; // { sub, email, email_verified, name, ... } — ID token payload ile aynı alanlar
+};
+
 const googleLogin = asyncHandler(async (req, res) => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   if (!clientId) {
@@ -182,8 +201,9 @@ const googleLogin = asyncHandler(async (req, res) => {
 
   let payload;
   try {
-    const ticket = await googleClient.verifyIdToken({ idToken: req.body.credential, audience: clientId });
-    payload = ticket.getPayload();
+    payload = req.body.accessToken
+      ? await profileFromAccessToken(req.body.accessToken, clientId)
+      : (await googleClient.verifyIdToken({ idToken: req.body.credential, audience: clientId })).getPayload();
   } catch {
     throw new ApiError(401, 'Google ile giriş doğrulanamadı. Lütfen tekrar dene.');
   }

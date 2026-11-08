@@ -1,9 +1,10 @@
 const { body } = require('express-validator');
+const { newPasswordRule } = require('./password.rule');
 
 const registerRules = [
   body('name').trim().notEmpty().withMessage('İsim zorunludur.'),
   body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail(),
-  body('password').isLength({ min: 6 }).withMessage('Şifre en az 6 karakter olmalıdır.'),
+  newPasswordRule('password'),
 ];
 
 const loginRules = [
@@ -37,7 +38,12 @@ const resendVerificationRules = [
 ];
 
 // Google Identity Services'ten gelen ID token (JWT).
-const googleLoginRules = [body('credential').isString().notEmpty().withMessage('Google kimlik bilgisi eksik.')];
+// Google'ın kendi butonu ID token (credential), bizim butonumuz access token (accessToken) gönderir.
+const googleLoginRules = [
+  body('credential').optional().isString().notEmpty(),
+  body('accessToken').optional().isString().notEmpty(),
+  body().custom((value) => Boolean(value?.credential || value?.accessToken)).withMessage('Google kimlik bilgisi eksik.'),
+];
 
 const emailRule = () => body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail();
 
@@ -55,7 +61,7 @@ const resetPasswordRules = [
     .isHexadecimal()
     .isLength({ min: 64, max: 64 })
     .withMessage('Şifre sıfırlama isteği geçersiz.'),
-  body('password').isLength({ min: 6 }).withMessage('Şifre en az 6 karakter olmalıdır.'),
+  newPasswordRule('password'),
 ];
 
 module.exports = {

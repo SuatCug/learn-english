@@ -1,15 +1,29 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Clock, TriangleAlert, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Clock,
+  TriangleAlert,
+  CheckCircle2,
+  XCircle,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  Timer,
+  Trophy,
+  BarChart3,
+  Info,
+  ArrowRight,
+} from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ListeningPlayer from '@/components/lesson/ListeningPlayer';
 import { useGetExamQuery, useSubmitExamMutation } from '@/services/examsApi';
 import { setCredentials } from '@/app/authSlice';
 import { cloudinaryAudioUrl } from '@/lib/cloudinary';
-import { LEVELS } from '@/lib/constants';
-import { EXAM_PLAYER_THEME } from '@/lib/exams';
+import { EXAM_PLAYER_THEME, EXAM_SECTION_ICONS } from '@/lib/exams';
+import ExamIllustration from '@/components/exams/ExamIllustration';
+import StartConfirmModal from '@/components/exams/StartConfirmModal';
 import { getErrorMessage } from '@/lib/getErrorMessage';
 
 const VALID_LEVELS = ['A1', 'A2', 'B1', 'B2'];
@@ -200,115 +214,181 @@ function SectionHeader({ section, index, total }) {
   );
 }
 
+const sectionFormat = (section) => {
+  if (section.key === 'listening') return `${section.groups.length} recordings`;
+  if (section.key === 'reading') return `${section.groups.length} texts`;
+  if (section.key === 'writing') return `${section.groups.length} texts, word box`;
+  return 'Multiple choice (A–D)';
+};
+
+function StatItem({ icon: Icon, title, subtitle }) {
+  return (
+    <div className="flex items-center gap-4">
+      <Icon size={30} strokeWidth={2} className="shrink-0 text-emerald-600" aria-hidden="true" />
+      <div>
+        <p className="font-bold text-gray-900 leading-tight">{title}</p>
+        <p className="text-sm text-gray-500">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
 function IntroScreen({ exam, previousResult, onStart }) {
   const [confirming, setConfirming] = useState(false);
-  const levelInfo = LEVELS.find((l) => l.code === exam.level);
+  const closeConfirm = useCallback(() => setConfirming(false), []);
 
   return (
-    <div className="max-w-3xl w-full mx-auto px-4 sm:px-6 py-12 sm:py-16">
-      <div className="rounded-2xl border border-emerald-100 bg-white shadow-sm p-6 sm:p-10">
-        <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase mb-2">
-          {exam.level} · {levelInfo?.name}
-        </p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{exam.title}</h1>
-        <p className="text-sm text-gray-600 leading-relaxed mb-6">
-          This exam checks your English at {exam.level} level across five skills. You need {exam.passPercent}% or more
-          to pass.
-        </p>
+    <section className="relative isolate overflow-hidden bg-gradient-to-b from-emerald-50/80 via-white to-emerald-50/50 flex-1">
+      {/* Alttaki yumuşak yeşil dalga */}
+      <svg
+        className="absolute inset-x-0 bottom-0 -z-10 w-full h-24 sm:h-32 text-emerald-100/70"
+        viewBox="0 0 1440 120"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path fill="currentColor" d="M0 70c180-40 360-40 540-10s360 50 540 20 270-50 360-40v80H0Z" />
+      </svg>
 
-        {previousResult && (
-          <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6">
-            <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
-            <p className="text-sm text-amber-800 leading-relaxed">
-              You've already taken this exam — your last score was {previousResult.score} / {previousResult.maxScore} (
-              {previousResult.percent}%). Your new result will replace it, and your best score will be kept.
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-16 sm:pb-24">
+        <div className="grid gap-6 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
+          {/* Sol: başlık + genel bakış */}
+          <div className="min-w-0">
+            <h1 className="mt-2 text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900">
+              <span className="text-emerald-600">{exam.level}</span> Level Exam
+            </h1>
+            <p className="mt-3 text-base sm:text-lg text-gray-600">
+              This exam checks your English at {exam.level} level across five skills. You need {exam.passPercent}% or
+              more to pass.
             </p>
+
+            {previousResult && (
+              <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
+                <p className="text-sm text-amber-800 leading-relaxed">
+                  You've already taken this exam — your last score was {previousResult.score} /{' '}
+                  {previousResult.maxScore} ({previousResult.percent}%). Your new result will replace it, and your
+                  best score will be kept.
+                </p>
+              </div>
+            )}
+
+            <div className="mt-6 rounded-2xl border border-gray-100 bg-white shadow-sm p-4 sm:p-6">
+              <h2 className="flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-900 mb-4">
+                <span className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                  <ClipboardCheck size={20} aria-hidden="true" />
+                </span>
+                Exam Overview
+              </h2>
+
+              <div className="overflow-hidden rounded-xl border border-gray-100">
+                <table className="w-full text-sm sm:text-[15px]">
+                  <thead>
+                    <tr className="bg-emerald-50 text-gray-600 text-xs uppercase tracking-wide">
+                      <th className="text-left px-3 sm:px-5 py-3 font-semibold">Part</th>
+                      <th className="hidden sm:table-cell text-left px-5 py-3 font-semibold">Format</th>
+                      <th className="text-right px-3 sm:px-5 py-3 font-semibold">Questions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {exam.sections.map((section, i) => {
+                      const Icon = EXAM_SECTION_ICONS[section.key] ?? ClipboardCheck;
+                      const count = section.groups.reduce((n, g) => n + g.questions.length, 0);
+                      return (
+                        <tr key={section.key}>
+                          <td className="px-3 sm:px-5 py-3 text-gray-800">
+                            <span className="flex items-center gap-3">
+                              <Icon size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                              <span>
+                                {i + 1}. {section.label}
+                                {/* Telefonda format sütunu gizli; bilgi bölüm adının altında gösterilir. */}
+                                <span className="block sm:hidden text-xs text-gray-500">{sectionFormat(section)}</span>
+                              </span>
+                            </span>
+                          </td>
+                          <td className="hidden sm:table-cell px-5 py-3 text-gray-600">{sectionFormat(section)}</td>
+                          <td className="px-3 sm:px-5 py-3 text-right text-gray-800 tabular-nums">{count}</td>
+                        </tr>
+                      );
+                    })}
+                    <tr className="bg-emerald-50 font-bold text-emerald-800">
+                      <td className="px-3 sm:px-5 py-3.5 sm:hidden">
+                        <span className="flex items-center gap-3">
+                          <Clock size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                          Total · {exam.durationMinutes} min
+                        </span>
+                      </td>
+                      <td className="hidden sm:table-cell px-5 py-3.5" colSpan={2}>
+                        <span className="flex items-center gap-3">
+                          <Clock size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                          Total · {exam.durationMinutes} minutes
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-5 py-3.5 text-right text-lg tabular-nums">{exam.maxScore}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        )}
 
-        <div className="rounded-xl border border-gray-100 overflow-hidden mb-6">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                <th className="text-left px-4 py-2.5 font-semibold">Part</th>
-                <th className="text-left px-4 py-2.5 font-semibold">Format</th>
-                <th className="text-right px-4 py-2.5 font-semibold">Questions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {exam.sections.map((section, i) => {
-                const count = section.groups.reduce((n, g) => n + g.questions.length, 0);
-                const format =
-                  section.key === 'listening'
-                    ? `${section.groups.length} recordings`
-                    : section.key === 'reading'
-                      ? `${section.groups.length} texts`
-                      : section.key === 'writing'
-                        ? `${section.groups.length} texts, word box`
-                        : 'Multiple choice (A–D)';
-                return (
-                  <tr key={section.key}>
-                    <td className="px-4 py-2.5 text-gray-700">
-                      {i + 1}. {section.label}
-                    </td>
-                    <td className="px-4 py-2.5 text-gray-500">{format}</td>
-                    <td className="px-4 py-2.5 text-right text-gray-700">{count}</td>
-                  </tr>
-                );
-              })}
-              <tr className="bg-emerald-50/60 font-semibold text-emerald-800">
-                <td className="px-4 py-2.5" colSpan={2}>
-                  Total · {exam.durationMinutes} minutes
-                </td>
-                <td className="px-4 py-2.5 text-right">{exam.maxScore}</td>
-              </tr>
-            </tbody>
-          </table>
+          {/* Sağ: çizim + özet bilgiler */}
+          <div className="flex flex-col gap-4 lg:pt-2">
+            <ExamIllustration className="hidden sm:block w-full max-w-[340px] mx-auto" />
+            <div className="rounded-2xl bg-emerald-50/80 border border-emerald-100 p-5 sm:p-6 space-y-5">
+              <StatItem icon={Timer} title={`${exam.durationMinutes} minutes`} subtitle="Time for the exam" />
+              <StatItem
+                icon={Trophy}
+                title={`${exam.passPercent}% to pass`}
+                subtitle={`Get at least ${exam.passPercent}%`}
+              />
+              <StatItem icon={BarChart3} title="Improve your English" subtitle="Build your skills" />
+            </div>
+          </div>
         </div>
 
-        <div className="text-sm text-gray-600 mb-8">
-          <p className="font-semibold text-gray-800 mb-2">Before you start:</p>
-          <ul className="space-y-1.5 list-disc list-inside">
-            <li>You have {exam.durationMinutes} minutes. When the time is up, the exam is submitted automatically.</li>
-            <li>Use headphones for the Listening part. You can play each recording as many times as you need.</li>
-            <li>You can move back and forth between the parts until you submit.</li>
-            <li>Answer every question — there is no penalty for guessing.</li>
-          </ul>
-        </div>
+        {/* Alt: başlamadan önce + başlat butonu */}
+        <div className="mt-6 rounded-2xl border border-gray-100 bg-white shadow-sm p-5 sm:p-7 flex flex-col md:flex-row md:items-center gap-6">
+          <div className="flex-1 min-w-0">
+            <h2 className="flex items-center gap-3 text-lg font-bold text-gray-900 mb-3">
+              <Info size={24} className="shrink-0 fill-emerald-600 text-white" aria-hidden="true" />
+              Before you start:
+            </h2>
+            <ul className="space-y-2 text-sm sm:text-[15px] text-gray-700">
+              {[
+                `You have ${exam.durationMinutes} minutes. When the time is up, the exam is submitted automatically.`,
+                'Use headphones for the Listening part. You can play each recording as many times as you need.',
+                'You can move back and forth between the parts until you submit.',
+                'Answer every question — there is no penalty for guessing.',
+              ].map((text) => (
+                <li key={text} className="flex gap-3">
+                  <span className="mt-2 w-1.5 h-1.5 shrink-0 rounded-full bg-emerald-600" />
+                  {text}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {!confirming ? (
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="w-full sm:w-auto rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 transition-colors"
+            className="shrink-0 w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white text-lg font-bold px-10 py-4 shadow-lg shadow-emerald-600/25 transition-colors"
           >
-            {previousResult ? 'Retake the exam' : 'Start the exam'}
+            {previousResult ? 'Retake Exam' : 'Start Exam'}
+            <ArrowRight size={22} strokeWidth={2.5} aria-hidden="true" />
           </button>
-        ) : (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-4 sm:p-5">
-            <p className="text-sm font-semibold text-gray-900">
-              Are you ready? The {exam.durationMinutes}-minute timer starts now and can't be paused.
-            </p>
-            <div className="flex flex-wrap items-center gap-3 mt-3">
-              <button
-                type="button"
-                onClick={onStart}
-                className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 text-sm transition-colors"
-              >
-                Yes, start
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfirming(false)}
-                className="rounded-lg border border-rose-300 text-rose-600 hover:bg-rose-50 font-semibold px-6 py-2.5 text-sm transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {confirming && (
+        <StartConfirmModal
+          testName={`${exam.level} exam`}
+          questionCount={exam.maxScore}
+          durationMinutes={exam.durationMinutes}
+          onConfirm={onStart}
+          onCancel={closeConfirm}
+        />
+      )}
+    </section>
   );
 }
 

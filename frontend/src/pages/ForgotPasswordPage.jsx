@@ -8,6 +8,7 @@ import PasswordField from '@/components/auth/PasswordField';
 import { useForgotPasswordMutation, useVerifyResetCodeMutation, useResetPasswordMutation } from '@/services/authApi';
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import { validateNewPassword, PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 const PRIMARY_BUTTON =
   'w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors';
@@ -94,8 +95,9 @@ export default function ForgotPasswordPage() {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (password.length < 6) {
-      setError('Şifre en az 6 karakter olmalıdır.');
+    const passwordError = validateNewPassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     if (password !== passwordConfirm) {
@@ -226,7 +228,7 @@ export default function ForgotPasswordPage() {
               label="Yeni şifre"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="En az 6 karakter"
+              placeholder={`En az ${PASSWORD_MIN_LENGTH} karakter`}
               autoComplete="new-password"
             />
             <PasswordField

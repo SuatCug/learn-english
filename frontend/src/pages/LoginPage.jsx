@@ -120,7 +120,7 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <GoogleSignInButton text="signin_with" />
+      <GoogleSignInButton />
 
       <p className="text-center text-sm text-gray-500 mt-6">
         Hesabın yok mu?{' '}

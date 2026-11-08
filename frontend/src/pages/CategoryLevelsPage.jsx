@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { CATEGORIES, LEVELS, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from '@/lib/constants';
-import { CATEGORY_ILLUSTRATIONS } from '@/lib/categoryIllustrations';
+import { levelIllustration } from '@/lib/categoryIllustrations';
 
 const PALETTES = [
   'from-emerald-500 to-emerald-700',
@@ -18,7 +18,8 @@ export default function CategoryLevelsPage() {
   const { category } = useParams();
   const categoryInfo = CATEGORIES.find((c) => c.slug === category);
   const categoryLabel = categoryInfo?.label ?? category;
-  const illustration = CATEGORY_ILLUSTRATIONS[category];
+  // Her seviye kartının kendi kapak fotoğrafı var (lib/categoryIllustrations.js).
+  const illustrationFor = (levelCode) => levelIllustration(category, levelCode);
   const bannerClass = CATEGORY_BANNER_CLASS[category] ?? DEFAULT_BANNER_CLASS;
 
   return (
@@ -43,11 +44,11 @@ export default function CategoryLevelsPage() {
             >
               <div
                 className={`relative h-48 flex items-center justify-center overflow-hidden ${
-                  illustration ? '' : `bg-gradient-to-br ${PALETTES[index % PALETTES.length]}`
+                  illustrationFor(level.code) ? '' : `bg-gradient-to-br ${PALETTES[index % PALETTES.length]}`
                 }`}
               >
-                {illustration ? (
-                  <img src={illustration} alt="" className="w-full h-full object-cover" />
+                {illustrationFor(level.code) ? (
+                  <img src={illustrationFor(level.code)} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-5xl">{categoryInfo?.icon}</span>
                 )}

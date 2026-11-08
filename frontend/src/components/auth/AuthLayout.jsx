@@ -3,7 +3,7 @@ import heroImage from '@/assets/login-hero.webp';
 
 // Auth ekranları (Login/Register/Verify) için ortak iki panelli yerleşim.
 // Solda: navbar ile aynı koyu zemin üzerinde fotoğraf ve slogan.
-// Sağda: beyaz form paneli. Mobilde fotoğraf paneli yerine üstte kısa, koyu bir şerit görünür.
+// Sağda: beyaz form paneli. Mobil/tablette (lg altı) fotoğraf hiç gösterilmez, sadece form görünür.
 function HeroPhoto({ className = '' }) {
   return (
     <img
@@ -16,7 +16,7 @@ function HeroPhoto({ className = '' }) {
 
 export default function AuthLayout({ children }) {
   return (
-    <div className="min-h-screen lg:h-screen grid lg:grid-cols-2">
+    <div className="min-h-dvh lg:h-dvh grid lg:grid-cols-2">
       {/* Masaüstü: sol fotoğraf paneli */}
       <div className="hidden lg:flex relative isolate h-full overflow-hidden bg-[#15181c] items-end">
         <HeroPhoto className="-z-10 brightness-[0.6]" />
@@ -34,13 +34,7 @@ export default function AuthLayout({ children }) {
       </div>
 
       <div className="flex flex-col bg-white overflow-y-auto">
-        {/* Mobil: üstte koyu şerit */}
-        <div className="lg:hidden relative isolate h-32 shrink-0 overflow-hidden bg-[#15181c] flex items-end">
-          <HeroPhoto className="-z-10 brightness-[0.45]" />
-          <p className="px-4 pb-4 text-emerald-500 text-xl font-bold leading-tight">Take your learning with you!</p>
-        </div>
-
-        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8">
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-5 sm:py-8">
           {/* 400px: Google butonunun izin verilen en büyük genişliği; form elemanları onunla aynı genişlikte olsun. */}
           <div className="w-full max-w-[400px]">{children}</div>
         </div>

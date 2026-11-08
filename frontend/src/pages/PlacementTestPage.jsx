@@ -1,12 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { TriangleAlert, Clock } from 'lucide-react';
+import { TriangleAlert, Clock, ClipboardCheck, Timer, ListChecks, Gauge, Info, ArrowRight } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { useGetPlacementTestQuery, useSubmitPlacementTestMutation } from '@/services/placementApi';
 import { setCredentials } from '@/app/authSlice';
 import { LEVELS } from '@/lib/constants';
+import { EXAM_SECTION_ICONS } from '@/lib/exams';
+import ExamIllustration from '@/components/exams/ExamIllustration';
+import StartConfirmModal from '@/components/exams/StartConfirmModal';
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const TEST_DURATION_SECONDS = 80 * 60;
@@ -194,115 +197,183 @@ function WritingClozeGroup({ passage, questions, answers, onChange, disabled, st
   );
 }
 
+// Level Test bölümleri (giriş ekranındaki tablo); soru sayıları backend'deki seviye testiyle aynı.
+const PLACEMENT_PARTS = [
+  { key: 'reading', label: 'Reading', format: '3 texts', questions: 20 },
+  { key: 'grammar', label: 'Grammar', format: 'Gap-fill paragraphs (A–D)', questions: 15 },
+  { key: 'vocabulary', label: 'Vocabulary', format: 'Multiple choice (A–D)', questions: 10 },
+  { key: 'writing', label: 'Writing', format: '2 texts, word box', questions: 10 },
+];
+const PLACEMENT_TOTAL = PLACEMENT_PARTS.reduce((n, p) => n + p.questions, 0);
+const PLACEMENT_MINUTES = TEST_DURATION_SECONDS / 60;
+
+function StatItem({ icon: Icon, title, subtitle }) {
+  return (
+    <div className="flex items-center gap-4">
+      <Icon size={30} strokeWidth={2} className="shrink-0 text-emerald-600" aria-hidden="true" />
+      <div>
+        <p className="font-bold text-gray-900 leading-tight">{title}</p>
+        <p className="text-sm text-gray-500">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
+// Seviye sınavlarıyla aynı görsel dil: açık yeşil zemin, alt dalga, tek renk.
+function GreenBackdrop({ children }) {
+  return (
+    <section className="relative isolate overflow-hidden flex-1 bg-gradient-to-b from-emerald-50/80 via-white to-emerald-50/50">
+      <svg
+        className="absolute inset-x-0 bottom-0 -z-10 w-full h-24 sm:h-32 text-emerald-100/70"
+        viewBox="0 0 1440 120"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path fill="currentColor" d="M0 70c180-40 360-40 540-10s360 50 540 20 270-50 360-40v80H0Z" />
+      </svg>
+      {children}
+    </section>
+  );
+}
+
 function IntroScreen({ onStart, isLoading, user }) {
   const alreadyCompleted = Boolean(user?.placementTestCompleted);
   const [confirming, setConfirming] = useState(false);
+  const closeConfirm = useCallback(() => setConfirming(false), []);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
-      <div className="rounded-2xl border border-emerald-100 bg-white shadow-sm p-8 sm:p-10">
-        <p className="text-xs font-semibold tracking-widest text-emerald-600 uppercase mb-2">
-          General English Placement Test
-        </p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Find out your English level</h1>
-        <p className="text-sm text-gray-600 leading-relaxed mb-6">
-          This placement test is designed in line with the CEFR (Common European Framework of Reference for
-          Languages) — the same international standard used to describe the A1–B2 levels throughout this site. It
-          combines a Reading, a Grammar, a Vocabulary, and a Writing section, moving from easier to more difficult
-          questions within each part, and your result is used to recommend the right lessons for you.
-        </p>
-
-        {alreadyCompleted && (
-          <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 mb-6">
-            <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber-600" />
-            <p className="text-sm text-amber-800 leading-relaxed">
-              You've already taken this test{user?.level ? ` — your current level is ${user.level}` : ''}. You can
-              take it again, but your level will be updated based on the new result.
+    <GreenBackdrop>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-16 sm:pb-24">
+        <div className="grid gap-6 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="min-w-0">
+            <h1 className="mt-2 text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900">
+              Level <span className="text-emerald-600">Test</span>
+            </h1>
+            <p className="mt-3 text-base sm:text-lg text-gray-600">
+              Find out your English level. This CEFR-based test moves from easier to harder questions in each part, and
+              your result sets the A1–B2 level we recommend lessons for.
             </p>
+
+            {alreadyCompleted && (
+              <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
+                <p className="text-sm text-amber-800 leading-relaxed">
+                  You've already taken this test{user?.level ? ` — your current level is ${user.level}` : ''}. You can
+                  take it again, but your level will be updated based on the new result.
+                </p>
+              </div>
+            )}
+
+            <div className="mt-6 rounded-2xl border border-gray-100 bg-white shadow-sm p-4 sm:p-6">
+              <h2 className="flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-900 mb-4">
+                <span className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                  <ClipboardCheck size={20} aria-hidden="true" />
+                </span>
+                Test Overview
+              </h2>
+
+              <div className="overflow-hidden rounded-xl border border-gray-100">
+                <table className="w-full text-sm sm:text-[15px]">
+                  <thead>
+                    <tr className="bg-emerald-50 text-gray-600 text-xs uppercase tracking-wide">
+                      <th className="text-left px-3 sm:px-5 py-3 font-semibold">Part</th>
+                      <th className="hidden sm:table-cell text-left px-5 py-3 font-semibold">Format</th>
+                      <th className="text-right px-3 sm:px-5 py-3 font-semibold">Questions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {PLACEMENT_PARTS.map((part, i) => {
+                      const Icon = EXAM_SECTION_ICONS[part.key] ?? ClipboardCheck;
+                      return (
+                        <tr key={part.key}>
+                          <td className="px-3 sm:px-5 py-3 text-gray-800">
+                            <span className="flex items-center gap-3">
+                              <Icon size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                              <span>
+                                {i + 1}. {part.label}
+                                <span className="block sm:hidden text-xs text-gray-500">{part.format}</span>
+                              </span>
+                            </span>
+                          </td>
+                          <td className="hidden sm:table-cell px-5 py-3 text-gray-600">{part.format}</td>
+                          <td className="px-3 sm:px-5 py-3 text-right text-gray-800 tabular-nums">{part.questions}</td>
+                        </tr>
+                      );
+                    })}
+                    <tr className="bg-emerald-50 font-bold text-emerald-800">
+                      <td className="px-3 sm:px-5 py-3.5 sm:hidden">
+                        <span className="flex items-center gap-3">
+                          <Clock size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                          Total · {PLACEMENT_MINUTES} min
+                        </span>
+                      </td>
+                      <td className="hidden sm:table-cell px-5 py-3.5" colSpan={2}>
+                        <span className="flex items-center gap-3">
+                          <Clock size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                          Total · {PLACEMENT_MINUTES} minutes
+                        </span>
+                      </td>
+                      <td className="px-3 sm:px-5 py-3.5 text-right text-lg tabular-nums">{PLACEMENT_TOTAL}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-        )}
 
-        <div className="rounded-xl border border-gray-100 overflow-hidden mb-6">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                <th className="text-left px-4 py-2.5 font-semibold">Section</th>
-                <th className="text-right px-4 py-2.5 font-semibold">Questions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              <tr>
-                <td className="px-4 py-2.5 text-gray-700">Reading</td>
-                <td className="px-4 py-2.5 text-right text-gray-700">20</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 text-gray-700">Grammar</td>
-                <td className="px-4 py-2.5 text-right text-gray-700">15</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 text-gray-700">Vocabulary</td>
-                <td className="px-4 py-2.5 text-right text-gray-700">10</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 text-gray-700">Writing</td>
-                <td className="px-4 py-2.5 text-right text-gray-700">10</td>
-              </tr>
-              <tr className="bg-emerald-50/60 font-semibold text-emerald-800">
-                <td className="px-4 py-2.5">Total</td>
-                <td className="px-4 py-2.5 text-right">55</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="flex flex-col gap-4 lg:pt-2">
+            <ExamIllustration className="hidden sm:block w-full max-w-[340px] mx-auto" />
+            <div className="rounded-2xl bg-emerald-50/80 border border-emerald-100 p-5 sm:p-6 space-y-5">
+              <StatItem icon={Timer} title={`${PLACEMENT_MINUTES} minutes`} subtitle="Time for the test" />
+              <StatItem icon={ListChecks} title={`${PLACEMENT_TOTAL} questions`} subtitle="Easier to harder in each part" />
+              <StatItem icon={Gauge} title="Your level: A1–B2" subtitle="Set automatically when you finish" />
+            </div>
+          </div>
         </div>
 
-        <div className="text-sm text-gray-600 mb-8">
-          <p className="font-semibold text-gray-800 mb-2">Before you start:</p>
-          <ul className="space-y-1.5 list-disc list-inside">
-            <li>You have 80 minutes to complete the test — a timer will be shown once you start.</li>
-            <li>
-              Choose the best option, or type the missing word, for each question — there is only one correct
-              answer.
-            </li>
-            <li>Answer every question, even if you're not sure — there is no penalty for guessing.</li>
-            <li>Once you submit the test, you won't be able to change your answers.</li>
-          </ul>
-        </div>
+        <div className="mt-6 rounded-2xl border border-gray-100 bg-white shadow-sm p-5 sm:p-7 flex flex-col md:flex-row md:items-center gap-6">
+          <div className="flex-1 min-w-0">
+            <h2 className="flex items-center gap-3 text-lg font-bold text-gray-900 mb-3">
+              <Info size={24} className="shrink-0 fill-emerald-600 text-white" aria-hidden="true" />
+              Before you start:
+            </h2>
+            <ul className="space-y-2 text-sm sm:text-[15px] text-gray-700">
+              {[
+                `You have ${PLACEMENT_MINUTES} minutes — a timer will be shown once you start.`,
+                'Choose the best option, or type the missing word — there is only one correct answer.',
+                "Answer every question, even if you're not sure — there is no penalty for guessing.",
+                "Once you submit the test, you won't be able to change your answers.",
+              ].map((text) => (
+                <li key={text} className="flex gap-3">
+                  <span className="mt-2 w-1.5 h-1.5 shrink-0 rounded-full bg-emerald-600" />
+                  {text}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {!confirming ? (
           <button
             type="button"
             onClick={() => setConfirming(true)}
             disabled={isLoading}
-            className="w-full sm:w-auto rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold px-8 py-3 transition-colors"
+            className="shrink-0 w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 disabled:opacity-60 text-white text-lg font-bold px-10 py-4 shadow-lg shadow-emerald-600/25 transition-colors"
           >
-            {isLoading ? 'Loading test...' : alreadyCompleted ? 'OK, retake the test' : 'OK, start the test'}
+            {isLoading ? 'Loading...' : alreadyCompleted ? 'Retake Test' : 'Start Test'}
+            <ArrowRight size={22} strokeWidth={2.5} aria-hidden="true" />
           </button>
-        ) : (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-4 sm:p-5">
-            <p className="text-sm font-semibold text-gray-900">
-              Are you sure you're ready? Once you start, the 80-minute timer begins and you won't be able to pause.
-            </p>
-            <div className="flex items-center gap-3 mt-3">
-              <button
-                type="button"
-                onClick={onStart}
-                disabled={isLoading}
-                className="rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold px-6 py-2.5 text-sm transition-colors"
-              >
-                {isLoading ? 'Loading test...' : 'Yes, start the test'}
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfirming(false)}
-                className="rounded-lg border border-rose-300 text-rose-600 hover:bg-rose-50 font-semibold px-6 py-2.5 text-sm transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {confirming && (
+        <StartConfirmModal
+          testName="level test"
+          questionCount={PLACEMENT_TOTAL}
+          durationMinutes={PLACEMENT_MINUTES}
+          onConfirm={onStart}
+          onCancel={closeConfirm}
+        />
+      )}
+    </GreenBackdrop>
   );
 }
 
@@ -311,56 +382,59 @@ function ResultScreen({ result }) {
   const levelInfo = LEVELS.find((l) => l.code === level);
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      <div className="rounded-2xl border border-emerald-100 bg-white shadow-sm p-8 sm:p-10 text-center">
-        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Your result</p>
-        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-50 border-4 border-emerald-100 mb-4">
-          <span className="text-3xl font-extrabold text-emerald-700">{level}</span>
-        </div>
-        <h1 className="text-xl font-bold text-gray-900 mb-1">
-          You are at {levelInfo ? `${levelInfo.code} — ${levelInfo.name}` : level} level
-        </h1>
-        <p className="text-sm text-gray-500 mb-8">
-          Overall score: {score} / {maxScore}
-        </p>
+    <GreenBackdrop>
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-16 sm:pb-24">
+        <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-6 sm:p-10 text-center">
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Your level</p>
+          <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-emerald-50 ring-8 ring-emerald-50/60 border-4 border-emerald-500 mb-5">
+            <span className="text-4xl font-extrabold text-emerald-700">{level}</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
+            You are at <span className="text-emerald-600">{levelInfo?.name ?? level}</span> level
+          </h1>
+          <p className="mt-2 text-sm text-gray-500">
+            Overall score: {score} / {maxScore}
+          </p>
 
-        <div className="rounded-xl border border-gray-100 overflow-hidden mb-8 text-left">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                <th className="text-left px-4 py-2.5 font-semibold">Section</th>
-                <th className="text-right px-4 py-2.5 font-semibold">Score</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {SECTION_ORDER.map((section) => (
-                <tr key={section}>
-                  <td className="px-4 py-2.5 text-gray-700">{SECTION_INFO[section].label}</td>
-                  <td className="px-4 py-2.5 text-right text-gray-700">
-                    {statsBySection[section]?.correct ?? 0} / {statsBySection[section]?.total ?? 0}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          <div className="mt-8 text-left space-y-4">
+            {SECTION_ORDER.map((section) => {
+              const stats = statsBySection[section] ?? { correct: 0, total: 0 };
+              const pct = stats.total ? Math.round((stats.correct / stats.total) * 100) : 0;
+              const Icon = EXAM_SECTION_ICONS[section] ?? ClipboardCheck;
+              return (
+                <div key={section}>
+                  <div className="flex items-center gap-3 text-sm">
+                    <Icon size={18} className="shrink-0 text-emerald-600" aria-hidden="true" />
+                    <span className="flex-1 font-medium text-gray-800">{SECTION_INFO[section].label}</span>
+                    <span className="tabular-nums text-gray-500">
+                      {stats.correct} / {stats.total}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 ml-[30px] h-2 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-full rounded-full bg-emerald-500" style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            to={`/topics/grammar/${level}`}
-            className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 transition-colors"
-          >
-            Start learning at my level
-          </Link>
-          <Link
-            to="/"
-            className="rounded-lg border border-gray-300 text-gray-700 font-semibold px-6 py-3 hover:bg-gray-50 transition-colors"
-          >
-            Back to home
-          </Link>
+          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              to={`/topics/grammar/${level}`}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 transition-colors"
+            >
+              Start learning at my level <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+            <Link
+              to={`/exams/${level}`}
+              className="inline-flex items-center justify-center rounded-xl border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold px-6 py-3 transition-colors"
+            >
+              Take the {level} exam
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </GreenBackdrop>
   );
 }
 
