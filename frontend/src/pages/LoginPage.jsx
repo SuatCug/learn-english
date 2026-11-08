@@ -17,6 +17,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
   // Doğrulanmamış hesapla giriş denendiğinde kod ekranına geçiş butonu gösterilir.
   const [unverifiedEmail, setUnverifiedEmail] = useState(null);
@@ -28,7 +29,7 @@ export default function LoginPage() {
     setUnverifiedEmail(null);
     try {
       const data = await login({ email, password }).unwrap();
-      dispatch(setCredentials(data.data));
+      dispatch(setCredentials({ ...data.data, remember }));
       navigate('/');
     } catch (err) {
       setError(getErrorMessage(err));
@@ -79,12 +80,21 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-between text-sm">
           <label className="flex items-center gap-2 text-gray-600">
-            <input type="checkbox" className="rounded border-gray-300 accent-gray-900 focus:ring-gray-900" />
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+              className="rounded border-gray-300 accent-gray-900 focus:ring-gray-900"
+            />
             Beni hatırla
           </label>
-          <span className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer font-medium">
+          <Link
+            to="/forgot-password"
+            state={{ email }}
+            className="text-emerald-600 hover:text-emerald-700 hover:underline font-medium"
+          >
             Şifremi unuttum?
-          </span>
+          </Link>
         </div>
 
         {error && (

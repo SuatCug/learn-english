@@ -37,6 +37,21 @@ const progressEntrySchema = new mongoose.Schema(
   { _id: false }
 );
 
+// Seviye sınavı (Exams) sonucu: her seviye için tek kayıt — son deneme + en iyi puan.
+const examResultSchema = new mongoose.Schema(
+  {
+    level: { type: String, enum: ['A1', 'A2', 'B1', 'B2'], required: true },
+    score: { type: Number, required: true, min: 0 },
+    maxScore: { type: Number, required: true, min: 1 },
+    percent: { type: Number, required: true, min: 0, max: 100 },
+    passed: { type: Boolean, default: false },
+    bestScore: { type: Number, default: 0 },
+    attempts: { type: Number, default: 1 },
+    takenAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -65,6 +80,7 @@ const userSchema = new mongoose.Schema(
     level: { type: String, enum: ['A1', 'A2', 'B1', 'B2'], default: null },
     placementTestCompleted: { type: Boolean, default: false },
     progress: { type: [progressEntrySchema], default: [] },
+    examResults: { type: [examResultSchema], default: [] },
     badges: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Badge' }],
     // Premium/Öğretmen özellikleri (sınıf oluşturma vb.) şimdilik admin tarafından manuel set edilir.
     isPremium: { type: Boolean, default: false },
@@ -80,14 +96,35 @@ const userSchema = new mongoose.Schema(
     // Kaba kuvvetle kod denemeyi engellemek için: sınır aşılınca kod geçersiz olur, yenisi istenmelidir.
     emailVerificationAttempts: { type: Number, select: false },
     verificationEmailSentAt: { type: Date, select: false },
+    // Şifre sıfırlama: mailde gelen 6 haneli kodun hash'i, süresi, hatalı deneme sayısı ve son gönderim zamanı.
+    passwordResetCode: { type: String, select: false },
+    passwordResetCodeExpires: { type: Date, select: false },
+    passwordResetAttempts: { type: Number, select: false },
+    passwordResetSentAt: { type: Date, select: false },
+    // Kod doğrulanınca verilen tek kullanımlık izin (hash'i); yeni şifre bu izinle kaydedilir.
+    passwordResetToken: { type: String, select: false },
+    passwordResetTokenExpires: { type: Date, select: false },
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
 
 userSchema.methods.toSafeJSON = function toSafeJSON() {
-  const { _id, name, email, role, level, placementTestCompleted, progress, badges, isPremium, createdAt } = this;
+  const { _id, name, email, role, level, placementTestCompleted, progress, examResults, badges, isPremium, createdAt } = this;
   const hasPassword = this.hasPassword !== false;
-  return { id: _id, name, email, role, level, placementTestCompleted, progress, badges, isPremium, createdAt, hasPassword };
+  return {
+    id: _id,
+    name,
+    email,
+    role,
+    level,
+    placementTestCompleted,
+    progress,
+    examResults: examResults ?? [],
+    badges,
+    isPremium,
+    createdAt,
+    hasPassword,
+  };
 };
 
 module.exports = mongoose.model('User', userSchema);

@@ -4,6 +4,7 @@ import ScrollToTop from '@/components/ScrollToTop';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import VerifyEmailPage from '@/pages/VerifyEmailPage';
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
 import HomePage from '@/pages/HomePage';
 import CategoryLevelsPage from '@/pages/CategoryLevelsPage';
 import LevelCategoriesPage from '@/pages/LevelCategoriesPage';
@@ -11,6 +12,8 @@ import TopicListPage from '@/pages/TopicListPage';
 import InfoPage from '@/pages/InfoPage';
 import LessonPage from '@/pages/LessonPage';
 import PlacementTestPage from '@/pages/PlacementTestPage';
+import ExamsPage from '@/pages/ExamsPage';
+import ExamPage from '@/pages/ExamPage';
 import ProfilePage from '@/pages/ProfilePage';
 import EditProfilePage from '@/pages/EditProfilePage';
 import SchoolPage from '@/pages/SchoolPage';
@@ -31,6 +34,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route
           path="/"
           element={
@@ -84,6 +88,22 @@ export default function App() {
           element={
             <RequireAuth>
               <PlacementTestPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/exams"
+          element={
+            <RequireAuth>
+              <ExamsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/exams/:level"
+          element={
+            <RequireAuth>
+              <ExamPage />
             </RequireAuth>
           }
         />

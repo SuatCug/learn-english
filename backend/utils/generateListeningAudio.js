@@ -1,8 +1,10 @@
-// Listening kayıtlarını Piper (ücretsiz, yerel TTS) ile üretir ve Cloudinary'ye yükler (data/listeningData.js).
+// Listening kayıtlarını Piper (ücretsiz, yerel TTS) ile üretir ve Cloudinary'ye yükler
+// (data/listeningData.js konuları + data/levelExams.js seviye sınavlarının listening bölümleri).
 //
 // - Her satır, konuşmacısının sesiyle ayrı üretilir; diyalog satırları arasına kısa bir sessizlik eklenip
 //   hepsi tek bir WAV dosyasında birleştirilir. Cloudinary bu WAV'ı ".mp3" URL'siyle MP3 olarak sunar.
-// - Üretilen dosyalar <proje kökü>/topic-audio/<seviye>/<slug>.wav altında saklanır (git'e girmez).
+// - Üretilen dosyalar <proje kökü>/topic-audio/<seviye>/<slug>.wav altında saklanır (git'e girmez);
+//   sınav kayıtları topic-audio/exams/<seviye>/<slug>.wav altında.
 //   Yanındaki .json dosyası metnin özetini tutar: metin değişmediyse ses yeniden üretilmez, yükleme de
 //   tekrarlanmaz. Yani script güvenle tekrar tekrar çalıştırılabilir; sadece eksik/değişenleri yapar.
 //
@@ -25,6 +27,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { LISTENING_DATA, listeningAudioId } = require('../data/listeningData');
+const { examListeningItems } = require('../data/levelExams');
 const { getConfig, uploadToCloudinary } = require('./cloudinary.util');
 
 const PIPER_DIR = process.env.PIPER_DIR || path.join(os.homedir(), 'AppData', 'Local', 'piper-tts');
@@ -146,17 +149,30 @@ const checkSetup = () => {
 
 const run = async () => {
   const sampleRate = checkSetup();
-  const items = Object.entries(LISTENING_DATA).flatMap(([level, list]) => list.map((item) => ({ level, item })));
+  const items = [
+    ...Object.entries(LISTENING_DATA).flatMap(([level, list]) =>
+      list.map((item) => ({
+        level,
+        item,
+        publicId: listeningAudioId(level, item.slug),
+        dir: path.join(AUDIO_ROOT, level.toLowerCase()),
+      }))
+    ),
+    ...examListeningItems().map(({ level, item, publicId }) => ({
+      level,
+      item,
+      publicId,
+      dir: path.join(AUDIO_ROOT, 'exams', level.toLowerCase()),
+    })),
+  ];
   let generated = 0;
   let uploaded = 0;
   let upToDate = 0;
   const failed = [];
 
-  for (const { level, item } of items) {
-    const dir = path.join(AUDIO_ROOT, level.toLowerCase());
+  for (const { level, item, publicId, dir } of items) {
     const wavPath = path.join(dir, `${item.slug}.wav`);
     const metaPath = path.join(dir, `${item.slug}.json`);
-    const publicId = listeningAudioId(level, item.slug);
     const hash = fingerprint(level, item);
     const meta = readMeta(metaPath);
     const forced = forceArg === 'all' || forceArg === item.slug;

@@ -60,6 +60,12 @@ puan ve açıklamalı geri bildirim döner; sonuç kalıcı ilerlemeye (streak, 
 - ~55 soru, ~80 dakika, A1–B2 aralığında bölümlere (reading/grammar/vocabulary/writing) ayrılmış test
 - Sınav sonunda kullanıcının seviyesinin otomatik atanması (`placementTestCompleted`)
 
+**Seviye sınavları (Exams)**
+- Navbar'daki **Exams** menüsünden A1, A2, B1 ve B2 için ayrı sınavlar
+- Her sınav 85 dakika, 55 soru: Listening (2 kayıt × 5), Reading (2 metin × 5), Grammar (15), Vocabulary (10) — hepsi 4 şıklı — ve Writing (2 metin × 5 boşluk, kelime kutusu)
+- Puanlama sunucuda yapılır, %60 ve üzeri geçer; bölüm bazında sonuç, cevap incelemesi ve listening transkriptleri
+- İçerik `backend/data/levelExams.js` içindedir (seed gerekmez); sesler `npm run generate:listening` ile üretilir
+
 **İlerleme & rozetler**
 - Profil sayfasında güncel streak, seviye ilerleme çubuğu ve kategori kırılımı
 - Kriter tabanlı rozet motoru: `topics_completed`, `level_completed`, `perfect_score`, `streak`

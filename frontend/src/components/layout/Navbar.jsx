@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School } from 'lucide-react';
+import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, ClipboardCheck, Gauge } from 'lucide-react';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
 import { useGetTopicsQuery } from '@/services/topicsApi';
 import AvatarMenu from './AvatarMenu';
 import BrandMark from '@/components/BrandMark';
+import { EXAM_LEVEL_STYLES } from '@/lib/exams';
 
 // Açılır menüdeki seviye rozetlerinin rengi (ana sayfa kartlarıyla aynı kategori renkleri).
 const CATEGORY_COLORS = {
@@ -76,6 +77,48 @@ function CategoryMenu({ label, slug }) {
   );
 }
 
+// "Exams" açılır menüsü: seviye sınavlarına (A1–B2) ve tüm sınavlar sayfasına bağlantılar.
+function ExamsMenu({ active }) {
+  return (
+    <div className="relative group">
+      <Link
+        to="/exams"
+        className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors py-2 ${
+          active ? 'text-white' : 'text-gray-300 hover:text-white'
+        }`}
+      >
+        <ClipboardCheck size={16} strokeWidth={1.75} className="hidden lg:block" aria-hidden="true" /> Exams
+      </Link>
+
+      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150">
+        <div className="min-w-[240px] bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] overflow-hidden">
+          {LEVELS.map(({ code, name }) => (
+            <Link
+              key={code}
+              to={`/exams/${code}`}
+              className="flex items-center gap-2.5 px-4 py-2 whitespace-nowrap text-[15px] font-light text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <span
+                className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center text-[11px] font-bold text-white"
+                style={{ backgroundColor: EXAM_LEVEL_STYLES[code].dot }}
+              >
+                {code}
+              </span>
+              {code} Exam · {name}
+            </Link>
+          ))}
+          <Link
+            to="/exams"
+            className="block border-t border-gray-100 px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
+          >
+            All exams →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -128,28 +171,39 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-gray-900 border-b border-gray-800">
-      <div className="w-full px-4 sm:px-6 h-16 flex md:grid md:grid-cols-3 items-center justify-between gap-4 md:gap-6">
-        <Link to="/" className="flex items-center gap-2 justify-self-start min-w-0">
+      <div className="w-full px-4 sm:px-6 h-16 flex items-center justify-between gap-4 lg:gap-6">
+        <Link to="/" className="flex items-center gap-2 min-w-0 shrink-0">
           <BrandMark size={30} />
-          <span className="text-lg font-bold text-white truncate">
+          <span className="text-lg font-bold text-white truncate md:hidden lg:inline">
             learnenglish
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center justify-center gap-4 lg:gap-6 xl:gap-8 justify-self-center">
+        <nav className="hidden md:flex flex-1 min-w-0 items-center justify-center gap-2.5 lg:gap-5 xl:gap-8">
           {CATEGORIES.map((category) => (
             <CategoryMenu key={category.slug} label={category.label} slug={category.slug} />
           ))}
+          <ExamsMenu active={location.pathname.startsWith('/exams')} />
+          <Link
+            to="/placement-test"
+            className={`inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium transition-colors py-2 ${
+              location.pathname === '/placement-test' ? 'text-white' : 'text-gray-300 hover:text-white'
+            }`}
+          >
+            <Gauge size={16} strokeWidth={1.75} className="hidden lg:block" aria-hidden="true" /> Level Test
+          </Link>
         </nav>
 
-        <div className="flex items-center gap-3 sm:gap-5 justify-self-end">
+        <div className="flex items-center gap-3 sm:gap-4 xl:gap-5 shrink-0">
           <Link
             to="/school"
+            title="School Mode"
             className={`hidden sm:inline-flex items-center gap-2 rounded-md text-sm font-medium px-3 py-1.5 transition-colors ${
               location.pathname === '/school' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
             }`}
           >
-            <School size={17} strokeWidth={1.75} aria-hidden="true" /> School Mode
+            <School size={17} strokeWidth={1.75} aria-hidden="true" />
+            <span className="md:hidden xl:inline">School Mode</span>
           </Link>
 
           {/* Kapalıyken sadece büyüteç ikonu görünür; tıklanınca kutu sağdan sola yumuşakça genişler. */}
@@ -317,6 +371,37 @@ export default function Navbar() {
                 ))}
               </div>
             </div>
+
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Exams</p>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  to="/exams"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors"
+                >
+                  <ClipboardCheck size={14} aria-hidden="true" /> All exams
+                </Link>
+                {LEVELS.map((level) => (
+                  <Link
+                    key={level.code}
+                    to={`/exams/${level.code}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-full border border-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors"
+                  >
+                    {level.code} Exam
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link
+              to="/placement-test"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 rounded-lg border border-emerald-200 px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
+            >
+              <Gauge size={16} strokeWidth={1.75} aria-hidden="true" /> Level Test
+            </Link>
 
             <Link
               to="/school"

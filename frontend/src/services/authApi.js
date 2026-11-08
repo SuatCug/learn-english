@@ -30,6 +30,20 @@ export const authApi = createApi({
     googleLogin: builder.mutation({
       query: ({ credential }) => ({ url: '/auth/google', method: 'POST', body: { credential } }),
     }),
+    // Şifremi unuttum: kod gönder → kodu doğrula (resetToken döner) → yeni şifreyi kaydet.
+    forgotPassword: builder.mutation({
+      query: (email) => ({ url: '/auth/forgot-password', method: 'POST', body: { email } }),
+    }),
+    verifyResetCode: builder.mutation({
+      query: ({ email, code }) => ({ url: '/auth/verify-reset-code', method: 'POST', body: { email, code } }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({ email, resetToken, password }) => ({
+        url: '/auth/reset-password',
+        method: 'POST',
+        body: { email, resetToken, password },
+      }),
+    }),
     resendVerification: builder.mutation({
       query: (email) => ({ url: '/auth/resend-verification', method: 'POST', body: { email } }),
     }),
@@ -43,4 +57,7 @@ export const {
   useVerifyEmailCodeMutation,
   useGoogleLoginMutation,
   useResendVerificationMutation,
+  useForgotPasswordMutation,
+  useVerifyResetCodeMutation,
+  useResetPasswordMutation,
 } = authApi;

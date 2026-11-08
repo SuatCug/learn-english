@@ -39,4 +39,32 @@ const resendVerificationRules = [
 // Google Identity Services'ten gelen ID token (JWT).
 const googleLoginRules = [body('credential').isString().notEmpty().withMessage('Google kimlik bilgisi eksik.')];
 
-module.exports = { registerRules, loginRules, verifyEmailRules, resendVerificationRules, googleLoginRules };
+const emailRule = () => body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail();
+
+const forgotPasswordRules = [emailRule()];
+
+const verifyResetCodeRules = [
+  emailRule(),
+  body('code').trim().matches(/^\d{6}$/).withMessage('Kod 6 haneli olmalıdır.'),
+];
+
+const resetPasswordRules = [
+  emailRule(),
+  body('resetToken')
+    .isString()
+    .isHexadecimal()
+    .isLength({ min: 64, max: 64 })
+    .withMessage('Şifre sıfırlama isteği geçersiz.'),
+  body('password').isLength({ min: 6 }).withMessage('Şifre en az 6 karakter olmalıdır.'),
+];
+
+module.exports = {
+  registerRules,
+  loginRules,
+  verifyEmailRules,
+  resendVerificationRules,
+  googleLoginRules,
+  forgotPasswordRules,
+  verifyResetCodeRules,
+  resetPasswordRules,
+};

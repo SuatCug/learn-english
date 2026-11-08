@@ -5,13 +5,15 @@ const { normalizeEmail } = require('validator');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const { generateToken } = require('../utils/jwt.util');
-const { sendVerificationEmail } = require('../utils/mail.util');
+const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/mail.util');
 const { User } = require('../models');
 
 const VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 const CODE_TTL_MS = 30 * 60 * 1000;
 const MAX_CODE_ATTEMPTS = 5;
 const RESEND_COOLDOWN_MS = 60 * 1000;
+const RESET_CODE_TTL_MS = 15 * 60 * 1000;
+const RESET_TOKEN_TTL_MS = 15 * 60 * 1000;
 
 const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
 
@@ -234,4 +236,124 @@ const googleLogin = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { register, login, verifyEmail, resendVerification, googleLogin };
+// ---- Şifremi unuttum ----
+// 1) forgotPassword: e-postaya 6 haneli kod gönderilir.
+// 2) verifyResetCode: kod doğruysa kısa ömürlü, tek kullanımlık bir sıfırlama izni (resetToken) döner.
+// 3) resetPassword: bu izinle yeni şifre kaydedilir ve kullanıcı oturum açmış olur.
+// Hangi e-postaların kayıtlı olduğunu sızdırmamak için 1. adım her durumda aynı yanıtı verir.
+
+const RESET_SELECT =
+  '+passwordResetCode +passwordResetCodeExpires +passwordResetAttempts +passwordResetSentAt +passwordResetToken +passwordResetTokenExpires';
+
+const clearPasswordReset = (user) => {
+  user.passwordResetCode = undefined;
+  user.passwordResetCodeExpires = undefined;
+  user.passwordResetAttempts = undefined;
+  user.passwordResetSentAt = undefined;
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpires = undefined;
+};
+
+const forgotPassword = asyncHandler(async (req, res) => {
+  const user = await User.findOne({ email: req.body.email }).select(RESET_SELECT);
+
+  if (user) {
+    const sentAt = user.passwordResetSentAt?.getTime() ?? 0;
+    if (Date.now() - sentAt < RESEND_COOLDOWN_MS) {
+      throw new ApiError(429, 'Yeni bir kod istemeden önce biraz bekle.');
+    }
+    const code = crypto.randomInt(0, 1_000_000).toString().padStart(6, '0');
+    user.passwordResetCode = hashToken(`reset:${user._id}:${code}`);
+    user.passwordResetCodeExpires = new Date(Date.now() + RESET_CODE_TTL_MS);
+    user.passwordResetAttempts = 0;
+    user.passwordResetSentAt = new Date();
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    await user.save();
+    try {
+      await sendPasswordResetEmail(user, { code });
+    } catch (err) {
+      // Mail gidemediyse kod geçersiz sayılır ve bekleme süresi başlamaz; kullanıcı hemen tekrar deneyebilir.
+      clearPasswordReset(user);
+      await user.save();
+      throw err;
+    }
+  }
+
+  res.json({
+    success: true,
+    message: 'Bu e-posta adresiyle kayıtlı bir hesap varsa şifre sıfırlama kodu gönderildi.',
+  });
+});
+
+const verifyResetCode = asyncHandler(async (req, res) => {
+  const { email, code } = req.body;
+  const invalid = 'Kod hatalı veya süresi dolmuş.';
+
+  const user = await User.findOne({ email }).select(RESET_SELECT);
+  if (!user || !user.passwordResetCode) throw new ApiError(400, invalid);
+  if (user.passwordResetCodeExpires <= new Date()) {
+    throw new ApiError(400, 'Kodun süresi doldu. Yeni bir kod iste.', [], 'CODE_EXPIRED');
+  }
+  if ((user.passwordResetAttempts ?? 0) >= MAX_CODE_ATTEMPTS) {
+    throw new ApiError(429, 'Çok fazla hatalı deneme yaptın. Yeni bir kod iste.', [], 'CODE_EXPIRED');
+  }
+
+  const expected = Buffer.from(user.passwordResetCode, 'hex');
+  const actual = Buffer.from(hashToken(`reset:${user._id}:${code}`), 'hex');
+  if (!crypto.timingSafeEqual(expected, actual)) {
+    user.passwordResetAttempts = (user.passwordResetAttempts ?? 0) + 1;
+    await user.save();
+    throw new ApiError(400, invalid);
+  }
+
+  // Kod bir kez kullanılır; yerine şifre değiştirme ekranında kullanılacak izin verilir.
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  user.passwordResetCode = undefined;
+  user.passwordResetCodeExpires = undefined;
+  user.passwordResetAttempts = undefined;
+  user.passwordResetToken = hashToken(resetToken);
+  user.passwordResetTokenExpires = new Date(Date.now() + RESET_TOKEN_TTL_MS);
+  await user.save();
+
+  res.json({ success: true, message: 'Kod doğrulandı. Yeni şifreni belirleyebilirsin.', data: { resetToken } });
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, resetToken, password } = req.body;
+
+  const user = await User.findOne({ email }).select(RESET_SELECT);
+  const valid =
+    user?.passwordResetToken &&
+    user.passwordResetTokenExpires > new Date() &&
+    crypto.timingSafeEqual(Buffer.from(user.passwordResetToken, 'hex'), Buffer.from(hashToken(resetToken), 'hex'));
+  if (!valid) {
+    throw new ApiError(400, 'Şifre sıfırlama süren doldu. Lütfen baştan tekrar dene.', [], 'RESET_EXPIRED');
+  }
+
+  user.password = await bcrypt.hash(password, 10);
+  user.hasPassword = true;
+  // Kodu e-postasına alıp girebildiği için adresin sahibi olduğu kanıtlandı.
+  if (user.emailVerified === false) user.emailVerified = true;
+  clearPasswordReset(user);
+  await user.save();
+
+  const token = generateToken({ id: user._id, role: user.role });
+
+  res.json({
+    success: true,
+    message: 'Şifren değiştirildi.',
+    data: { user: user.toSafeJSON(), token },
+  });
+});
+
+module.exports = {
+  register,
+  login,
+  verifyEmail,
+  resendVerification,
+  googleLogin,
+  forgotPassword,
+  verifyResetCode,
+  resetPassword,
+};

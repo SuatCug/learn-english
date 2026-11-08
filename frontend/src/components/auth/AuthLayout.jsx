@@ -1,14 +1,15 @@
-import heroImage from '@/assets/home-hero.webp';
+// Giriş ekranı fotoğrafı (ana sayfadakinden farklı): Unsplash photo-1573165850883-9b0e18c44bd2, Unsplash lisansı.
+import heroImage from '@/assets/login-hero.webp';
 
 // Auth ekranları (Login/Register/Verify) için ortak iki panelli yerleşim.
-// Solda: navbar ile aynı koyu zemin üzerinde ana sayfadaki fotoğraf ve slogan.
+// Solda: navbar ile aynı koyu zemin üzerinde fotoğraf ve slogan.
 // Sağda: beyaz form paneli. Mobilde fotoğraf paneli yerine üstte kısa, koyu bir şerit görünür.
 function HeroPhoto({ className = '' }) {
   return (
     <img
       src={heroImage}
       alt=""
-      className={`absolute inset-0 w-full h-full object-cover object-[35%_center] -scale-x-100 ${className}`}
+      className={`absolute inset-0 w-full h-full object-cover object-[center_30%] -scale-x-100 ${className}`}
     />
   );
 }
