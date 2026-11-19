@@ -20,6 +20,9 @@ import SchoolPage from '@/pages/SchoolPage';
 import ClassroomDetailPage from '@/pages/ClassroomDetailPage';
 import ClassroomStudentsPage from '@/pages/ClassroomStudentsPage';
 import LiveGamePage from '@/pages/LiveGamePage';
+import AiChatPage from '@/pages/AiChatPage';
+import AiLevelsPage from '@/pages/AiLevelsPage';
+import AiTopicsPage from '@/pages/AiTopicsPage';
 
 function RequireAuth({ children }) {
   const token = useSelector((state) => state.auth.token);
@@ -153,6 +156,54 @@ export default function App() {
           element={
             <RequireAuth>
               <LiveGamePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/ai-talk"
+          element={
+            <RequireAuth>
+              <AiLevelsPage key="talk" section="talk" />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/ai-talk/level/:level"
+          element={
+            <RequireAuth>
+              <AiTopicsPage key="talk" section="talk" />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/ai-talk/:id"
+          element={
+            <RequireAuth>
+              <AiChatPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/ai-chat"
+          element={
+            <RequireAuth>
+              <AiLevelsPage key="chat" section="chat" />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/ai-chat/level/:level"
+          element={
+            <RequireAuth>
+              <AiTopicsPage key="chat" section="chat" />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/ai-chat/:id"
+          element={
+            <RequireAuth>
+              <AiChatPage />
             </RequireAuth>
           }
         />

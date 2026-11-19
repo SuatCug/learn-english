@@ -5,4 +5,5 @@ module.exports = {
   Badge: require('./badge.model'),
   Classroom: require('./classroom.model'),
   Assignment: require('./assignment.model'),
+  Conversation: require('./conversation.model'),
 };

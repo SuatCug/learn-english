@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, ClipboardCheck, Clipboard, Gauge } from 'lucide-react';
+import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, ClipboardCheck, Clipboard, Gauge, Mic, MessageCircle } from 'lucide-react';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
+import { AI_SECTIONS, levelPath } from '@/lib/aiSections';
 import { useGetTopicsQuery } from '@/services/topicsApi';
 import AvatarMenu from './AvatarMenu';
 import BrandMark from '@/components/BrandMark';
@@ -117,6 +118,72 @@ function ExamsMenu({ active }) {
   );
 }
 
+// Lucide çizgi stilinde mikrofon; gövdesi seviye kodu (A1…) sığsın diye Lucide'ninkinden geniş.
+function MicOutline({ className }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="36"
+      height="36"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect x="6.5" y="1.5" width="11" height="14" rx="5.5" />
+      <path d="M19.5 10.5v1a7.5 7.5 0 0 1-15 0v-1" />
+      <line x1="12" y1="19" x2="12" y2="22.5" />
+    </svg>
+  );
+}
+
+// "AI Talk" (sesli) ve "AI Chat" (yazılı): tıklayınca A1–B2 kart sayfası açılır;
+// üzerine gelince seviyeler listelenir, seviye seçilince o seviyenin konu kartları açılır.
+function AiMenu({ section, active }) {
+  const isTalk = section.key === 'talk';
+  return (
+    <div className="relative group">
+      <Link to={section.path} className={`whitespace-nowrap ${navItemClass(active)}`}>
+        {section.label}
+      </Link>
+
+      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150">
+        <div
+          className="min-w-[250px] bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] overflow-hidden"
+          style={{ '--menu-color': section.color }}
+        >
+          {LEVELS.map(({ code, name }) => (
+            <Link
+              key={code}
+              to={levelPath(section.key, code)}
+              className="flex items-center gap-2.5 px-4 py-2 whitespace-nowrap text-[15px] font-light text-gray-500 hover:bg-gray-100 hover:text-[var(--menu-color)] transition-colors"
+            >
+              {/* Diğer menülerle aynı tarz: ikonun içinde seviye kodu. Talking: mikrofon, Chatting: konuşma balonu. */}
+              <span className="relative w-9 h-9 shrink-0 flex items-center justify-center" style={{ color: section.color }}>
+                {isTalk ? (
+                  <>
+                    <MicOutline className="absolute inset-0" />
+                    <span className="relative -translate-y-[5px] font-medium leading-none text-[8.5px]">{code}</span>
+                  </>
+                ) : (
+                  <>
+                    <MessageCircle size={36} strokeWidth={1.1} className="absolute inset-0" aria-hidden="true" />
+                    <span className="relative font-medium leading-none text-[10px]">{code}</span>
+                  </>
+                )}
+              </span>
+              {code} {isTalk ? 'Speaking' : 'Chat'} · {name}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -186,6 +253,8 @@ export default function Navbar() {
               active={location.pathname.startsWith(`/topics/${category.slug}`)}
             />
           ))}
+          <AiMenu section={AI_SECTIONS.chat} active={location.pathname.startsWith(AI_SECTIONS.chat.path)} />
+          <AiMenu section={AI_SECTIONS.talk} active={location.pathname.startsWith(AI_SECTIONS.talk.path)} />
           <ExamsMenu active={location.pathname.startsWith('/exams')} />
           <Link
             to="/placement-test"
@@ -403,6 +472,23 @@ export default function Navbar() {
             >
               <Gauge size={16} strokeWidth={1.75} aria-hidden="true" /> Level Test
             </Link>
+
+            <div className="grid grid-cols-2 gap-2">
+              <Link
+                to={AI_SECTIONS.chat.path}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 rounded-lg border border-indigo-200 px-4 py-2.5 text-sm font-medium text-indigo-700 hover:bg-indigo-50 transition-colors"
+              >
+                <MessageCircle size={16} strokeWidth={1.75} aria-hidden="true" /> {AI_SECTIONS.chat.label}
+              </Link>
+              <Link
+                to={AI_SECTIONS.talk.path}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 rounded-lg border border-teal-200 px-4 py-2.5 text-sm font-medium text-teal-700 hover:bg-teal-50 transition-colors"
+              >
+                <Mic size={16} strokeWidth={1.75} aria-hidden="true" /> {AI_SECTIONS.talk.label}
+              </Link>
+            </div>
 
             <Link
               to="/school"

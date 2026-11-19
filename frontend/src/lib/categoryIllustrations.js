@@ -21,6 +21,8 @@ export const CATEGORY_ILLUSTRATIONS = {
 // reading     1532012197267 / 1491841550275 / 1507842217343 / 1524995997946
 // writing     1434030216411 / 1517842645767 / 1456324504439 / 1488190211105
 // listening   1524678606370 / 1505740420928 / 1546435770 / 1478737270239
+// talk (AI Talk sayfası) 1758613171260 / 1764173039259 / 1714974528833 / 1772419216340
+// chat (AI Chat sayfası) 1758874383881 / 1758611971897 / 1713946598698 / 1647334355585
 const levelImages = import.meta.glob('@/assets/levels/*.webp', { eager: true, import: 'default' });
 const levelImage = (category, level) =>
   Object.entries(levelImages).find(([path]) => path.endsWith(`/${category}-${level.toLowerCase()}.webp`))?.[1];

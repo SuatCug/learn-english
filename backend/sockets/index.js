@@ -2,6 +2,7 @@ const { verifyToken } = require('../utils/jwt.util');
 const { User, Classroom } = require('../models');
 const { appendProgressEntry } = require('../utils/progress.util');
 const gameSession = require('../services/gameSession.service');
+const registerAiChatSocket = require('./aiChat.socket');
 
 const GAME_OVER_CLEANUP_MS = 30000;
 
@@ -80,6 +81,8 @@ function registerGameSockets(io) {
   });
 
   io.on('connection', (socket) => {
+    registerAiChatSocket(socket);
+
     socket.on('game:create', async ({ classroomId, category, level }, callback) => {
       try {
         const classroom = await Classroom.findById(classroomId);

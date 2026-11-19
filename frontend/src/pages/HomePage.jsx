@@ -1,5 +1,15 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, MessageSquareText, Newspaper, PenLine, Headphones, BarChart3 } from 'lucide-react';
+import {
+  BookOpen,
+  MessageSquareText,
+  Newspaper,
+  PenLine,
+  Headphones,
+  BarChart3,
+  MessageCircle,
+  Mic,
+  ClipboardCheck,
+} from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import TopicsOfTheDay from '@/components/home/TopicsOfTheDay';
@@ -14,6 +24,10 @@ import readingImage from '@/assets/home-reading.webp'; // photo-1497633762265-9d
 import writingImage from '@/assets/home-writing.webp'; // photo-1455390582262-044cdead277a
 import listeningImage from '@/assets/home-listening.webp'; // photo-1484704849700-f032a568e944
 import levelTestImage from '@/assets/home-level-test.webp'; // photo-1606326608606-aa0b62935f2b
+import chattingImage from '@/assets/home-chatting.webp'; // photo-1758876018661-41b3c4012df8
+import talkingImage from '@/assets/home-talking.webp'; // photo-1758270704763-22072a90d3b6
+import examsImage from '@/assets/home-exams.webp'; // photo-1598981457915-aea220950616
+import { AI_SECTIONS } from '@/lib/aiSections';
 
 const BRAND = '#50af31';
 
@@ -84,6 +98,45 @@ const CARDS = [
     levelBase: '/topics/listening',
     to: '/topics/listening',
     cta: 'Start listening',
+  },
+  {
+    key: 'exams',
+    tag: 'Level Exams',
+    title: 'Level Exams',
+    color: BRAND,
+    image: examsImage,
+    Icon: ClipboardCheck,
+    intro: 'Check your progress with a full exam for each level:',
+    outro: 'Each exam tests your grammar, vocabulary, reading, writing and listening, and shows your score at the end.',
+    levelBase: '/exams',
+    to: '/exams',
+    cta: 'Go to the exams',
+  },
+  {
+    key: 'talking',
+    tag: 'Talking',
+    title: 'Speaking Practice',
+    color: AI_SECTIONS.talk.color,
+    image: talkingImage,
+    Icon: Mic,
+    intro: 'Practise speaking out loud with your microphone. Your partner listens and answers with a natural voice. Topics for',
+    outro: 'Role-plays like hotels, doctors and interviews help you speak with confidence.',
+    levelBase: `${AI_SECTIONS.talk.path}/level`,
+    to: AI_SECTIONS.talk.path,
+    cta: 'Start talking',
+  },
+  {
+    key: 'chatting',
+    tag: 'Chatting',
+    title: 'Chatting Practice',
+    color: AI_SECTIONS.chat.color,
+    image: chattingImage,
+    Icon: MessageCircle,
+    intro: 'Chat in English with a friendly partner on real-life topics, from ordering food to job interviews. Topics for',
+    outro: 'Your partner answers at your level and gives you a tip when you make a mistake.',
+    levelBase: `${AI_SECTIONS.chat.path}/level`,
+    to: AI_SECTIONS.chat.path,
+    cta: 'Start chatting',
   },
   {
     key: 'level-test',
@@ -184,7 +237,8 @@ export default function HomePage() {
           </h1>
           <p className="mt-3 sm:mt-4 text-white/90 text-[15px] sm:text-lg font-light leading-snug">
             Grammar lessons with exercises and clear explanations, vocabulary sets, reading tests, writing lessons
-            with feedback, instant marking, a placement test, live classroom quizzes and much more!
+            with feedback, instant marking, a placement test, live classroom quizzes, chatting and speaking practice
+            and much more!
           </p>
         </div>
       </header>
