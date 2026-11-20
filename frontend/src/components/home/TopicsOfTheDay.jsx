@@ -1,17 +1,20 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
 import { useSelector } from 'react-redux';
 import { useGetTopicsQuery } from '@/services/topicsApi';
 import { useGetMeQuery } from '@/services/usersApi';
 import { cloudinaryUrl } from '@/lib/cloudinary';
 import FadeImage from '@/components/FadeImage';
 import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrations';
+import { tk } from '@/i18n';
 
 const CATEGORIES = [
-  { slug: 'grammar', label: 'Grammar', color: '#1a8ec1' },
-  { slug: 'vocabulary', label: 'Vocabulary', color: '#ff6699' },
-  { slug: 'reading', label: 'Reading', color: '#ed1c24' },
-  { slug: 'writing', label: 'Writing', color: '#a84d98' },
-  { slug: 'listening', label: 'Listening', color: '#f7741d' },
+  { slug: 'grammar', label: tk('Grammar'), color: '#1a8ec1' },
+  { slug: 'vocabulary', label: tk('Vocabulary'), color: '#ff6699' },
+  { slug: 'reading', label: tk('Reading'), color: '#ed1c24' },
+  { slug: 'writing', label: tk('Writing'), color: '#a84d98' },
+  { slug: 'listening', label: tk('Listening'), color: '#f7741d' },
 ];
 
 const DEFAULT_LEVEL = 'A1';
@@ -33,12 +36,13 @@ const pickTopicOfTheDay = (topics, completedIds, salt) => {
 };
 
 function TopicCard({ category, topic, isLoading }) {
+  const { t } = useTranslation();
   if (isLoading || !topic) {
     return (
       <div className="rounded-xl border border-[#f0f0f0] bg-white overflow-hidden">
         <div className={`${CARD_IMAGE_BOX} bg-gray-100`} />
         <div className="p-4 min-h-[5.5rem]">
-          {!isLoading && <p className="text-sm text-gray-400">No topics yet for this level.</p>}
+          {!isLoading && <p className="text-sm text-gray-400">{t('No topics yet for this level.')}</p>}
         </div>
       </div>
     );
@@ -57,14 +61,14 @@ function TopicCard({ category, topic, isLoading }) {
           className="absolute top-3 right-0 text-white font-bold text-sm px-3 py-1"
           style={{ backgroundColor: category.color }}
         >
-          {category.label}
+          {t(category.label)}
         </span>
       </div>
       <div className="p-4 min-h-[5.5rem] flex flex-col justify-center">
         <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: category.color }}>
-          {topic.level} · {category.label}
+          {topic.level} · {t(category.label)}
         </p>
-        <p className="mt-1 text-[15px] font-medium text-gray-800 leading-snug line-clamp-2">{topic.title}</p>
+        <p className="mt-1 text-[15px] font-medium text-gray-800 leading-snug line-clamp-2">{localized(topic)}</p>
       </div>
     </Link>
   );
@@ -77,6 +81,7 @@ function CategoryTopic({ category, level, completedIds, salt }) {
 }
 
 export default function TopicsOfTheDay() {
+  const { t } = useTranslation();
   const token = useSelector((state) => state.auth.token);
   const storedUser = useSelector((state) => state.auth.user);
   const { data: meData } = useGetMeQuery(undefined, { skip: !token });
@@ -90,18 +95,18 @@ export default function TopicsOfTheDay() {
     <section className="max-w-[1400px] mx-auto px-4 sm:px-8 pb-12 sm:pb-16">
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl font-black text-gray-800">
-          Topics of the day <span className="text-[#50af31]">· {level}</span>
+          {t('Topics of the day')} <span className="text-[#50af31]">· {level}</span>
         </h2>
         <p className="mt-2 text-[15px] text-gray-500">
           {hasLevel ? (
-            <>One lesson from each skill, picked for your level. New picks every day!</>
+            t('One lesson from each skill, picked for your level. New picks every day!')
           ) : (
             <>
-              Showing {DEFAULT_LEVEL} lessons.{' '}
+              {t('Showing {{level}} lessons.', { level: DEFAULT_LEVEL })}{' '}
               <Link to="/placement-test" className="text-[#50af31] font-medium hover:underline">
-                Take the placement test
-              </Link>{' '}
-              to get lessons for your level.
+                {t('Take the placement test')}
+              </Link>
+              {t(' to get lessons for your level.')}
             </>
           )}
         </p>

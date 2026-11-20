@@ -7,11 +7,15 @@ import Footer from '@/components/layout/Footer';
 import { useGetClassroomQuery } from '@/services/classroomApi';
 import { getSocket, disconnectSocket } from '@/lib/socket';
 import { CATEGORIES, LEVELS } from '@/lib/constants';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
+import i18n from '@/i18n';
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const GAME_CATEGORIES = CATEGORIES.filter((c) => c.slug === 'grammar' || c.slug === 'vocabulary');
 
 function RoomCodeBadge({ roomCode }) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -26,7 +30,7 @@ function RoomCodeBadge({ roomCode }) {
         }
       }}
       className="inline-flex max-w-full items-center gap-2 sm:gap-3 rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50 px-5 sm:px-8 py-3 sm:py-4 hover:bg-indigo-100 transition-colors"
-      title="Copy room code"
+      title={t('Copy room code')}
     >
       <span className="text-2xl sm:text-3xl font-extrabold tracking-[0.2em] sm:tracking-[0.3em] text-indigo-700 break-all">{roomCode}</span>
       {copied ? <Check className="h-5 w-5 shrink-0 text-emerald-600" /> : <Copy className="h-5 w-5 shrink-0 text-indigo-400" />}
@@ -35,8 +39,9 @@ function RoomCodeBadge({ roomCode }) {
 }
 
 function PlayerList({ players }) {
+  const { t } = useTranslation();
   if (!players.length) {
-    return <p className="text-sm text-gray-400 text-center py-6">Waiting for players to join…</p>;
+    return <p className="text-sm text-gray-400 text-center py-6">{t('Waiting for players to join…')}</p>;
   }
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -56,11 +61,12 @@ function PlayerList({ players }) {
 }
 
 function GameSetupPicker({ isHost, onCreate, creating, error }) {
+  const { t } = useTranslation();
   const [category, setCategory] = useState('grammar');
   const [level, setLevel] = useState('A1');
 
   if (!isHost) {
-    return <p className="text-center text-gray-400 text-sm py-16">Only the teacher can start a new game.</p>;
+    return <p className="text-center text-gray-400 text-sm py-16">{t('Only the teacher can start a new game.')}</p>;
   }
 
   return (
@@ -70,13 +76,13 @@ function GameSetupPicker({ isHost, onCreate, creating, error }) {
           <Gamepad2 className="h-4 w-4" />
         </div>
         <div>
-          <h2 className="text-sm font-semibold text-gray-900">Set up your live game</h2>
-          <p className="text-xs text-gray-500">Questions are pulled from existing topics</p>
+          <h2 className="text-sm font-semibold text-gray-900">{t('Set up your live game')}</h2>
+          <p className="text-xs text-gray-500">{t('Questions are pulled from existing topics')}</p>
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Category</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">{t('Category')}</p>
         <div className="grid grid-cols-2 gap-3">
           {GAME_CATEGORIES.map(({ slug, label, icon }) => (
             <button
@@ -90,14 +96,14 @@ function GameSetupPicker({ isHost, onCreate, creating, error }) {
               }`}
             >
               <span className="text-lg">{icon}</span>
-              <span className="text-sm font-medium">{label}</span>
+              <span className="text-sm font-medium">{t(label)}</span>
             </button>
           ))}
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Level</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">{t('Level')}</p>
         <div className="flex flex-wrap gap-2">
           {LEVELS.map(({ code }) => (
             <button
@@ -125,17 +131,18 @@ function GameSetupPicker({ isHost, onCreate, creating, error }) {
         className="w-full flex items-center justify-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold text-sm px-5 py-3 transition-colors"
       >
         <Gamepad2 className="h-4 w-4" />
-        {creating ? 'Creating room…' : 'Create Game'}
+        {creating ? t('Creating room…') : t('Create game')}
       </button>
     </div>
   );
 }
 
 function WaitingRoom({ isHost, roomCode, players, onStart, starting, joinError }) {
+  const { t } = useTranslation();
   return (
     <div className="max-w-2xl mx-auto text-center space-y-8">
       <div>
-        <p className="text-sm text-gray-500 mb-3">{isHost ? 'Share this code with your students' : 'Waiting room'}</p>
+        <p className="text-sm text-gray-500 mb-3">{isHost ? t('Share this code with your students') : t('Waiting room')}</p>
         <RoomCodeBadge roomCode={roomCode} />
       </div>
 
@@ -156,10 +163,10 @@ function WaitingRoom({ isHost, roomCode, players, onStart, starting, joinError }
           onClick={onStart}
           className="rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-sm px-8 py-3 transition-colors"
         >
-          {starting ? 'Starting…' : 'Start Game'}
+          {starting ? t('Starting…') : t('Start game')}
         </button>
       ) : (
-        <p className="text-sm text-gray-400">Waiting for the host to start the game…</p>
+        <p className="text-sm text-gray-400">{t('Waiting for the host to start the game…')}</p>
       )}
     </div>
   );
@@ -178,11 +185,12 @@ function TimerBar({ timeLeftMs, durationMs }) {
 }
 
 function QuestionView({ isHost, question, timeLeftMs, selectedOption, onAnswer, reveal }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-2xl border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-3 text-xs text-gray-400 font-medium">
         <span>
-          Question {question.index + 1} / {question.total}
+          {t('Question {{n}} / {{total}}', { n: question.index + 1, total: question.total })}
         </span>
         <span>{Math.ceil(timeLeftMs / 1000)}s</span>
       </div>
@@ -221,7 +229,7 @@ function QuestionView({ isHost, question, timeLeftMs, selectedOption, onAnswer, 
         })}
       </div>
 
-      {isHost && !reveal && <p className="text-xs text-gray-400 mt-4">Live — students are answering…</p>}
+      {isHost && !reveal && <p className="text-xs text-gray-400 mt-4">{t('Live — students are answering…')}</p>}
       {reveal && (
         <p className="text-sm text-gray-500 mt-4">
           {reveal.correctCount} player{reveal.correctCount === 1 ? '' : 's'} answered correctly. Next question coming up…
@@ -232,15 +240,16 @@ function QuestionView({ isHost, question, timeLeftMs, selectedOption, onAnswer, 
 }
 
 function Leaderboard({ players }) {
+  const { t } = useTranslation();
   const top = players.slice(0, 8);
   const max = Math.max(1, ...top.map((p) => p.score));
   return (
     <div className="rounded-2xl border border-gray-100 p-5">
       <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3 flex items-center gap-1.5">
         <Trophy className="h-3.5 w-3.5" />
-        Leaderboard
+        {t('Leaderboard')}
       </p>
-      {!top.length && <p className="text-sm text-gray-400">No scores yet.</p>}
+      {!top.length && <p className="text-sm text-gray-400">{t('No scores yet.')}</p>}
       <div className="space-y-2.5">
         {top.map((p) => (
           <div key={p.id}>
@@ -268,12 +277,13 @@ const MEDAL_ROW_CLASS = {
 };
 
 function GameOverScreen({ finalLeaderboard, classroomId, isHost }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <div className="max-w-xl mx-auto text-center space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Game Over!</h2>
+      <h2 className="text-2xl font-bold text-gray-900">{t('Game over!')}</h2>
       <div className="rounded-2xl border border-gray-100 p-5 text-left">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">Final Leaderboard</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">{t('Final leaderboard')}</p>
         <div className="space-y-2">
           {finalLeaderboard.map((p) => (
             <div
@@ -296,7 +306,7 @@ function GameOverScreen({ finalLeaderboard, classroomId, isHost }) {
           to={`/classroom/${classroomId}`}
           className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 transition-colors"
         >
-          Back to Classroom
+          {t('Back to classroom')}
         </Link>
         {isHost && (
           <button
@@ -304,7 +314,7 @@ function GameOverScreen({ finalLeaderboard, classroomId, isHost }) {
             onClick={() => navigate(`/classroom/${classroomId}/game/new`, { replace: true })}
             className="rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 transition-colors"
           >
-            Start Another Game
+            {t('Start another game')}
           </button>
         )}
       </div>
@@ -313,6 +323,7 @@ function GameOverScreen({ finalLeaderboard, classroomId, isHost }) {
 }
 
 export default function LiveGamePage() {
+  const { t } = useTranslation();
   const { id: classroomId, roomCode } = useParams();
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
@@ -320,6 +331,7 @@ export default function LiveGamePage() {
 
   const { data } = useGetClassroomQuery(classroomId);
   const classroom = data?.data?.classroom;
+  usePageTitle(t('Live game'));
   const isHost = Boolean(classroom && classroom.teacherId?._id === currentUserId);
 
   const [phase, setPhase] = useState(roomCode === 'new' ? 'setup' : 'connecting');
@@ -389,7 +401,7 @@ export default function LiveGamePage() {
         if (ack?.ok) {
           setPhase((prev) => (prev === 'connecting' ? 'waiting' : prev));
         } else {
-          setJoinError(ack?.message || 'Could not join this game.');
+          setJoinError(ack?.message || i18n.t("Couldn't join this game."));
           setPhase('error');
         }
       });
@@ -423,7 +435,7 @@ export default function LiveGamePage() {
           setPhase('waiting');
           navigate(`/classroom/${classroomId}/game/${ack.roomCode}`, { replace: true });
         } else {
-          setSetupError(ack?.message || 'Could not create the game.');
+          setSetupError(ack?.message || t("Couldn't create the game."));
         }
       });
     };
@@ -435,7 +447,7 @@ export default function LiveGamePage() {
     setStarting(true);
     getSocket(token).emit('game:start', { roomCode }, (ack) => {
       setStarting(false);
-      if (!ack?.ok) setJoinError(ack?.message || 'Could not start the game.');
+      if (!ack?.ok) setJoinError(ack?.message || t("Couldn't start the game."));
     });
   };
 
@@ -452,13 +464,13 @@ export default function LiveGamePage() {
       <div className="bg-indigo-600">
         <h1 className="max-w-6xl mx-auto px-6 py-4 text-center text-white font-bold tracking-wide uppercase text-sm sm:text-base flex items-center justify-center gap-2">
           <Gamepad2 className="h-4 w-4" />
-          {classroom?.name ? `${classroom.name} — Live Game` : 'Live Game'}
+          {classroom?.name ? `${classroom.name} — ${t('Live game')}` : t('Live game')}
         </h1>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-6 flex-1 w-full">
         <Link to={`/classroom/${classroomId}`} className="inline-block text-sm text-gray-500 hover:text-indigo-600 mb-6">
-          ← Back to room
+          ← {t('Back to room')}
         </Link>
 
         {phase === 'setup' && (
@@ -466,7 +478,7 @@ export default function LiveGamePage() {
         )}
 
         {phase === 'error' && (
-          <p className="text-center text-rose-500 text-sm py-16">{joinError || 'Something went wrong.'}</p>
+          <p className="text-center text-rose-500 text-sm py-16">{joinError || t('Something went wrong. Please try again.')}</p>
         )}
 
         {phase === 'waiting' && (

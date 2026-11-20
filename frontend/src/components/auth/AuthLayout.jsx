@@ -1,5 +1,7 @@
 // Giriş ekranı fotoğrafı (ana sayfadakinden farklı): Unsplash photo-1573165850883-9b0e18c44bd2, Unsplash lisansı.
 import heroImage from '@/assets/login-hero.webp';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 
 // Auth ekranları (Login/Register/Verify) için ortak iki panelli yerleşim.
 // Solda: navbar ile aynı koyu zemin üzerinde fotoğraf ve slogan.
@@ -15,6 +17,7 @@ function HeroPhoto({ className = '' }) {
 }
 
 export default function AuthLayout({ children }) {
+  const { t } = useTranslation();
   return (
     <div className="min-h-dvh lg:h-dvh grid lg:grid-cols-2">
       {/* Masaüstü: sol fotoğraf paneli */}
@@ -24,16 +27,19 @@ export default function AuthLayout({ children }) {
         <div className="p-12 max-w-lg">
           <p className="text-white text-[40px] font-bold leading-none tracking-wide">
             learn english
-            <span className="block mt-2 text-[0.8em] text-emerald-500">Take your learning with you!</span>
+            <span className="block mt-2 text-[0.8em] text-emerald-500">{t('Take your learning with you!')}</span>
           </p>
           <p className="mt-4 text-white/85 text-lg font-light leading-snug">
-            Grammar, vocabulary, reading and writing lessons from A1 to B2, with instant feedback on every
-            exercise.
+            {t('Grammar, vocabulary, reading and writing lessons from A1 to B2, with instant feedback on every exercise.')}
           </p>
         </div>
       </div>
 
       <div className="flex flex-col bg-white overflow-y-auto">
+        {/* Giriş/kayıt sayfalarında navbar yok; dil seçimi burada. */}
+        <div className="flex justify-end px-4 pt-4 sm:px-6">
+          <LanguageSwitcher dark={false} />
+        </div>
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-5 sm:py-8">
           {/* 400px: Google butonunun izin verilen en büyük genişliği; form elemanları onunla aynı genişlikte olsun. */}
           <div className="w-full max-w-[400px]">{children}</div>

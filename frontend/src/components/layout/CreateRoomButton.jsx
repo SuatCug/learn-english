@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useCreateClassroomMutation } from '@/services/classroomApi';
 
 export default function CreateRoomButton({ trigger, open: openProp, onOpenChange } = {}) {
+  const { t } = useTranslation();
   const isPremium = useSelector((state) => state.auth.user?.isPremium);
   const navigate = useNavigate();
   const [internalOpen, setInternalOpen] = useState(false);
@@ -37,7 +39,7 @@ export default function CreateRoomButton({ trigger, open: openProp, onOpenChange
       const res = await createClassroom({ name }).unwrap();
       setCreatedClassroom(res.data.classroom);
     } catch (err) {
-      setError(err?.data?.message || 'Sınıf oluşturulamadı.');
+      setError(err?.data?.message || t("Couldn't create the classroom."));
     }
   };
 
@@ -51,7 +53,7 @@ export default function CreateRoomButton({ trigger, open: openProp, onOpenChange
           onClick={() => setOpen(true)}
           className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-emerald-200 text-emerald-700 text-sm font-medium px-4 py-1.5 hover:bg-emerald-50 transition-colors"
         >
-          <span aria-hidden="true">➕</span> Create Room
+          <span aria-hidden="true">➕</span> {t('Create Room')}
         </button>
       )}
 
@@ -60,15 +62,15 @@ export default function CreateRoomButton({ trigger, open: openProp, onOpenChange
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
             {!createdClassroom ? (
               <form onSubmit={handleCreate}>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Create a classroom</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">{t('Create a classroom')}</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  Students will join with a 6-character code once the room is created.
+                  {t('Students will join with a 6-character code once the room is created.')}
                 </p>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. 10-A English"
+                  placeholder={t('e.g. 10-A English')}
                   required
                   minLength={2}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-3"
@@ -80,22 +82,22 @@ export default function CreateRoomButton({ trigger, open: openProp, onOpenChange
                     onClick={handleClose}
                     className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
                   >
-                    Cancel
+                    {t('Cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading}
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition-colors"
                   >
-                    {isLoading ? 'Creating...' : 'Create'}
+                    {isLoading ? t('Creating...') : t('Create')}
                   </button>
                 </div>
               </form>
             ) : (
               <div className="text-center">
-                <p className="text-sm text-gray-500 mb-1">Room created!</p>
+                <p className="text-sm text-gray-500 mb-1">{t('Room created!')}</p>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{createdClassroom.name}</h3>
-                <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Join code</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">{t('Join code')}</p>
                 <p className="text-3xl font-extrabold tracking-[0.3em] text-emerald-700 mb-6">
                   {createdClassroom.joinCode}
                 </p>
@@ -105,14 +107,14 @@ export default function CreateRoomButton({ trigger, open: openProp, onOpenChange
                     onClick={handleClose}
                     className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
                   >
-                    Close
+                    {t('Close')}
                   </button>
                   <button
                     type="button"
                     onClick={handleGoToRoom}
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2 transition-colors"
                   >
-                    Go to room →
+                    {t('Go to room →')}
                   </button>
                 </div>
               </div>

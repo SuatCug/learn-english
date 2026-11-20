@@ -9,6 +9,12 @@ const MODEL = process.env.AI_MODEL || 'claude-opus-5-5';
 const DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT) || 50; // kullanıcı başına günlük mesaj
 const MAX_INPUT_CHARS = 4000;
 const HISTORY_LIMIT = 30; // modele gönderilen son mesaj sayısı (maliyet için)
+// Konulu sohbet kuralları: öğrenci TOPIC_TURNS mesaj yazınca sohbet biter ve sonuç ekranı gelir.
+// MIN_TURNS_TO_FINISH mesajdan sonra öğrenci "Bitir" ile erken de bitirebilir.
+const TOPIC_TURNS = Number(process.env.AI_TOPIC_TURNS) || 7;
+const MIN_TURNS_TO_FINISH = 3;
+
+const countUserTurns = (messages) => messages.filter((m) => m.role === 'user').length;
 
 const SYSTEM_PROMPTS = {
   // Sesli konuşma: cevap tarayıcıda sesli okunur, kullanıcının sözleri ses tanımayla yazıya çevrilmiştir.
@@ -64,7 +70,7 @@ async function countTodayMessages(userId) {
 
 // Claude'dan cevabı parça parça (stream) alır. Her yeni metin parçası için onDelta çağrılır.
 // Tamamlanan cevabın metnini döndürür.
-async function streamReply({ mode, level, topic, messages, onDelta }) {
+async function streamReply({ mode, level, topic, messages, lastTurn = false, onDelta }) {
   const history = messages.slice(-HISTORY_LIMIT).map(({ role, content }) => ({ role, content }));
   // Konulu sohbetler AI'nın ilk mesajıyla (opener) başlar; geçmiş bir kullanıcı mesajıyla başlamalı.
   if (history[0]?.role === 'assistant') {
@@ -72,6 +78,9 @@ async function streamReply({ mode, level, topic, messages, onDelta }) {
   }
 
   let system = SYSTEM_PROMPTS[mode](level);
+  // Konuşma sesi kadın (Piper Cori); partner kendini tanıtırken buna uygun olsun, erkek adı uydurmasın.
+  system +=
+    '\n\nIf you introduce yourself or talk about yourself, your name is Emma and you are a woman. In role-plays you keep the role from the scenario (receptionist, doctor...), but you are still a woman.';
   if (topic && topic.slug === 'free-talk') {
     system += `\n\nThis is a free conversation: ${topic.scenario}`;
   } else if (topic) {
@@ -82,6 +91,10 @@ Scenario: ${topic.scenario}
 Every reply must be about this topic. Stay in your role for the whole conversation and keep it moving: ask questions and add new details that fit the scenario, so the learner practises the words and phrases of this topic.
 If the learner writes something off-topic, answer it in one short, friendly sentence, then bring the conversation back to the topic with a question.
 If the learner says they want to finish, close the conversation politely in your role.`;
+  }
+  // Sınırdaki son mesaj: AI cevap verip sohbeti kendi rolünde kapatır, yeni soru sormaz.
+  if (lastTurn) {
+    system += `\n\nThis is the learner's last message in this practice session. Answer it briefly, then close the conversation warmly in your role and say goodbye. Do not ask a new question.`;
   }
 
   const stream = client.beta.messages.stream({
@@ -111,4 +124,96 @@ If the learner says they want to finish, close the conversation politely in your
   return text || "Sorry, I couldn't answer that. Could you say it another way?";
 }
 
-module.exports = { streamReply, countTodayMessages, DAILY_LIMIT, MAX_INPUT_CHARS };
+// Sonuç ekranı için değerlendirmenin şeması (structured output: cevap her zaman bu JSON yapısında gelir).
+const RESULT_SCHEMA = {
+  type: 'object',
+  properties: {
+    score: { type: 'integer', description: "Overall score from 1 to 10, judged for the learner's level." },
+    summary: { type: 'string' },
+    mistakes: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          wrong: { type: 'string' },
+          correct: { type: 'string' },
+          explanation: { type: 'string' },
+        },
+        required: ['wrong', 'correct', 'explanation'],
+        additionalProperties: false,
+      },
+    },
+    strengths: { type: 'array', items: { type: 'string' } },
+    usefulPhrases: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { phrase: { type: 'string' }, meaning: { type: 'string' } },
+        required: ['phrase', 'meaning'],
+        additionalProperties: false,
+      },
+    },
+    nextStep: { type: 'string' },
+  },
+  required: ['score', 'summary', 'mistakes', 'strengths', 'usefulPhrases', 'nextStep'],
+  additionalProperties: false,
+};
+
+// Biten sohbeti değerlendirir: puan, özet, hatalar (yanlış → doğru + Türkçe açıklama), güçlü yanlar, faydalı ifadeler.
+// lang: sonuç ekranındaki açıklamaların dili (arayüz dili). İngilizce örnekler (wrong/correct/phrase) her zaman İngilizce.
+async function evaluateConversation({ mode, level, topic, messages, lang = 'en' }) {
+  const feedbackLanguage =
+    lang === 'en'
+      ? `Write everything in English, using simple words and short sentences suited to level ${level} (very easy English for A1/A2).`
+      : "Write the feedback (summary, explanations, strengths, meanings, next step) in simple, friendly Turkish. Keep the learner's words, the corrected sentences and the useful phrases in English.";
+  const transcript = messages
+    .map((m) => `${m.role === 'user' ? 'LEARNER' : 'PARTNER'}: ${m.content}`)
+    .join('\n\n');
+
+  const system = `You are an English teacher on a language-learning website. A Turkish learner (CEFR ${level}) has just finished a ${
+    mode === 'talk' ? 'spoken (speech-recognised)' : 'written chat'
+  } practice conversation${topic ? ` on the topic "${topic.title}"` : ''}. Evaluate ONLY the learner's messages.
+
+- score: 1-10, judged fairly for level ${level} (how clear, correct and on-topic the learner was). Short but correct answers at a low level can still score well.
+${feedbackLanguage}
+
+- summary: 1-2 encouraging sentences about how the learner did.
+- mistakes: every real grammar or vocabulary mistake the learner made (at most 8, most important first). "wrong" = the learner's exact words, "correct" = the corrected sentence, "explanation" = a very short, simple explanation of the rule. ${
+    mode === 'talk'
+      ? 'The text comes from speech recognition: ignore punctuation, capital letters and obvious recognition errors.'
+      : 'Ignore missing capital letters and final punctuation.'
+  } If there are no real mistakes, return an empty list.
+- strengths: 1-3 short things the learner did well.
+- usefulPhrases: 3-5 useful English words or phrases for this topic that would have improved the learner's answers. "meaning" = a short, simple explanation or example of when to use it.
+- nextStep: one concrete suggestion for the next practice.`;
+
+  const response = await client.beta.messages.create({
+    model: MODEL,
+    max_tokens: 16000,
+    output_config: { effort: 'medium', format: { type: 'json_schema', schema: RESULT_SCHEMA } },
+    betas: ['server-side-fallback-2026-07-01'],
+    fallbacks: 'default',
+    system,
+    messages: [{ role: 'user', content: `Here is the conversation:\n\n${transcript}` }],
+  });
+
+  if (response.stop_reason === 'refusal') throw new Error('Değerlendirme reddedildi.');
+  const text = response.content
+    .filter((block) => block.type === 'text')
+    .map((block) => block.text)
+    .join('');
+  const result = JSON.parse(text);
+  result.score = Math.min(10, Math.max(1, Math.round(Number(result.score) || 1)));
+  return result;
+}
+
+module.exports = {
+  streamReply,
+  evaluateConversation,
+  countTodayMessages,
+  countUserTurns,
+  DAILY_LIMIT,
+  MAX_INPUT_CHARS,
+  TOPIC_TURNS,
+  MIN_TURNS_TO_FINISH,
+};

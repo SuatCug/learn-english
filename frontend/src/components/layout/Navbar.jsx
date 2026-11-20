@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, ClipboardCheck, Clipboard, Gauge, Mic, MessageCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, Clipboard, Gauge, Mic, MessageCircle } from 'lucide-react';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
 import { AI_SECTIONS, levelPath } from '@/lib/aiSections';
 import { useGetTopicsQuery } from '@/services/topicsApi';
 import AvatarMenu from './AvatarMenu';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useSelector } from 'react-redux';
+import { rememberReturnTo } from '@/lib/returnTo';
 import BrandMark from '@/components/BrandMark';
 
 // Açılır menüdeki seviye rozetlerinin rengi (ana sayfa kartlarıyla aynı kategori renkleri).
@@ -50,12 +55,13 @@ function LevelBadge({ code, color, slug }) {
 }
 
 function CategoryMenu({ label, slug, active }) {
+  const { t } = useTranslation();
   const color = CATEGORY_COLORS[slug] ?? '#50af31';
   return (
     <div className="relative group">
       {/* Tıklayınca kategorinin seviye sayfasına gider; üzerine gelince seviye menüsü açılır. */}
       <Link to={`/topics/${slug}`} className={navItemClass(active)}>
-        {label}
+        {t(label)}
       </Link>
 
       <div className="absolute top-full left-0 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-150">
@@ -70,7 +76,7 @@ function CategoryMenu({ label, slug, active }) {
               className="flex items-center gap-2.5 px-4 py-2 whitespace-nowrap text-[15px] font-light text-gray-500 hover:bg-gray-100 hover:text-[var(--menu-color)] transition-colors"
             >
               <LevelBadge code={code} color={color} slug={slug} />
-              {name}
+              {t(name)}
             </Link>
           ))}
         </div>
@@ -79,15 +85,16 @@ function CategoryMenu({ label, slug, active }) {
   );
 }
 
-// "Exams" açılır menüsü: seviye sınavlarına (A1–B2) ve tüm sınavlar sayfasına bağlantılar.
+// "Exams" açılır menüsü: seviye sınavlarına (A1–B2) bağlantılar.
 function ExamsMenu({ active }) {
+  const { t } = useTranslation();
   return (
     <div className="relative group">
       <Link
         to="/exams"
         className={`inline-flex items-center gap-1.5 ${navItemClass(active)}`}
       >
-        Exams
+        {t('Exams')}
       </Link>
 
       <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150">
@@ -103,15 +110,9 @@ function ExamsMenu({ active }) {
                 <Clipboard size={36} strokeWidth={1.1} className="absolute inset-0" aria-hidden="true" />
                 <span className="relative font-medium leading-none text-[10px] translate-y-[2px]">{code}</span>
               </span>
-              {code} Exam · {name}
+              {t('{{code}} Exam · {{name}}', { code, name: t(name) })}
             </Link>
           ))}
-          <Link
-            to="/exams"
-            className="block border-t border-gray-100 px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
-          >
-            All exams →
-          </Link>
         </div>
       </div>
     </div>
@@ -143,11 +144,12 @@ function MicOutline({ className }) {
 // "AI Talk" (sesli) ve "AI Chat" (yazılı): tıklayınca A1–B2 kart sayfası açılır;
 // üzerine gelince seviyeler listelenir, seviye seçilince o seviyenin konu kartları açılır.
 function AiMenu({ section, active }) {
+  const { t } = useTranslation();
   const isTalk = section.key === 'talk';
   return (
     <div className="relative group">
       <Link to={section.path} className={`whitespace-nowrap ${navItemClass(active)}`}>
-        {section.label}
+        {t(section.label)}
       </Link>
 
       <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150">
@@ -175,7 +177,9 @@ function AiMenu({ section, active }) {
                   </>
                 )}
               </span>
-              {code} {isTalk ? 'Speaking' : 'Chat'} · {name}
+              {isTalk
+                ? t('{{code}} Speaking · {{name}}', { code, name: t(name) })
+                : t('{{code}} Chat · {{name}}', { code, name: t(name) })}
             </Link>
           ))}
         </div>
@@ -185,13 +189,17 @@ function AiMenu({ section, active }) {
 }
 
 export default function Navbar() {
+  const { t } = useTranslation();
+  // Giriş yapmamış ziyaretçi: profil menüsü yerine dil seçici ve Giriş yap / Kayıt ol.
+  const isGuest = !useSelector((state) => state.auth.token);
+  const rememberHere = () => rememberReturnTo(location.pathname + location.search);
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Ders araması sadece mobil menüde (masaüstünde navbar'a sığmadığı için kaldırıldı).
   // Kullanıcı yazarken her tuşta istek atmamak için arama metnini kısa bir gecikmeyle uygular.
   useEffect(() => {
     const handle = setTimeout(() => setDebouncedSearch(search.trim()), 300);
@@ -218,12 +226,10 @@ export default function Navbar() {
     { skip: debouncedSearch.length < 2 }
   );
   const searchResults = (searchData?.data?.topics ?? []).slice(0, 8);
-  const showDropdown = searchOpen && debouncedSearch.length >= 2;
 
   const handleSelectResult = (topicId) => {
     setSearch('');
     setDebouncedSearch('');
-    setSearchOpen(false);
     setMobileOpen(false);
     navigate(`/lesson/${topicId}`);
   };
@@ -260,98 +266,48 @@ export default function Navbar() {
             to="/placement-test"
             className={`inline-flex items-center gap-1.5 whitespace-nowrap ${navItemClass(location.pathname === '/placement-test')}`}
           >
-            Level Test
+            {t('Level Test')}
           </Link>
         </nav>
 
         <div className="flex items-center gap-3 sm:gap-4 xl:gap-5 shrink-0">
           <Link
             to="/school"
-            title="School Mode"
+            title={t('School Mode')}
             className={`hidden sm:inline-flex items-center gap-2 rounded-md text-sm font-medium px-3 py-1.5 transition-colors ${
               location.pathname === '/school' ? 'bg-gray-800 text-white' : 'text-gray-200 hover:bg-gray-800 hover:text-white'
             }`}
           >
             <School size={17} strokeWidth={1.75} aria-hidden="true" />
-            <span className="md:hidden xl:inline">School Mode</span>
+            <span className="md:hidden xl:inline">{t('School Mode')}</span>
           </Link>
 
-          {/* Kapalıyken sadece büyüteç ikonu görünür; tıklanınca kutu sağdan sola yumuşakça genişler. */}
-          <div className="relative hidden sm:flex items-center">
-            <Search
-              size={18}
-              strokeWidth={2}
-              className={`absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors ${
-                searchOpen ? 'text-gray-400' : 'text-gray-300'
-              }`}
-              aria-hidden="true"
-            />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => setSearchOpen(true)}
-              onBlur={() => !search && setSearchOpen(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  setSearch('');
-                  setSearchOpen(false);
-                  e.currentTarget.blur();
-                }
-                handleSearchKeyDown(e);
-              }}
-              aria-label="Search lessons"
-              placeholder="Search lessons"
-              className={`rounded-md border pl-9 pr-3 py-1.5 text-sm text-white transition-all duration-300 ease-out focus:outline-none ${
-                searchOpen
-                  ? 'w-64 bg-gray-800 border-gray-600 placeholder-gray-400'
-                  : 'w-9 bg-transparent border-transparent placeholder-transparent cursor-pointer hover:bg-gray-800'
-              }`}
-            />
-
-            {showDropdown && (
-              <div
-                onMouseDown={(e) => e.preventDefault()}
-                className="absolute top-full right-0 mt-2 w-72 bg-white rounded-xl border border-emerald-100 shadow-lg py-2 z-50"
+          {isGuest ? (
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher className="hidden md:block" />
+              <Link
+                to="/login"
+                onClick={rememberHere}
+                className="hidden sm:inline-flex rounded-md px-3 py-1.5 text-sm font-medium text-gray-200 hover:bg-gray-800 hover:text-white transition-colors"
               >
-                {searching && <p className="px-4 py-2.5 text-sm text-gray-400">Searching...</p>}
-
-                {!searching && searchResults.length === 0 && (
-                  <p className="px-4 py-2.5 text-sm text-gray-400">No lessons found for "{debouncedSearch}".</p>
-                )}
-
-                {!searching &&
-                  searchResults.map((topic) => {
-                    const categoryInfo = CATEGORIES.find((c) => c.slug === topic.category);
-                    return (
-                      <button
-                        key={topic._id}
-                        type="button"
-                        onClick={() => handleSelectResult(topic._id)}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-emerald-50 transition-colors"
-                      >
-                        <span className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-base shrink-0">
-                          {categoryInfo?.icon}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block text-sm font-medium text-gray-800 truncate">{topic.title}</span>
-                          <span className="block text-xs text-gray-400">
-                            {topic.level} · {categoryInfo?.label ?? topic.category}
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-              </div>
-            )}
-          </div>
-
-          <AvatarMenu />
+                {t('Log in')}
+              </Link>
+              <Link
+                to="/register"
+                onClick={rememberHere}
+                className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"
+              >
+                {t('Sign up')}
+              </Link>
+            </div>
+          ) : (
+            <AvatarMenu />
+          )}
 
           <button
             type="button"
             onClick={() => setMobileOpen((o) => !o)}
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileOpen ? t('Close menu') : t('Open menu')}
             aria-expanded={mobileOpen}
             className="md:hidden -mr-1 p-2 text-gray-300 hover:text-white transition-colors"
           >
@@ -375,15 +331,15 @@ export default function Navbar() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
-                placeholder="Search lessons..."
+                placeholder={t('Search lessons...')}
                 className="w-full rounded-md border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-gray-400"
               />
               {debouncedSearch.length >= 2 && (
                 <div className="mt-2 rounded-xl border border-emerald-100 bg-white py-1">
-                  {searching && <p className="px-4 py-2.5 text-sm text-gray-400">Searching...</p>}
+                  {searching && <p className="px-4 py-2.5 text-sm text-gray-400">{t('Searching...')}</p>}
                   {!searching && searchResults.length === 0 && (
                     <p className="px-4 py-2.5 text-sm text-gray-400">
-                      No lessons found for "{debouncedSearch}".
+                      {t('No lessons found for "{{query}}".', { query: debouncedSearch })}
                     </p>
                   )}
                   {!searching &&
@@ -400,9 +356,9 @@ export default function Navbar() {
                             {categoryInfo?.icon}
                           </span>
                           <span className="min-w-0">
-                            <span className="block text-sm font-medium text-gray-800 truncate">{topic.title}</span>
+                            <span className="block text-sm font-medium text-gray-800 truncate">{localized(topic)}</span>
                             <span className="block text-xs text-gray-400">
-                              {topic.level} · {categoryInfo?.label ?? topic.category}
+                              {topic.level} · {t(categoryInfo?.label ?? topic.category)}
                             </span>
                           </span>
                         </button>
@@ -421,13 +377,13 @@ export default function Navbar() {
                   className="flex items-center gap-2 rounded-lg border border-emerald-100 px-3 py-2.5 text-sm font-semibold text-gray-800 hover:bg-emerald-50 transition-colors"
                 >
                   <span className="text-base">{category.icon}</span>
-                  <span className="truncate">{category.label}</span>
+                  <span className="truncate">{t(category.label)}</span>
                 </Link>
               ))}
             </nav>
 
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Levels</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">{t('Levels')}</p>
               <div className="flex flex-wrap gap-2">
                 {LEVELS.map((level) => (
                   <Link
@@ -443,15 +399,8 @@ export default function Navbar() {
             </div>
 
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Exams</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">{t('Exams')}</p>
               <div className="flex flex-wrap gap-2">
-                <Link
-                  to="/exams"
-                  onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors"
-                >
-                  <ClipboardCheck size={14} aria-hidden="true" /> All exams
-                </Link>
                 {LEVELS.map((level) => (
                   <Link
                     key={level.code}
@@ -459,7 +408,7 @@ export default function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     className="rounded-full border border-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors"
                   >
-                    {level.code} Exam
+                    {t('{{code}} Exam', { code: level.code })}
                   </Link>
                 ))}
               </div>
@@ -470,7 +419,7 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-2 rounded-lg border border-emerald-200 px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
             >
-              <Gauge size={16} strokeWidth={1.75} aria-hidden="true" /> Level Test
+              <Gauge size={16} strokeWidth={1.75} aria-hidden="true" /> {t('Level Test')}
             </Link>
 
             <div className="grid grid-cols-2 gap-2">
@@ -479,14 +428,14 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center gap-2 rounded-lg border border-indigo-200 px-4 py-2.5 text-sm font-medium text-indigo-700 hover:bg-indigo-50 transition-colors"
               >
-                <MessageCircle size={16} strokeWidth={1.75} aria-hidden="true" /> {AI_SECTIONS.chat.label}
+                <MessageCircle size={16} strokeWidth={1.75} aria-hidden="true" /> {t(AI_SECTIONS.chat.label)}
               </Link>
               <Link
                 to={AI_SECTIONS.talk.path}
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center gap-2 rounded-lg border border-teal-200 px-4 py-2.5 text-sm font-medium text-teal-700 hover:bg-teal-50 transition-colors"
               >
-                <Mic size={16} strokeWidth={1.75} aria-hidden="true" /> {AI_SECTIONS.talk.label}
+                <Mic size={16} strokeWidth={1.75} aria-hidden="true" /> {t(AI_SECTIONS.talk.label)}
               </Link>
             </div>
 
@@ -495,8 +444,33 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-2 rounded-lg border border-emerald-200 px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
             >
-              <School size={16} strokeWidth={1.75} aria-hidden="true" /> School Mode
+              <School size={16} strokeWidth={1.75} aria-hidden="true" /> {t('School Mode')}
             </Link>
+
+            {isGuest && (
+              <div className="space-y-3 border-t border-gray-100 pt-4">
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/login"
+                    onClick={rememberHere}
+                    className="rounded-lg border border-gray-300 px-4 py-2.5 text-center text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                  >
+                    {t('Log in')}
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={rememberHere}
+                    className="rounded-lg bg-emerald-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-emerald-700"
+                  >
+                    {t('Sign up')}
+                  </Link>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{t('Language')}</span>
+                  <LanguageSwitcher dark={false} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

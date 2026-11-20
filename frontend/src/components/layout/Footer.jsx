@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
+import { AI_SECTIONS } from '@/lib/aiSections';
 import BrandMark from '@/components/BrandMark';
 import PlanModal from './PlanModal';
+import { tk } from '@/i18n';
 
 const SOCIAL_LINKS = [
   {
@@ -46,141 +49,167 @@ const SOCIAL_LINKS = [
   },
 ];
 
+// Etiketler render sırasında t() ile çevrilir.
 const INFO_LINKS = [
-  { label: 'About us', slug: 'about-us' },
-  { label: 'Terms of Use', slug: 'terms-of-use' },
-  { label: 'Privacy Policy', slug: 'privacy-policy' },
-  { label: 'Cookie Policy', slug: 'cookie-policy' },
-  { label: 'Cookie Declaration', slug: 'cookie-declaration' },
+  { label: tk('About us'), slug: 'about-us' },
+  { label: tk('Terms of Use'), slug: 'terms-of-use' },
+  { label: tk('Privacy Policy'), slug: 'privacy-policy' },
+  { label: tk('Cookie Policy'), slug: 'cookie-policy' },
+  { label: tk('Cookie Declaration'), slug: 'cookie-declaration' },
 ];
 
 const CONTACT_LINKS = [
-  { label: 'Contact us', slug: 'contact-us' },
-  { label: 'Request a topic for a lesson', slug: 'request-topic' },
-  { label: 'Change your cookie consent', slug: 'cookie-consent' },
+  { label: tk('Contact us'), slug: 'contact-us' },
+  { label: tk('Request a topic for a lesson'), slug: 'request-topic' },
+  { label: tk('Change your cookie consent'), slug: 'cookie-consent' },
 ];
 
+// Pratik ve testler sütunu (girişe kapalı sayfalar; misafir giriş ekranına gider, sonra buraya döner).
+const PRACTICE_LINKS = [
+  { label: AI_SECTIONS.chat.label, to: AI_SECTIONS.chat.path },
+  { label: AI_SECTIONS.talk.label, to: AI_SECTIONS.talk.path },
+  { label: tk('Level Exams'), to: '/exams' },
+  { label: tk('Level Test'), to: '/placement-test' },
+  { label: tk('School Mode'), to: '/school' },
+];
+
+const LINK_CLASS = 'text-sm text-gray-400 hover:text-emerald-400 transition-colors';
+
+function FooterColumn({ title, children }) {
+  return (
+    <div>
+      <h4 className="text-sm font-semibold text-white mb-3">{title}</h4>
+      <ul className="space-y-1.5">{children}</ul>
+    </div>
+  );
+}
+
 export default function Footer() {
+  const { t } = useTranslation();
+  const isGuest = !useSelector((state) => state.auth.token);
   const isPremium = useSelector((state) => state.auth.user?.isPremium);
   const [planModalOpen, setPlanModalOpen] = useState(false);
 
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-9 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 text-center lg:text-left">
-        <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-8 flex-1">
-          <div>
-            <Link to="/" className="flex items-center gap-2 w-fit mx-auto lg:mx-0">
+      {/* Üst şerit: marka, kısa tanıtım; girişli kullanıcıya seviye testi / Pro butonları (misafir için navbar'da giriş/kayıt var) */}
+      <div className="border-b border-white/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-center md:text-left">
+          <div className="max-w-md">
+            <Link to="/" className="inline-flex items-center gap-2">
               <BrandMark size={30} />
-              <span className="text-lg font-bold text-white">
-                learnenglish
-              </span>
+              <span className="text-lg font-bold text-white">learnenglish</span>
             </Link>
-            <p className="text-sm text-gray-400 mt-3">
-              © {new Date().getFullYear()} learnenglish.
-              <br />
-              All rights reserved.
+            <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+              {t(
+                'Lessons, exercises and AI conversation practice from A1 to B2 — with instant feedback on every answer.'
+              )}
             </p>
           </div>
 
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Levels</h4>
-            <ul className="space-y-1.5">
-              {LEVELS.map((l) => (
-                <li key={l.code}>
-                  <Link
-                    to={`/levels/${l.code}`}
-                    className="text-sm text-gray-400 hover:text-emerald-400 transition-colors"
-                  >
-                    {l.code} {l.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Categories</h4>
-            <ul className="space-y-1.5">
-              {CATEGORIES.map((c) => (
-                <li key={c.slug}>
-                  <Link
-                    to={`/topics/${c.slug}`}
-                    className="text-sm text-gray-400 hover:text-emerald-400 transition-colors"
-                  >
-                    {c.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Info</h4>
-            <ul className="space-y-1.5">
-              {INFO_LINKS.map((info) => (
-                <li key={info.slug}>
-                  <Link
-                    to={`/info/${info.slug}`}
-                    className="text-sm text-gray-400 hover:text-emerald-400 transition-colors"
-                  >
-                    {info.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Get in Touch</h4>
-            <ul className="space-y-1.5">
-              {CONTACT_LINKS.map((contact) => (
-                <li key={contact.slug}>
-                  <Link
-                    to={`/info/${contact.slug}`}
-                    className="text-sm text-gray-400 hover:text-emerald-400 transition-colors"
-                  >
-                    {contact.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="flex items-center justify-center lg:justify-start gap-2.5 mt-3">
-              {SOCIAL_LINKS.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:bg-white/20 hover:text-white transition-colors"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 shrink-0">
+            {!isGuest && (
+              <>
+                <Link
+                  to="/placement-test"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg border border-gray-600 text-white text-sm font-semibold px-5 py-2.5 hover:bg-white/5 transition-colors"
                 >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
+                  {t('Take a level test')}
+                </Link>
+                {isPremium ? (
+                  <span className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-500/50 text-emerald-400 text-sm font-semibold px-5 py-2.5">
+                    ✓ {t('Pro member')}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setPlanModalOpen(true)}
+                    className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 transition-colors"
+                  >
+                    {t('Upgrade to pro')}
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </div>
+      </div>
 
-        <div className="shrink-0 flex flex-col items-center lg:items-stretch gap-2.5 w-full sm:w-auto">
-          <Link
-            to="/placement-test"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-600 text-white text-sm font-semibold px-5 py-2.5 hover:bg-white/5 transition-colors"
-          >
-            Take a level test
-          </Link>
-          {isPremium ? (
-            <span className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-500/50 text-emerald-400 text-sm font-semibold px-5 py-2.5">
-              ✓ Pro member
-            </span>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setPlanModalOpen(true)}
-              className="inline-flex items-center justify-center rounded-lg border border-gray-600 text-white text-sm font-semibold px-5 py-2.5 hover:bg-white/5 transition-colors"
-            >
-              Upgrade to pro
-            </button>
-          )}
+      {/* Bağlantı sütunları */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-9 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
+        <FooterColumn title={t('Learn')}>
+          {CATEGORIES.map((c) => (
+            <li key={c.slug}>
+              <Link to={`/topics/${c.slug}`} className={LINK_CLASS}>
+                {t(c.label)}
+              </Link>
+            </li>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title={t('Practice & tests')}>
+          {PRACTICE_LINKS.map((link) => (
+            <li key={link.to}>
+              <Link to={link.to} className={LINK_CLASS}>
+                {t(link.label)}
+              </Link>
+            </li>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title={t('Levels')}>
+          {LEVELS.map((l) => (
+            <li key={l.code}>
+              <Link to={`/levels/${l.code}`} className={LINK_CLASS}>
+                {l.code} {t(l.name)}
+              </Link>
+            </li>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title={t('About')}>
+          {INFO_LINKS.map((info) => (
+            <li key={info.slug}>
+              <Link to={`/info/${info.slug}`} className={LINK_CLASS}>
+                {t(info.label)}
+              </Link>
+            </li>
+          ))}
+        </FooterColumn>
+
+        <div>
+          <FooterColumn title={t('Help')}>
+            {CONTACT_LINKS.map((contact) => (
+              <li key={contact.slug}>
+                <Link to={`/info/${contact.slug}`} className={LINK_CLASS}>
+                  {t(contact.label)}
+                </Link>
+              </li>
+            ))}
+          </FooterColumn>
+          <div className="flex items-center gap-2.5 mt-4">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:bg-white/20 hover:text-white transition-colors"
+              >
+                {social.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Alt şerit: telif */}
+      <div className="border-t border-white/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+          <p>
+            © {new Date().getFullYear()} learnenglish. {t('All rights reserved.')}
+          </p>
         </div>
       </div>
 

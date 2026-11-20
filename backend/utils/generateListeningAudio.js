@@ -28,6 +28,7 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { LISTENING_DATA, listeningAudioId } = require('../data/listeningData');
 const { examListeningItems } = require('../data/levelExams');
+const { placementListeningItems } = require('../data/placementListening');
 const { getConfig, uploadToCloudinary } = require('./cloudinary.util');
 
 const PIPER_DIR = process.env.PIPER_DIR || path.join(os.homedir(), 'AppData', 'Local', 'piper-tts');
@@ -163,6 +164,13 @@ const run = async () => {
       item,
       publicId,
       dir: path.join(AUDIO_ROOT, 'exams', level.toLowerCase()),
+    })),
+    // Seviye Testi (placement) Listening kayıtları: topic-audio/placement/<slug>.wav
+    ...placementListeningItems().map(({ level, item, publicId }) => ({
+      level,
+      item,
+      publicId,
+      dir: path.join(AUDIO_ROOT, 'placement'),
     })),
   ];
   let generated = 0;

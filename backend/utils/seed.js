@@ -4,6 +4,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 const connectDB = require('../config/db');
 const { Topic, Question, Badge } = require('../models');
+const { snapshotIds, withStableTopicIds, withStableQuestionIds } = require('./stableIds');
 const { grammarTopics } = require('../data/grammarCurriculum');
 const { GRAMMAR_EXERCISES } = require('../data/grammarExercises');
 const { vocabularyTopics: vocabularyCurriculumTopics } = require('../data/vocabularyCurriculum');
@@ -11,6 +12,8 @@ const { topicImageId } = require('../data/topicImages');
 const { READING_DATA, READING_IMAGES_PENDING } = require('../data/readingData');
 const { WRITING_DATA, WRITING_IMAGES_PENDING } = require('../data/writingData');
 const { LISTENING_DATA, listeningAudioId, buildTranscript, withSpreadAnswers } = require('../data/listeningData');
+const { placementListeningQuestions } = require('../data/placementListening');
+const { TOPIC_TITLES_TR } = require('../data/topicTitlesTr');
 
 const topics = [
   // Grammar: backend/data/grammarCurriculum.js (kart resimleriyle birlikte).
@@ -54,12 +57,43 @@ const listeningTopics = Object.entries(LISTENING_DATA).flatMap(([level, items]) 
   }))
 );
 
+// Rozetler başlığa göre eşlenir (seed'de upsert): başlığı değiştirmek, o rozeti kazananlardan koparır.
+// Koşul türleri ve kontrolleri: utils/badgeEngine.js. Sıra, profildeki rozet kartının sırasıdır.
 const badges = [
+  // Konu tamamlama
   { title: 'First Step', description: 'You completed your first topic!', icon: '🎉', criteriaType: 'topics_completed', criteriaValue: 1 },
   { title: 'Dedicated Learner', description: 'You completed 10 topics.', icon: '📚', criteriaType: 'topics_completed', criteriaValue: 10 },
+  { title: 'Bookworm', description: 'You completed 25 topics.', icon: '🐛', criteriaType: 'topics_completed', criteriaValue: 25 },
+  { title: 'Knowledge Seeker', description: 'You completed 50 topics.', icon: '🧠', criteriaType: 'topics_completed', criteriaValue: 50 },
+  { title: 'Century Club', description: 'You completed 100 topics.', icon: '🏛️', criteriaType: 'topics_completed', criteriaValue: 100 },
   { title: 'Level Master', description: 'You completed all topics at your current level.', icon: '🏆', criteriaType: 'level_completed', criteriaValue: 1 },
+  // Kategoriler
+  { title: 'Grammar Guru', description: 'You completed 10 grammar topics.', icon: '🔤', criteriaType: 'category_topics', criteriaCategory: 'grammar', criteriaValue: 10 },
+  { title: 'Word Collector', description: 'You completed 10 vocabulary topics.', icon: '🗂️', criteriaType: 'category_topics', criteriaCategory: 'vocabulary', criteriaValue: 10 },
+  { title: 'Avid Reader', description: 'You completed 10 reading topics.', icon: '📰', criteriaType: 'category_topics', criteriaCategory: 'reading', criteriaValue: 10 },
+  { title: 'Wordsmith', description: 'You completed 10 writing topics.', icon: '✍️', criteriaType: 'category_topics', criteriaCategory: 'writing', criteriaValue: 10 },
+  { title: 'Good Listener', description: 'You completed 10 listening topics.', icon: '🎧', criteriaType: 'category_topics', criteriaCategory: 'listening', criteriaValue: 10 },
+  // Tam puan
   { title: 'Perfect Score', description: 'You scored 100% on a topic.', icon: '💯', criteriaType: 'perfect_score', criteriaValue: 1 },
+  { title: 'Sharp Mind', description: 'You scored 100% ten times.', icon: '🎯', criteriaType: 'perfect_score', criteriaValue: 10 },
+  { title: 'Flawless', description: 'You scored 100% twenty-five times.', icon: '💎', criteriaType: 'perfect_score', criteriaValue: 25 },
+  // Seri (art arda günler)
+  { title: 'Warming Up', description: 'You practised 3 days in a row.', icon: '🌱', criteriaType: 'streak', criteriaValue: 3 },
   { title: 'On a Roll', description: 'You practiced 7 days in a row.', icon: '🔥', criteriaType: 'streak', criteriaValue: 7 },
+  { title: 'Unstoppable', description: 'You practised 30 days in a row.', icon: '🚀', criteriaType: 'streak', criteriaValue: 30 },
+  // Level Test ve seviye sınavları
+  { title: 'Know Your Level', description: 'You completed the Level Test.', icon: '🧭', criteriaType: 'placement_completed', criteriaValue: 1 },
+  { title: 'Certified', description: 'You passed a level exam.', icon: '📜', criteriaType: 'exams_passed', criteriaValue: 1 },
+  { title: 'Exam Champion', description: 'You passed all four level exams (A1–B2).', icon: '👑', criteriaType: 'exams_passed', criteriaValue: 4 },
+  // AI Talking / Chatting (bitirilip sonucu alınan konulu sohbetler)
+  { title: 'First Words', description: 'You finished your first speaking practice.', icon: '🎙️', criteriaType: 'ai_conversations', criteriaCategory: 'talk', criteriaValue: 1 },
+  { title: 'Confident Speaker', description: 'You finished 10 speaking practices.', icon: '🗣️', criteriaType: 'ai_conversations', criteriaCategory: 'talk', criteriaValue: 10 },
+  { title: 'Chat Starter', description: 'You finished your first chat practice.', icon: '💬', criteriaType: 'ai_conversations', criteriaCategory: 'chat', criteriaValue: 1 },
+  { title: 'Chatterbox', description: 'You finished 10 chat practices.', icon: '📨', criteriaType: 'ai_conversations', criteriaCategory: 'chat', criteriaValue: 10 },
+  { title: 'Fluent Moment', description: 'You scored 9/10 or more in an AI conversation.', icon: '🌟', criteriaType: 'ai_high_score', criteriaValue: 9 },
+  // Live Game
+  { title: 'Game On', description: 'You played your first live game.', icon: '🎮', criteriaType: 'games_played', criteriaValue: 1 },
+  { title: 'Quiz Regular', description: 'You played 10 live games.', icon: '🕹️', criteriaType: 'games_played', criteriaValue: 10 },
 ];
 
 // Genel Seviye Belirleme Sınavı: sabit, 55 sorudan oluşan tek bir test
@@ -434,6 +468,7 @@ const placementWritingGroup2Questions = [
 }));
 
 const placementQuestions = [
+  ...placementListeningQuestions(),
   ...placementReadingText1Questions,
   ...placementReadingText2HeadingQuestions,
   ...placementReadingText2Questions,
@@ -449,16 +484,31 @@ const placementQuestions = [
 const seed = async () => {
   await connectDB();
 
-  await Promise.all([Topic.deleteMany({}), Question.deleteMany({}), Badge.deleteMany({})]);
-  console.log('🧹 Mevcut Topic, Question ve Badge verileri temizlendi.');
+  // Konu ve soruların mevcut _id'leri silmeden önce kaydedilir; yeniden yazılırken aynı _id'ler kullanılır
+  // (utils/stableIds.js). Böylece kullanıcıların ilerlemesi ve kayıtlı cevapları seed'den sonra da bağlı kalır.
+  const idSnapshot = await snapshotIds({ Topic, Question });
 
-  const createdTopics = await Topic.insertMany([
-    ...topics,
-    ...vocabularyTopics,
-    ...writingTopics,
-    ...readingTopics,
-    ...listeningTopics,
-  ]);
+  // Rozetler silinmez: kullanıcıların kazandığı rozetler (User.badges) id ile bağlı; aşağıda başlığa göre upsert edilir.
+  await Promise.all([Topic.deleteMany({}), Question.deleteMany({})]);
+  console.log('🧹 Mevcut Topic ve Question verileri temizlendi (id\'ler korunarak yeniden yazılacak).');
+
+  const createdTopics = await Topic.insertMany(
+    withStableTopicIds(
+      [...topics, ...vocabularyTopics, ...writingTopics, ...readingTopics, ...listeningTopics].map((t) => ({
+        ...t,
+        titleTr: TOPIC_TITLES_TR[t.title] ?? null,
+      })),
+      idSnapshot
+    )
+  );
+  console.log(
+    `🔗 ${createdTopics.filter((t) => idSnapshot.topicIds.get(`${t.category}|${t.level}|${t.title}`)?.equals(t._id)).length}/${createdTopics.length} konu eski id'sini korudu.`
+  );
+  const missingTitleTr = createdTopics.filter((t) => !t.titleTr).map((t) => `${t.category}/${t.level}: ${t.title}`);
+  if (missingTitleTr.length) {
+    console.warn(`⚠️  Türkçe başlığı eksik ${missingTitleTr.length} konu (data/topicTitlesTr.js):`);
+    missingTitleTr.forEach((line) => console.warn(`   ${line}`));
+  }
   const findGrammar = (level, title) =>
     createdTopics.find((t) => t.category === 'grammar' && t.level === level && t.title === title);
   const findVocabulary = (level, title) =>
@@ -7226,7 +7276,7 @@ const seed = async () => {
     ];
   });
 
-  await Question.insertMany([
+  const allQuestions = withStableQuestionIds([
     ...topicQuestions,
     ...vocabularyLessonQuestions,
     ...curriculumExerciseQuestions,
@@ -7264,8 +7314,21 @@ const seed = async () => {
     ...listeningQuestions,
     ...writingQuestions,
     ...placementQuestions,
-  ]);
-  await Badge.insertMany(badges);
+  ], idSnapshot);
+  await Question.insertMany(allQuestions);
+  console.log(`🔗 ${allQuestions.filter((q) => q._id).length}/${allQuestions.length} soru eski id'sini korudu.`);
+  // Rozetler: başlığa göre güncelle/ekle (id'ler korunur); listede artık olmayanlar silinir.
+  // `order` profildeki sıralama içindir.
+  await Badge.bulkWrite(
+    badges.map((badge, order) => ({
+      updateOne: {
+        filter: { title: badge.title },
+        update: { $set: { criteriaCategory: null, ...badge, order } },
+        upsert: true,
+      },
+    }))
+  );
+  await Badge.deleteMany({ title: { $nin: badges.map((b) => b.title) } });
 
   const totalQuestions =
     topicQuestions.length +

@@ -20,7 +20,9 @@ const questionSchema = new mongoose.Schema(
     // Placement test alanları: section soruyu Reading/Grammar/Vocabulary'ye ayırır,
     // passage aynı gruptaki sorularda tekrar eden okuma metni/boşluklu paragraftır,
     // order sabit (rastgele olmayan) sınav sırasını belirler.
-    section: { type: String, enum: ['reading', 'grammar', 'vocabulary', 'writing'], default: null },
+    section: { type: String, enum: ['listening', 'reading', 'grammar', 'vocabulary', 'writing'], default: null },
+    // Placement Listening sorularında kaydın Cloudinary public ID'si (data/placementListening.js); diğerlerinde null.
+    audio: { type: String, default: null },
     passage: { type: String, default: null },
     order: { type: Number, default: 0 },
   },

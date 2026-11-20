@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 import {
   BookOpen,
   MessageSquareText,
@@ -28,6 +30,7 @@ import chattingImage from '@/assets/home-chatting.webp'; // photo-1758876018661-
 import talkingImage from '@/assets/home-talking.webp'; // photo-1758270704763-22072a90d3b6
 import examsImage from '@/assets/home-exams.webp'; // photo-1598981457915-aea220950616
 import { AI_SECTIONS } from '@/lib/aiSections';
+import { tk } from '@/i18n';
 
 const BRAND = '#50af31';
 
@@ -36,118 +39,118 @@ const BRAND = '#50af31';
 const CARDS = [
   {
     key: 'grammar',
-    tag: 'Grammar Points',
-    title: 'Grammar Lessons',
+    tag: tk('Grammar Points'),
+    title: tk('Grammar Lessons'),
     color: '#1a8ec1',
     image: grammarImage,
     Icon: BookOpen,
-    intro: 'Study the grammar lessons that are typically included in each level:',
-    outro: 'There are exercises and an explanation in each lesson, and feedback for every single question!',
+    intro: tk('Study the grammar lessons that are typically included in each level:'),
+    outro: tk('There are exercises and an explanation in each lesson, and feedback for every single question!'),
     levelBase: '/topics/grammar',
     to: '/topics/grammar',
-    cta: 'Go to the lessons',
+    cta: tk('Go to the lessons'),
   },
   {
     key: 'vocabulary',
-    tag: 'Vocabulary',
-    title: 'Vocabulary Lessons',
+    tag: tk('Vocabulary'),
+    title: tk('Vocabulary Lessons'),
     color: '#ff6699',
     image: vocabularyImage,
     Icon: MessageSquareText,
-    intro: 'Boost your vocabulary with exercises tailored for each level:',
-    outro: 'Every lesson features word lists, definitions and exercises to enhance your learning.',
+    intro: tk('Boost your vocabulary with exercises tailored for each level:'),
+    outro: tk('Every lesson features word lists, definitions and exercises to enhance your learning.'),
     levelBase: '/topics/vocabulary',
     to: '/topics/vocabulary',
-    cta: 'Go to the lessons',
+    cta: tk('Go to the lessons'),
   },
   {
     key: 'reading',
-    tag: 'Reading Tests',
-    title: 'Reading Tests',
+    tag: tk('Reading Tests'),
+    title: tk('Reading Tests'),
     color: '#ed1c24',
     image: readingImage,
     Icon: Newspaper,
-    intro: 'Need to improve your reading skills? Work on our reading tests. There are reading tests for',
-    outro: 'You will find different types of texts and different types of questions in each test.',
+    intro: tk('Need to improve your reading skills? Work on our reading tests. There are reading tests for'),
+    outro: tk('You will find different types of texts and different types of questions in each test.'),
     levelBase: '/topics/reading',
     to: '/topics/reading',
-    cta: 'Go to the tests',
+    cta: tk('Go to the tests'),
   },
   {
     key: 'writing',
-    tag: 'Writing Exercises',
-    title: 'Writing Lessons',
+    tag: tk('Writing Exercises'),
+    title: tk('Writing Lessons'),
     color: '#a84d98',
     image: writingImage,
     Icon: PenLine,
-    intro: 'Improve your writing with the exercises suggested in each lesson. Different types of texts for each level:',
-    outro: 'Get instant, detailed feedback on what you write.',
+    intro: tk('Improve your writing with the exercises suggested in each lesson. Different types of texts for each level:'),
+    outro: tk('Get instant, detailed feedback on what you write.'),
     levelBase: '/topics/writing',
     to: '/topics/writing',
-    cta: 'Go to the lessons',
+    cta: tk('Go to the lessons'),
   },
   {
     key: 'listening',
-    tag: 'Listening',
-    title: 'Listening Practice',
+    tag: tk('Listening'),
+    title: tk('Listening Practice'),
     color: '#f7741d',
     image: listeningImage,
     Icon: Headphones,
-    intro: 'Listen to dialogues, messages, talks and podcasts recorded for each level:',
-    outro: 'Answer the questions, then read the transcript to check what you heard.',
+    intro: tk('Listen to dialogues, messages, talks and podcasts recorded for each level:'),
+    outro: tk('Answer the questions, then read the transcript to check what you heard.'),
     levelBase: '/topics/listening',
     to: '/topics/listening',
-    cta: 'Start listening',
+    cta: tk('Start listening'),
   },
   {
     key: 'exams',
-    tag: 'Level Exams',
-    title: 'Level Exams',
+    tag: tk('Level Exams'),
+    title: tk('Level Exams'),
     color: BRAND,
     image: examsImage,
     Icon: ClipboardCheck,
-    intro: 'Check your progress with a full exam for each level:',
-    outro: 'Each exam tests your grammar, vocabulary, reading, writing and listening, and shows your score at the end.',
+    intro: tk('Check your progress with a full exam for each level:'),
+    outro: tk('Each exam tests your grammar, vocabulary, reading, writing and listening, and shows your score at the end.'),
     levelBase: '/exams',
     to: '/exams',
-    cta: 'Go to the exams',
+    cta: tk('Go to the exams'),
   },
   {
     key: 'talking',
-    tag: 'Talking',
-    title: 'Speaking Practice',
+    tag: tk('Talking'),
+    title: tk('Speaking Practice'),
     color: AI_SECTIONS.talk.color,
     image: talkingImage,
     Icon: Mic,
-    intro: 'Practise speaking out loud with your microphone. Your partner listens and answers with a natural voice. Topics for',
-    outro: 'Role-plays like hotels, doctors and interviews help you speak with confidence.',
+    intro: tk('Practise speaking out loud with your microphone. Your partner listens and answers with a natural voice. Topics for'),
+    outro: tk('Role-plays like hotels, doctors and interviews help you speak with confidence.'),
     levelBase: `${AI_SECTIONS.talk.path}/level`,
     to: AI_SECTIONS.talk.path,
-    cta: 'Start talking',
+    cta: tk('Start talking'),
   },
   {
     key: 'chatting',
-    tag: 'Chatting',
-    title: 'Chatting Practice',
+    tag: tk('Chatting'),
+    title: tk('Chatting Practice'),
     color: AI_SECTIONS.chat.color,
     image: chattingImage,
     Icon: MessageCircle,
-    intro: 'Chat in English with a friendly partner on real-life topics, from ordering food to job interviews. Topics for',
-    outro: 'Your partner answers at your level and gives you a tip when you make a mistake.',
+    intro: tk('Chat in English with a friendly partner on real-life topics, from ordering food to job interviews. Topics for'),
+    outro: tk('Your partner answers at your level and gives you a tip when you make a mistake.'),
     levelBase: `${AI_SECTIONS.chat.path}/level`,
     to: AI_SECTIONS.chat.path,
-    cta: 'Start chatting',
+    cta: tk('Start chatting'),
   },
   {
     key: 'level-test',
-    tag: 'Level Test',
-    title: 'Level Test',
+    tag: tk('Level Test'),
+    title: tk('Level Test'),
     color: BRAND,
     image: levelTestImage,
     Icon: BarChart3,
-    text: "If you are not sure about your level, don't worry, you can take this online test. There are 55 questions and you will find out your level from A1 to B2 when you finish the test.",
+    text: tk("If you are not sure about your level, don't worry, you can take this online test. There are 55 questions and you will find out your level from A1 to B2 when you finish the test."),
     to: '/placement-test',
-    cta: 'Take a level test',
+    cta: tk('Take a level test'),
   },
 ];
 
@@ -162,7 +165,9 @@ function LevelLinks({ base }) {
   ));
 }
 
+// Kart metinleri (CARDS) render sırasında t() ile çevrilir.
 function CategoryCard({ card }) {
+  const { t } = useTranslation();
   const { Icon } = card;
   return (
     <div className="px-4 py-2.5 sm:p-4 h-full">
@@ -173,7 +178,7 @@ function CategoryCard({ card }) {
             className="absolute top-3 right-0 text-white font-bold text-base sm:text-lg px-3 sm:px-4 py-1"
             style={{ backgroundColor: card.color }}
           >
-            {card.tag}
+            {t(card.tag)}
           </span>
           <span
             className="absolute bottom-2 left-2 w-9 h-9 rounded-full flex items-center justify-center text-white"
@@ -185,13 +190,15 @@ function CategoryCard({ card }) {
 
         <div className="p-4 flex flex-col items-start flex-1">
           <h4 className="text-xl sm:text-2xl font-semibold leading-none" style={{ color: card.color }}>
-            {card.title}
+            {t(card.title)}
           </h4>
           <p className="mt-3 text-[15px] font-light text-gray-600 leading-snug flex-1">
-            {card.text ?? (
+            {card.text ? (
+              t(card.text)
+            ) : (
               <>
-                {card.intro} <LevelLinks base={card.levelBase} />
-                {card.outro}
+                {t(card.intro)} <LevelLinks base={card.levelBase} />
+                {t(card.outro)}
               </>
             )}
           </p>
@@ -200,7 +207,7 @@ function CategoryCard({ card }) {
             style={{ '--card-color': card.color }}
             className="mt-4 inline-block border-2 border-[#9d9d9d] text-[#9d9d9d] rounded-lg px-3 py-2 text-[17px] group-hover:border-[var(--card-color)] group-hover:text-[var(--card-color)] hover:bg-[var(--card-color)] hover:!text-white transition-colors"
           >
-            {card.cta}
+            {t(card.cta)}
           </Link>
         </div>
       </div>
@@ -209,6 +216,8 @@ function CategoryCard({ card }) {
 }
 
 export default function HomePage() {
+  const { t } = useTranslation();
+  usePageTitle(null);
   return (
     <div className="min-h-screen bg-[#fcfcfc] flex flex-col">
       <Navbar />
@@ -232,24 +241,24 @@ export default function HomePage() {
           <h1 className="text-white font-bold text-[32px] sm:text-[44px] leading-none tracking-wide">
             learn english
             <strong className="block mt-2 text-[0.8em] font-bold" style={{ color: BRAND }}>
-              Take your learning with you!
+              {t('Take your learning with you!')}
             </strong>
           </h1>
           <p className="mt-3 sm:mt-4 text-white/90 text-[15px] sm:text-lg font-light leading-snug">
-            Grammar lessons with exercises and clear explanations, vocabulary sets, reading tests, writing lessons
-            with feedback, instant marking, a placement test, live classroom quizzes, chatting and speaking practice
-            and much more!
+            {t(
+              'Grammar lessons with exercises and clear explanations, vocabulary sets, reading tests, writing lessons with feedback, instant marking, a placement test, live classroom quizzes, chatting and speaking practice and much more!'
+            )}
           </p>
         </div>
       </header>
 
       <main className="flex-1">
         <h2 className="text-center text-2xl sm:text-4xl font-black leading-tight px-4 pt-8 sm:pt-12 pb-2 sm:pb-4 text-gray-800 text-balance">
-          What would you like to{' '}
+          {t('What would you like to')}{' '}
           <span className="text-[1.4em]" style={{ color: BRAND }}>
-            learn
+            {t('learn')}
           </span>{' '}
-          today?
+          {t('today?')}
         </h2>
 
         <section className="max-w-[1400px] mx-auto px-0 sm:px-4 pb-10 sm:pb-16 grid sm:grid-cols-2 lg:grid-cols-3">

@@ -21,7 +21,7 @@ const AI_TOPICS = {
       emoji: '👋',
       scenario:
         'You are meeting the learner for the first time. Ask simple questions about their name, age, city, country and job or school, one question at a time. Share simple facts about yourself too.',
-      opener: "Hello! Nice to meet you. My name is Alex. What's your name?",
+      opener: "Hello! Nice to meet you. My name is Emma. What's your name?",
     },
     {
       slug: 'my-family',
@@ -251,7 +251,7 @@ const AI_TOPICS = {
 const SUGGESTIONS = {
   A1: {
     'free-talk': ["Let's talk about my school.", "Let's talk about food.", "Let's talk about my weekend."],
-    'introducing-yourself': ['My name is Ali.', "Hi Alex! I'm Zeynep.", "Nice to meet you. I'm Mert."],
+    'introducing-yourself': ['My name is Ali.', "Hi Emma! I'm Zeynep.", "Nice to meet you. I'm Mert."],
     'my-family': ['Yes, I have one brother.', 'Yes, I have two sisters.', "No, I don't. I'm an only child."],
     'daily-routine': ['I get up at seven o’clock.', 'I usually get up at half past six.', 'I get up at eight at the weekend.'],
     'food-i-like': ['My favourite food is pizza.', 'I love pasta and chicken.', 'I like Turkish food, like kebab.'],
@@ -287,6 +287,36 @@ const SUGGESTIONS = {
   },
 };
 
+// Konu kartlarının Türkçesi (arayüz Türkçe seçiliyken gösterilir): slug → [başlık, açıklama].
+// Hazır cevaplar (suggestions) ve sohbetin kendisi İngilizce kalır.
+const AI_TOPICS_TR = {
+  'free-talk': ['Serbest sohbet', 'İstediğin her şey hakkında konuş.'],
+  'introducing-yourself': ['Kendini tanıtma', 'Adını, yaşını, nereli olduğunu ve ne iş yaptığını söyle.'],
+  'my-family': ['Ailem', 'Annen, baban, kardeşlerin ve evcil hayvanların hakkında konuş.'],
+  'daily-routine': ['Günlük rutin', 'Sabahtan akşama her gün neler yapıyorsun?'],
+  'food-i-like': ['Sevdiğim yiyecekler', 'En sevdiğin yiyecekler, içecekler ve öğünler.'],
+  'my-home': ['Evim', 'Evini ya da daireni ve odanı anlat.'],
+  hobbies: ['Hobiler', 'Sporlar, oyunlar ve boş zamanında yaptıkların.'],
+  'at-the-restaurant': ['Restoranda', 'Garsondan yemek ve içecek siparişi ver.'],
+  'shopping-for-clothes': ['Kıyafet alışverişi', 'Mağazada beden, renk ve fiyat sor.'],
+  'asking-for-directions': ['Yol sorma', 'Yeni bir şehirde yolunu bul.'],
+  'at-the-hotel': ['Otelde', 'Giriş yap, odan ve otel hizmetleri hakkında soru sor.'],
+  'last-weekend': ['Geçen hafta sonu', 'Past simple kullanarak neler yaptığını anlat.'],
+  'weather-and-seasons': ['Hava ve mevsimler', 'Hava durumu ve en sevdiğin mevsim hakkında konuş.'],
+  'job-interview': ['İş görüşmesi', 'Sık sorulan mülakat sorularını cevaplama pratiği yap.'],
+  'at-the-doctor': ['Doktorda', 'Belirtilerini anlat ve tavsiyeleri anla.'],
+  'travel-problems': ['Seyahat sorunları', 'Rötar yapan bir uçuş ya da kayıp bagajla başa çık.'],
+  'making-plans': ['Arkadaşlarla plan yapma', 'Davet et, kabul et ya da kibarca reddet.'],
+  'films-and-books': ['Bir film ya da kitabı anlatma', 'Beğendiğin bir hikâyeyi ve nedenini anlat.'],
+  'giving-advice': ['Tavsiye verme', 'Should ve could kullanarak bir arkadaşının sorununa yardım et.'],
+  'debate-technology': ['Tartışma: teknoloji', 'Teknoloji hayatımızı iyileştiriyor mu, kötüleştiriyor mu?'],
+  'environment-and-climate': ['Çevre ve iklim', 'İklim değişikliğini ve neler yapabileceğimizi tartış.'],
+  'work-and-career': ['İş ve kariyer hedefleri', 'Hedeflerin ve işin geleceği hakkında konuş.'],
+  'news-and-current-events': ['Haberler ve gündem', 'Dünyada olup bitenler hakkındaki görüşlerini paylaş.'],
+  'problem-at-work': ['İş yerinde bir sorunu çözme', 'İş yerindeki bir sorunu tartış ve çözüm bul.'],
+  'persuading-someone': ['Birini ikna etme', 'Birini fikrini değiştirmeye ikna et.'],
+};
+
 const LEVELS = Object.keys(AI_TOPICS);
 
 // Kartlarda ve sohbet ekranında gösterilecek alanlar (senaryo/ilk mesaj gizli kalır).
@@ -295,10 +325,12 @@ const publicTopics = (level) =>
     slug,
     title,
     description,
+    titleTr: AI_TOPICS_TR[slug]?.[0] ?? null,
+    descriptionTr: AI_TOPICS_TR[slug]?.[1] ?? null,
     emoji,
     suggestions: SUGGESTIONS[level]?.[slug] ?? [],
   }));
 
 const findTopic = (level, slug) => (AI_TOPICS[level] ?? []).find((t) => t.slug === slug) ?? null;
 
-module.exports = { AI_TOPICS, LEVELS, publicTopics, findTopic };
+module.exports = { AI_TOPICS, AI_TOPICS_TR, LEVELS, publicTopics, findTopic };

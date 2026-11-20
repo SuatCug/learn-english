@@ -72,7 +72,7 @@ const getClassroom = asyncHandler(async (req, res) => {
   }
 
   const assignments = await Assignment.find({ classroomId: classroom._id })
-    .populate('topicId', 'title category level')
+    .populate('topicId', 'title titleTr category level')
     .sort({ assignedAt: -1 });
 
   // Puanlar: hem bu sınıfa özel ödevleri tamamlamaktan hem de genel egzersiz çözmekten
@@ -163,7 +163,7 @@ const getResults = asyncHandler(async (req, res) => {
   const classroom = req.classroom;
 
   const [assignments, students] = await Promise.all([
-    Assignment.find({ classroomId: classroom._id }).populate('topicId', 'title category level').sort({ assignedAt: 1 }),
+    Assignment.find({ classroomId: classroom._id }).populate('topicId', 'title titleTr category level').sort({ assignedAt: 1 }),
     User.find({ _id: { $in: classroom.students } }).select('name email progress'),
   ]);
 
@@ -189,6 +189,7 @@ const getResults = asyncHandler(async (req, res) => {
         id: a._id,
         topicId: a.topicId?._id,
         topicTitle: a.topicId?.title,
+        topicTitleTr: a.topicId?.titleTr ?? null,
         dueDate: a.dueDate,
       })),
       results,

@@ -1,16 +1,17 @@
+import { tk } from '@/i18n';
 export const LEVELS = [
-  { code: 'A1', name: 'Elementary' },
-  { code: 'A2', name: 'Pre-intermediate' },
-  { code: 'B1', name: 'Intermediate' },
-  { code: 'B2', name: 'Upper-intermediate' },
+  { code: 'A1', name: tk('Elementary') },
+  { code: 'A2', name: tk('Pre-intermediate') },
+  { code: 'B1', name: tk('Intermediate') },
+  { code: 'B2', name: tk('Upper-intermediate') },
 ];
 
 export const CATEGORIES = [
-  { label: 'Grammar', slug: 'grammar', icon: '🔤' },
-  { label: 'Vocabulary', slug: 'vocabulary', icon: '📖' },
-  { label: 'Reading', slug: 'reading', icon: '📚' },
-  { label: 'Writing', slug: 'writing', icon: '✏️' },
-  { label: 'Listening', slug: 'listening', icon: '🎧' },
+  { label: tk('Grammar'), slug: 'grammar', icon: '🔤' },
+  { label: tk('Vocabulary'), slug: 'vocabulary', icon: '📖' },
+  { label: tk('Reading'), slug: 'reading', icon: '📚' },
+  { label: tk('Writing'), slug: 'writing', icon: '✏️' },
+  { label: tk('Listening'), slug: 'listening', icon: '🎧' },
 ];
 
 // Kategoriye özel tema: konu/ders sayfalarında Navbar'ın hemen altındaki başlık şeridinin rengi.

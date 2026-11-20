@@ -8,7 +8,8 @@ const { createTopicRules, updateTopicRules, checkAnswersRules } = require('../va
 router.get('/', topicController.list);
 router.get('/:id', topicController.getById);
 router.get('/:id/questions', topicController.getQuestions);
-router.post('/:id/check', authenticate, checkAnswersRules, validate, topicController.checkAnswers);
+// Cevap kontrolü misafirlere de açık (dersler giriş yapmadan çözülebilir); ilerleme kaydı /users/progress'te ve girişli.
+router.post('/:id/check', checkAnswersRules, validate, topicController.checkAnswers);
 router.post('/', authenticate, authorize('admin'), createTopicRules, validate, topicController.create);
 router.put('/:id', authenticate, authorize('admin'), updateTopicRules, validate, topicController.update);
 router.delete('/:id', authenticate, authorize('admin'), topicController.remove);

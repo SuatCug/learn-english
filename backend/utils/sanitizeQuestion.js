@@ -21,6 +21,7 @@ const sanitizeQuestion = (questionDoc, { includeAnswers = false } = {}) => {
     exerciseGroup: q.exerciseGroup ?? 1,
     section: q.section ?? null,
     passage: q.passage ?? null,
+    audio: q.audio ?? null,
     order: q.order ?? 0,
   };
 

@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { User, Mail, Lock, Save, ShieldAlert, Trash2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { User, Mail, Lock, Save, ShieldAlert, Trash2, CheckCircle2, ArrowLeft, Bell } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PasswordField from '@/components/auth/PasswordField';
 import {
   useUpdateProfileMutation,
+  useUpdatePreferencesMutation,
   useChangePasswordMutation,
   useDeleteAccountMutation,
 } from '@/services/usersApi';
 import { setCredentials, logout } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
 import { validateNewPassword, PASSWORD_MIN_LENGTH } from '@/lib/password';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 
 function SectionHeader({ icon: Icon, title, subtitle }) {
   return (
@@ -29,6 +32,7 @@ function SectionHeader({ icon: Icon, title, subtitle }) {
 }
 
 function ProfileInfoForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
@@ -55,11 +59,11 @@ function ProfileInfoForm() {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-gray-100 p-6 space-y-4">
-      <SectionHeader icon={User} title="Profile Information" subtitle="Update your personal information." />
+      <SectionHeader icon={User} title={t('Profile information')} subtitle={t('Update your personal information.')} />
 
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-          Name
+          {t('Name')}
         </label>
         <div className="relative">
           <User className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={17} />
@@ -76,7 +80,7 @@ function ProfileInfoForm() {
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-          Email
+          {t('Email')}
         </label>
         <div className="relative">
           <Mail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={17} />
@@ -95,7 +99,7 @@ function ProfileInfoForm() {
       {success && (
         <p className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2">
           <CheckCircle2 size={16} />
-          Profile updated.
+          {t('Profile updated.')}
         </p>
       )}
 
@@ -105,13 +109,14 @@ function ProfileInfoForm() {
         className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
       >
         <Save size={16} />
-        {isLoading ? 'Saving...' : 'Save Changes'}
+        {isLoading ? t('Saving...') : t('Save changes')}
       </button>
     </form>
   );
 }
 
 function ChangePasswordForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
   // Google ile açılmış hesapların şifresi yoktur; ilk şifre mevcut şifre sorulmadan belirlenir.
@@ -129,13 +134,13 @@ function ChangePasswordForm() {
     setError('');
     setSuccess(false);
 
-    const passwordError = validateNewPassword(newPassword, 'en');
+    const passwordError = validateNewPassword(newPassword);
     if (passwordError) {
       setError(passwordError);
       return;
     }
     if (newPassword !== confirmPassword) {
-      setError("New passwords don't match.");
+      setError(t("New passwords don't match."));
       return;
     }
 
@@ -155,18 +160,18 @@ function ChangePasswordForm() {
     <form onSubmit={handleSubmit} className="rounded-xl border border-gray-100 p-6 space-y-4">
       <SectionHeader
         icon={Lock}
-        title={hasPassword ? 'Change Password' : 'Set a Password'}
+        title={hasPassword ? t('Change password') : t('Set a password')}
         subtitle={
           hasPassword
-            ? 'Choose a strong password to keep your account safe.'
-            : 'You signed up with Google. Set a password to also sign in with your email.'
+            ? t('Choose a strong password to keep your account safe.')
+            : t('You signed up with Google. Set a password to also sign in with your email.')
         }
       />
 
       {hasPassword && (
         <PasswordField
           id="currentPassword"
-          label="Current Password"
+          label={t('Current password')}
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
           autoComplete="current-password"
@@ -174,7 +179,7 @@ function ChangePasswordForm() {
       )}
       <PasswordField
         id="newPassword"
-        label="New Password"
+        label={t('New password')}
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
         placeholder={`At least ${PASSWORD_MIN_LENGTH} characters`}
@@ -182,7 +187,7 @@ function ChangePasswordForm() {
       />
       <PasswordField
         id="confirmNewPassword"
-        label="Confirm New Password"
+        label={t('Confirm new password')}
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         autoComplete="new-password"
@@ -192,7 +197,7 @@ function ChangePasswordForm() {
       {success && (
         <p className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2">
           <CheckCircle2 size={16} />
-          {hasPassword ? 'Password updated.' : 'Password set.'}
+          {hasPassword ? t('Password updated.') : t('Password set.')}
         </p>
       )}
 
@@ -202,13 +207,66 @@ function ChangePasswordForm() {
         className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
       >
         <Lock size={16} />
-        {isLoading ? 'Updating...' : 'Update Password'}
+        {isLoading ? t('Updating...') : t('Update password')}
       </button>
     </form>
   );
 }
 
+// Seri hatırlatma maili açma/kapama (backend: PATCH /users/me/preferences). Değişince hemen kaydedilir.
+function NotificationsForm() {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+  const [updatePreferences, { isLoading }] = useUpdatePreferencesMutation();
+  const [error, setError] = useState('');
+  const enabled = user?.emailReminders !== false;
+
+  const toggle = async () => {
+    setError('');
+    try {
+      const data = await updatePreferences({ emailReminders: !enabled }).unwrap();
+      dispatch(setCredentials({ user: data.data.user, token }));
+    } catch (err) {
+      setError(getErrorMessage(err));
+    }
+  };
+
+  return (
+    <div className="rounded-xl border border-gray-100 p-6 space-y-4">
+      <SectionHeader icon={Bell} title={t('Email notifications')} subtitle={t('Choose which emails you want to receive.')} />
+      <label className="flex items-start justify-between gap-4 cursor-pointer">
+        <span>
+          <span className="block text-sm font-medium text-gray-800">{t('Streak reminders')}</span>
+          <span className="block text-sm text-gray-500">
+            {t("An evening email when you haven't practised yet and your streak is about to end.")}
+          </span>
+        </span>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={enabled}
+          onClick={toggle}
+          disabled={isLoading}
+          className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60 ${
+            enabled ? 'bg-emerald-600' : 'bg-gray-300'
+          }`}
+        >
+          <span
+            className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+              enabled ? 'translate-x-5' : ''
+            }`}
+          />
+        </button>
+      </label>
+      {error && <p className="text-sm text-rose-600">{error}</p>}
+    </div>
+  );
+}
+
 function DeleteAccountForm() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [deleteAccount, { isLoading }] = useDeleteAccountMutation();
@@ -241,10 +299,11 @@ function DeleteAccountForm() {
           <ShieldAlert size={18} />
         </span>
         <div>
-          <h2 className="text-base font-bold text-rose-600">Danger Zone</h2>
+          <h2 className="text-base font-bold text-rose-600">{t('Danger zone')}</h2>
           <p className="text-sm text-gray-500 mt-1">
-            Permanently deletes your account, progress, and badges. If you teach any classrooms, those classrooms and
-            their assignments are deleted too. This can't be undone.
+            {t(
+              "Permanently deletes your account, progress, and badges. If you teach any classrooms, those classrooms and their assignments are deleted too. This can't be undone."
+            )}
           </p>
         </div>
       </div>
@@ -256,18 +315,18 @@ function DeleteAccountForm() {
           className="inline-flex items-center gap-2 rounded-lg border border-rose-300 bg-white text-rose-600 text-sm font-semibold px-5 py-2.5 hover:bg-rose-50 transition-colors"
         >
           <Trash2 size={16} />
-          Delete Account
+          {t('Delete account')}
         </button>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4 rounded-lg bg-white border border-rose-100 p-4">
           <p className="text-sm font-semibold text-gray-900">
-            Are you sure? This will permanently delete your account and everything in it.
+            {t('Are you sure? This will permanently delete your account and everything in it.')}
           </p>
 
           {hasPassword && (
             <PasswordField
               id="deletePassword"
-              label="Confirm your password"
+              label={t('Confirm your password')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
@@ -276,7 +335,7 @@ function DeleteAccountForm() {
 
           <div>
             <label htmlFor="confirmDelete" className="block text-sm font-medium text-gray-700 mb-1.5">
-              Type DELETE to confirm
+              {t('Type DELETE to confirm')}
             </label>
             <input
               id="confirmDelete"
@@ -299,7 +358,7 @@ function DeleteAccountForm() {
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
             >
               <Trash2 size={16} className="shrink-0" />
-              {isLoading ? 'Deleting...' : 'Permanently Delete My Account'}
+              {isLoading ? t('Deleting...') : t('Permanently delete my account')}
             </button>
             <button
               type="button"
@@ -311,7 +370,7 @@ function DeleteAccountForm() {
               }}
               className="text-sm text-gray-500 hover:text-gray-700"
             >
-              Cancel
+              {t('Cancel')}
             </button>
           </div>
         </form>
@@ -321,6 +380,8 @@ function DeleteAccountForm() {
 }
 
 export default function EditProfilePage() {
+  const { t } = useTranslation();
+  usePageTitle(t('Edit profile'));
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
@@ -331,14 +392,15 @@ export default function EditProfilePage() {
           className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium px-3 py-1.5 hover:bg-gray-50 hover:text-emerald-600 hover:border-emerald-200 transition-colors"
         >
           <ArrowLeft size={15} />
-          Back to Profile
+          {t('Back to profile')}
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 mt-3">Edit Profile</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage your account information and security settings.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mt-3">{t('Edit profile')}</h1>
+        <p className="text-sm text-gray-500 mt-1">{t('Manage your account information and security settings.')}</p>
 
         <div className="mt-6 space-y-6">
           <ProfileInfoForm />
           <ChangePasswordForm />
+          <NotificationsForm />
           <DeleteAccountForm />
         </div>
       </div>

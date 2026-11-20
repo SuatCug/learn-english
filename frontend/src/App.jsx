@@ -1,6 +1,7 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ScrollToTop from '@/components/ScrollToTop';
+import { rememberReturnTo } from '@/lib/returnTo';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import VerifyEmailPage from '@/pages/VerifyEmailPage';
@@ -24,9 +25,14 @@ import AiChatPage from '@/pages/AiChatPage';
 import AiLevelsPage from '@/pages/AiLevelsPage';
 import AiTopicsPage from '@/pages/AiTopicsPage';
 
+// Girişe kapalı sayfalar (AI, sınavlar, Seviye Testi, okul, profil): misafir giriş ekranına gider ve giriş
+// yaptıktan sonra geldiği sayfaya döner. Dersler, kategoriler ve ana sayfa herkese açıktır.
 function RequireAuth({ children }) {
   const token = useSelector((state) => state.auth.token);
-  return token ? children : <Navigate to="/login" replace />;
+  const location = useLocation();
+  if (token) return children;
+  rememberReturnTo(location.pathname + location.search);
+  return <Navigate to="/login" replace />;
 }
 
 export default function App() {
@@ -41,49 +47,37 @@ export default function App() {
         <Route
           path="/"
           element={
-            <RequireAuth>
-              <HomePage />
-            </RequireAuth>
+            <HomePage />
           }
         />
         <Route
           path="/topics/:category"
           element={
-            <RequireAuth>
-              <CategoryLevelsPage />
-            </RequireAuth>
+            <CategoryLevelsPage />
           }
         />
         <Route
           path="/topics/:category/:level"
           element={
-            <RequireAuth>
-              <TopicListPage />
-            </RequireAuth>
+            <TopicListPage />
           }
         />
         <Route
           path="/levels/:level"
           element={
-            <RequireAuth>
-              <LevelCategoriesPage />
-            </RequireAuth>
+            <LevelCategoriesPage />
           }
         />
         <Route
           path="/info/:slug"
           element={
-            <RequireAuth>
-              <InfoPage />
-            </RequireAuth>
+            <InfoPage />
           }
         />
         <Route
           path="/lesson/:topicId"
           element={
-            <RequireAuth>
-              <LessonPage />
-            </RequireAuth>
+            <LessonPage />
           }
         />
         <Route
@@ -207,7 +201,7 @@ export default function App() {
             </RequireAuth>
           }
         />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

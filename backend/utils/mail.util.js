@@ -63,49 +63,110 @@ const sendViaBrevo = async ({ to, subject, html }) => {
 // CLIENT_URL virgülle ayrılmış birden fazla origin içerebilir; linkler için ilki kullanılır.
 const clientUrl = () => (process.env.CLIENT_URL || 'http://localhost:5173').split(',')[0].trim().replace(/\/$/, '');
 
-// 6 haneli kod öne çıkarılır (web'de kayıt ekranına, mobilde uygulamaya girilir); yedek olarak link de bulunur.
+// Mail metinleri, kullanıcının o anki arayüz diline göre (req.lang: 'en' | 'tr'; varsayılan İngilizce).
+const MAIL_TEXTS = {
+  en: {
+    hello: (name) => `Hi ${name},`,
+    verifySubject: (code) => `Your verification code: ${code}`,
+    verifyIntro: 'Enter this code on the verification screen to activate your learnenglish account:',
+    verifyValid: 'The code is valid for 30 minutes.',
+    verifyLink: 'Instead of entering the code, you can also click this link (valid for 24 hours):',
+    verifyIgnore: "If you didn't sign up, you can ignore this email.",
+    resetSubject: (code) => `Your password reset code: ${code}`,
+    resetIntro: 'Enter this code on the "Forgot your password?" screen to reset your learnenglish password:',
+    resetValid: 'The code is valid for 15 minutes.',
+    resetIgnore: "If you didn't ask to reset your password, you can ignore this email; your password won't change.",
+    streakSubject: (days) => `Don't lose your ${days}-day streak! 🔥`,
+    streakIntro: (days) =>
+      `You've practised English ${days} days in a row. You haven't practised today yet — one short lesson keeps your streak alive.`,
+    streakCta: 'Practise now',
+    streakOptOut: "You can turn off these reminders on the 'Edit profile' page.",
+  },
+  tr: {
+    hello: (name) => `Merhaba ${name},`,
+    verifySubject: (code) => `Doğrulama kodun: ${code}`,
+    verifyIntro: 'learnenglish hesabını etkinleştirmek için bu kodu doğrulama ekranına gir:',
+    verifyValid: 'Kod 30 dakika geçerlidir.',
+    verifyLink: 'Kod girmek yerine bu bağlantıya da tıklayabilirsin (24 saat geçerli):',
+    verifyIgnore: 'Bu kaydı sen yapmadıysan bu e-postayı yok sayabilirsin.',
+    resetSubject: (code) => `Şifre sıfırlama kodun: ${code}`,
+    resetIntro: 'learnenglish hesabının şifresini sıfırlamak için bu kodu "Şifremi unuttum" ekranına gir:',
+    resetValid: 'Kod 15 dakika geçerlidir.',
+    resetIgnore: 'Şifre sıfırlamayı sen istemediysen bu e-postayı yok sayabilirsin; şifren değişmez.',
+    streakSubject: (days) => `${days} günlük serini kaybetme! 🔥`,
+    streakIntro: (days) =>
+      `${days} gündür üst üste İngilizce çalışıyorsun. Bugün henüz çalışmadın — kısa bir ders serini devam ettirir.`,
+    streakCta: 'Hemen çalış',
+    streakOptOut: "Bu hatırlatmaları 'Profili düzenle' sayfasından kapatabilirsin.",
+  },
+};
+const textsFor = (lang) => MAIL_TEXTS[lang] ?? MAIL_TEXTS.en;
+
 // Renkler sitenin marka yeşili (#50af31) ve navbar grisiyle uyumludur.
-const sendVerificationEmail = (user, { token, code }) => {
+const codeBox = (code) => `
+        <p style="text-align:center;margin:28px 0">
+          <span style="display:inline-block;background:#f2f9ef;border:2px solid #50af31;border-radius:14px;padding:14px 22px;font-size:32px;font-weight:bold;letter-spacing:10px;color:#111827">${code}</span>
+        </p>`;
+
+// 6 haneli kod öne çıkarılır (web'de kayıt ekranına, mobilde uygulamaya girilir); yedek olarak link de bulunur.
+const sendVerificationEmail = (user, { token, code, lang }) => {
+  const t = textsFor(lang);
   const link = `${clientUrl()}/verify-email?token=${token}`;
   return sendMail({
     to: user.email,
-    subject: `Doğrulama kodun: ${code}`,
+    subject: t.verifySubject(code),
     html: `
       <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#111827">
-        <h2 style="color:#111827">Merhaba ${escapeHtml(user.name)},</h2>
-        <p>learnenglish hesabını etkinleştirmek için bu kodu doğrulama ekranına gir:</p>
-        <p style="text-align:center;margin:28px 0">
-          <span style="display:inline-block;background:#f2f9ef;border:2px solid #50af31;border-radius:14px;padding:14px 22px;font-size:32px;font-weight:bold;letter-spacing:10px;color:#111827">${code}</span>
-        </p>
-        <p style="font-size:13px;color:#6b7280">Kod 30 dakika geçerlidir.</p>
-        <p style="font-size:13px;color:#6b7280">Kod girmek yerine bu bağlantıya da tıklayabilirsin (24 saat geçerli):<br>
+        <h2 style="color:#111827">${t.hello(escapeHtml(user.name))}</h2>
+        <p>${t.verifyIntro}</p>${codeBox(code)}
+        <p style="font-size:13px;color:#6b7280">${t.verifyValid}</p>
+        <p style="font-size:13px;color:#6b7280">${t.verifyLink}<br>
           <a href="${link}" style="color:#367823">${link}</a>
         </p>
-        <p style="font-size:13px;color:#6b7280">Bu kaydı sen yapmadıysan bu e-postayı yok sayabilirsin.</p>
+        <p style="font-size:13px;color:#6b7280">${t.verifyIgnore}</p>
       </div>
     `,
   });
 };
 
 // Şifre sıfırlama kodu: kullanıcı "Şifremi unuttum" ekranına bu kodu girer.
-const sendPasswordResetEmail = (user, { code }) =>
-  sendMail({
+const sendPasswordResetEmail = (user, { code, lang }) => {
+  const t = textsFor(lang);
+  return sendMail({
     to: user.email,
-    subject: `Şifre sıfırlama kodun: ${code}`,
+    subject: t.resetSubject(code),
     html: `
       <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#111827">
-        <h2 style="color:#111827">Merhaba ${escapeHtml(user.name)},</h2>
-        <p>learnenglish hesabının şifresini sıfırlamak için bu kodu "Şifremi unuttum" ekranına gir:</p>
-        <p style="text-align:center;margin:28px 0">
-          <span style="display:inline-block;background:#f2f9ef;border:2px solid #50af31;border-radius:14px;padding:14px 22px;font-size:32px;font-weight:bold;letter-spacing:10px;color:#111827">${code}</span>
-        </p>
-        <p style="font-size:13px;color:#6b7280">Kod 15 dakika geçerlidir.</p>
-        <p style="font-size:13px;color:#6b7280">Şifre sıfırlamayı sen istemediysen bu e-postayı yok sayabilirsin; şifren değişmez.</p>
+        <h2 style="color:#111827">${t.hello(escapeHtml(user.name))}</h2>
+        <p>${t.resetIntro}</p>${codeBox(code)}
+        <p style="font-size:13px;color:#6b7280">${t.resetValid}</p>
+        <p style="font-size:13px;color:#6b7280">${t.resetIgnore}</p>
       </div>
     `,
   });
+};
+
+// Seri hatırlatma: serisi süren ama bugün çalışmamış kullanıcıya (utils/streakReminder.js), kullanıcının dilinde.
+const sendStreakReminderEmail = (user, { streak }) => {
+  const t = textsFor(user.language);
+  const link = clientUrl();
+  return sendMail({
+    to: user.email,
+    subject: t.streakSubject(streak),
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#111827">
+        <h2 style="color:#111827">${t.hello(escapeHtml(user.name))}</h2>
+        <p>${t.streakIntro(streak)}</p>
+        <p style="text-align:center;margin:28px 0">
+          <a href="${link}" style="display:inline-block;background:#43962a;color:#fff;text-decoration:none;font-weight:bold;border-radius:10px;padding:12px 24px">${t.streakCta}</a>
+        </p>
+        <p style="font-size:13px;color:#6b7280">${t.streakOptOut}</p>
+      </div>
+    `,
+  });
+};
 
 const escapeHtml = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-module.exports = { sendVerificationEmail, sendPasswordResetEmail };
+module.exports = { sendVerificationEmail, sendPasswordResetEmail, sendStreakReminderEmail, MAIL_TEXTS, textsFor };

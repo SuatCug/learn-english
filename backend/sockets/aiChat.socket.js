@@ -1,5 +1,12 @@
 const { Conversation } = require('../models');
-const { streamReply, countTodayMessages, DAILY_LIMIT, MAX_INPUT_CHARS } = require('../services/ai.service');
+const {
+  streamReply,
+  countTodayMessages,
+  countUserTurns,
+  DAILY_LIMIT,
+  MAX_INPUT_CHARS,
+  TOPIC_TURNS,
+} = require('../services/ai.service');
 const { findTopic } = require('../data/aiTopics');
 
 // AI sohbeti: kullanıcı 'ai:message' gönderir, cevap 'ai:delta' parçalarıyla canlı akar,
@@ -20,6 +27,7 @@ function registerAiChatSocket(socket) {
     try {
       const conversation = await Conversation.findOne({ _id: conversationId, userId: socket.user.id }).catch(() => null);
       if (!conversation) return reply({ ok: false, message: 'Sohbet bulunamadı.' });
+      if (conversation.finished) return reply({ ok: false, message: 'Bu sohbet bitti. Yeni bir sohbet başlatabilirsin.' });
 
       const usedToday = await countTodayMessages(socket.user.id);
       if (usedToday >= DAILY_LIMIT) {
@@ -31,6 +39,8 @@ function registerAiChatSocket(socket) {
         conversation.title = content.length > 40 ? `${content.slice(0, 40)}…` : content;
       }
       await conversation.save();
+      // Konulu sohbette sınırdaki mesaj: AI sohbeti kapatır, cevaptan sonra sohbet biter (sonuç ekranı).
+      const lastTurn = Boolean(conversation.topic) && countUserTurns(conversation.messages) >= TOPIC_TURNS;
 
       // Mesaj kabul edildi; cevap stream ile gelecek.
       reply({ ok: true, usedToday: usedToday + 1, dailyLimit: DAILY_LIMIT, title: conversation.title });
@@ -41,12 +51,19 @@ function registerAiChatSocket(socket) {
           level: conversation.level,
           topic: conversation.topic ? findTopic(conversation.level, conversation.topic) : null,
           messages: conversation.messages,
+          lastTurn,
           onDelta: (chunk) => socket.emit('ai:delta', { conversationId, chunk }),
         });
 
         conversation.messages.push({ role: 'assistant', content: answer });
+        if (lastTurn) conversation.finished = true;
         await conversation.save();
-        socket.emit('ai:done', { conversationId, message: conversation.messages[conversation.messages.length - 1] });
+        // finished: true gelirse frontend sonuç ekranını açar ve değerlendirmeyi (POST .../finish) ister.
+        socket.emit('ai:done', {
+          conversationId,
+          message: conversation.messages[conversation.messages.length - 1],
+          finished: conversation.finished,
+        });
       } catch (err) {
         console.error('AI cevap hatası:', err.status, err.message);
         // Cevapsız kalan kullanıcı mesajını geri al ki sohbet geçmişi bozulmasın (iki user mesajı art arda).

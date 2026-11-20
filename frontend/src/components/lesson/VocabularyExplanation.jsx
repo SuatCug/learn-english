@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 // Vocabulary konuları için "Explanation" görünümü — resim kullanılmıyor, sadece emoji.
 // Kelime grupları tablo halinde: (varsa) emoji, kelime, anlam/örnek cümle.
 function WordTable({ group, theme }) {
+  const { t } = useTranslation();
   const hasEmoji = group.words.some((w) => w.emoji);
 
   return (
@@ -13,8 +15,8 @@ function WordTable({ group, theme }) {
           <thead>
             <tr className={`${theme.solid} text-white`}>
               {hasEmoji && <th className="text-left font-semibold px-3 py-2 w-12"></th>}
-              <th className="text-left font-semibold px-3 py-2 whitespace-nowrap">Word</th>
-              <th className="text-left font-semibold px-3 py-2">Meaning &amp; Example</th>
+              <th className="text-left font-semibold px-3 py-2 whitespace-nowrap">{t('Word')}</th>
+              <th className="text-left font-semibold px-3 py-2">{t('Meaning & example')}</th>
             </tr>
           </thead>
           <tbody>
@@ -36,6 +38,7 @@ function WordTable({ group, theme }) {
 }
 
 export default function VocabularyExplanation({ data, theme, onNext }) {
+  const { t } = useTranslation();
   return (
     <div>
       <h2 className="text-xl font-bold text-gray-900 mb-1.5">{data.heading}</h2>
@@ -49,7 +52,7 @@ export default function VocabularyExplanation({ data, theme, onNext }) {
 
       {data.tips && (
         <div className={`rounded-xl border-2 ${theme.border} bg-white p-4 mb-8`}>
-          <p className="font-bold text-gray-900 mb-1.5">Tips</p>
+          <p className="font-bold text-gray-900 mb-1.5">{t('Tips')}</p>
           <ul className="text-sm text-gray-700 space-y-1">
             {data.tips.map((tip) => (
               <li key={tip} className="flex gap-2">
@@ -68,7 +71,7 @@ export default function VocabularyExplanation({ data, theme, onNext }) {
             onClick={onNext}
             className={`rounded-full ${theme.solid} ${theme.solidHover} text-white font-semibold px-6 py-3 text-sm transition-colors`}
           >
-            Next: Try the Exercises →
+            {t('Next: Try the exercises →')}
           </button>
         </div>
       )}

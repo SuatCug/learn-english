@@ -5,6 +5,7 @@ const validate = require('../middlewares/validate.middleware');
 const {
   progressRules,
   updateProfileRules,
+  preferencesRules,
   changePasswordRules,
   deleteAccountRules,
   setLevelRules,
@@ -12,6 +13,7 @@ const {
 
 router.get('/me', authenticate, userController.me);
 router.patch('/me', authenticate, updateProfileRules, validate, userController.updateProfile);
+router.patch('/me/preferences', authenticate, preferencesRules, validate, userController.updatePreferences);
 router.patch('/me/level', authenticate, setLevelRules, validate, userController.setLevel);
 router.patch('/me/password', authenticate, changePasswordRules, validate, userController.changePassword);
 router.delete('/me', authenticate, deleteAccountRules, validate, userController.deleteAccount);

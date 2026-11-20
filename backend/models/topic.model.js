@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const topicSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+    // Başlığın Türkçesi (data/topicTitlesTr.js, seed doldurur); arayüz Türkçeyken gösterilir, yoksa title.
+    titleTr: { type: String, default: null },
     category: { type: String, enum: ['grammar', 'vocabulary', 'writing', 'reading', 'listening'], required: true },
     level: { type: String, enum: ['A1', 'A2', 'B1', 'B2'], required: true },
     description: { type: String, trim: true, default: '' },

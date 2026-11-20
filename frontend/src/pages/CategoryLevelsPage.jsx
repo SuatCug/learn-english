@@ -3,6 +3,8 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { CATEGORIES, LEVELS, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from '@/lib/constants';
 import { levelIllustration } from '@/lib/categoryIllustrations';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 
 const PALETTES = [
   'from-emerald-500 to-emerald-700',
@@ -15,9 +17,11 @@ const PALETTES = [
 ];
 
 export default function CategoryLevelsPage() {
+  const { t } = useTranslation();
   const { category } = useParams();
   const categoryInfo = CATEGORIES.find((c) => c.slug === category);
-  const categoryLabel = categoryInfo?.label ?? category;
+  const categoryLabel = t(categoryInfo?.label ?? category);
+  usePageTitle(t('{{category}} Lessons and Exercises', { category: categoryLabel }));
   // Her seviye kartının kendi kapak fotoğrafı var (lib/categoryIllustrations.js).
   const illustrationFor = (levelCode) => levelIllustration(category, levelCode);
   const bannerClass = CATEGORY_BANNER_CLASS[category] ?? DEFAULT_BANNER_CLASS;
@@ -28,11 +32,9 @@ export default function CategoryLevelsPage() {
 
       <div className={bannerClass}>
         <h1 className="max-w-6xl mx-auto px-6 py-3 text-center text-white font-bold tracking-wide uppercase text-sm sm:text-base">
-          {categoryLabel} Lessons and Exercises
+          {t('{{category}} Lessons and Exercises', { category: categoryLabel })}
         </h1>
       </div>
-
-      <div className="max-w-6xl mx-auto px-6 pt-4 text-sm text-gray-500">{categoryLabel}</div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-6 flex-1 w-full">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -56,13 +58,13 @@ export default function CategoryLevelsPage() {
                   {level.code}
                 </span>
                 <span className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm px-4 py-2.5">
-                  <span className="block text-white font-bold text-sm leading-tight">{level.name}</span>
-                  <span className="block text-white/80 text-xs">{categoryLabel} Exercises</span>
+                  <span className="block text-white font-bold text-sm leading-tight">{t(level.name)}</span>
+                  <span className="block text-white/80 text-xs">{t('{{category}} Exercises', { category: categoryLabel })}</span>
                 </span>
               </div>
               <div className="p-4 bg-white">
                 <p className="text-sm font-medium text-gray-800 leading-snug">
-                  {level.code} {categoryLabel} lessons and exercises
+                  {t('{{level}} {{category}} lessons and exercises', { level: level.code, category: categoryLabel })}
                 </p>
               </div>
             </Link>

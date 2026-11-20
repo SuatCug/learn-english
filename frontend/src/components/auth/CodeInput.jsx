@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const CODE_LENGTH = 6;
 export const emptyCode = () => Array(CODE_LENGTH).fill('');
@@ -7,6 +8,7 @@ export const emptyCode = () => Array(CODE_LENGTH).fill('');
 // Yazılan/yapıştırılan rakamlar kutulara dağıtılır; 6 hane dolunca onComplete(kod) çağrılır.
 // digits / onChange dışarıdan kontrol edilir; inputsRef verilirse ilk kutuya odaklanmak için kullanılabilir.
 export default function CodeInput({ digits, onChange, onComplete, disabled = false, inputsRef }) {
+  const { t } = useTranslation();
   const localRef = useRef([]);
   const inputs = inputsRef ?? localRef;
 
@@ -60,7 +62,7 @@ export default function CodeInput({ digits, onChange, onComplete, disabled = fal
           autoFocus={i === 0}
           maxLength={CODE_LENGTH}
           value={digit}
-          aria-label={`Kodun ${i + 1}. hanesi`}
+          aria-label={t('Digit {{n}} of the code', { n: i + 1 })}
           onChange={(e) => {
             // Dolu kutuya yazılınca eski rakamı at, sadece yeni yazılanı al.
             const value = e.target.value;

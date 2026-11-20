@@ -82,6 +82,12 @@ const userSchema = new mongoose.Schema(
     progress: { type: [progressEntrySchema], default: [] },
     examResults: { type: [examResultSchema], default: [] },
     badges: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Badge' }],
+    // Arayüz dili: kullanıcıya giden otomatik maillerin (seri hatırlatma) dili. Profil açılışında güncellenir.
+    language: { type: String, enum: ['en', 'tr'], default: 'en' },
+    // Seri hatırlatma maili (utils/streakReminder.js) gönderilsin mi; profil düzenleme sayfasından kapatılabilir.
+    emailReminders: { type: Boolean, default: true },
+    // Aynı gün ikinci hatırlatma gitmesin diye son gönderim zamanı.
+    lastStreakReminderAt: { type: Date, default: null },
     // Premium/Öğretmen özellikleri (sınıf oluşturma vb.) şimdilik admin tarafından manuel set edilir.
     isPremium: { type: Boolean, default: false },
     // Default bilerek verilmedi: bu alan eklenmeden önce kayıt olan kullanıcılarda alan hiç yoktur
@@ -109,7 +115,8 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.methods.toSafeJSON = function toSafeJSON() {
-  const { _id, name, email, role, level, placementTestCompleted, progress, examResults, badges, isPremium, createdAt } = this;
+  const { _id, name, email, role, level, placementTestCompleted, progress, examResults, badges, isPremium, createdAt, emailReminders } =
+    this;
   const hasPassword = this.hasPassword !== false;
   return {
     id: _id,
@@ -124,6 +131,7 @@ userSchema.methods.toSafeJSON = function toSafeJSON() {
     isPremium,
     createdAt,
     hasPassword,
+    emailReminders: emailReminders !== false,
   };
 };
 

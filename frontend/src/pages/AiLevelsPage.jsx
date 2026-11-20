@@ -7,24 +7,27 @@ import { levelIllustration } from '@/lib/categoryIllustrations';
 import { AI_SECTIONS, conversationPath, levelPath } from '@/lib/aiSections';
 import { speechRecognitionSupported } from '@/hooks/useSpeech';
 import { useGetConversationsQuery } from '@/services/aiChatApi';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
+import { tk, dateLocale } from '@/i18n';
 
 // /topics/:category (CategoryLevelsPage) sayfasıyla aynı tasarım; AI Talk ve AI Chat bu sayfayı kullanır.
 // Kapak fotoğrafları: assets/levels/<talk|chat>-<seviye>.webp (yoksa gradyan).
 const CONTENT = {
   talk: {
-    title: 'Talking Practice',
-    cardSubtitle: 'Speaking Practice',
-    cardText: (code) => `${code} speaking practice`,
-    recentTitle: 'Your recent speaking practice',
+    title: tk('Talking Practice'),
+    cardSubtitle: tk('Speaking Practice'),
+    cardText: tk('{{code}} speaking practice'),
+    recentTitle: tk('Your recent speaking practice'),
     icon: Mic,
     palettes: ['from-teal-500 to-teal-700', 'from-cyan-500 to-cyan-700', 'from-sky-500 to-sky-700', 'from-emerald-600 to-teal-700'],
     recentIconClass: 'bg-teal-50 text-teal-600',
   },
   chat: {
-    title: 'Chatting Practice',
-    cardSubtitle: 'Chat Practice',
-    cardText: (code) => `${code} chat practice`,
-    recentTitle: 'Your recent chats',
+    title: tk('Chatting Practice'),
+    cardSubtitle: tk('Chat Practice'),
+    cardText: tk('{{code}} chat practice'),
+    recentTitle: tk('Your recent chats'),
     icon: MessageCircle,
     palettes: ['from-indigo-500 to-indigo-700', 'from-violet-500 to-indigo-700', 'from-indigo-600 to-blue-700', 'from-blue-600 to-indigo-800'],
     recentIconClass: 'bg-indigo-50 text-indigo-600',
@@ -32,8 +35,10 @@ const CONTENT = {
 };
 
 export default function AiLevelsPage({ section: sectionKey }) {
+  const { t } = useTranslation();
   const section = AI_SECTIONS[sectionKey];
   const content = CONTENT[sectionKey];
+  usePageTitle(t(content.title));
   const Icon = content.icon;
   const illustrationFor = (levelCode) => levelIllustration(sectionKey, levelCode);
 
@@ -46,17 +51,16 @@ export default function AiLevelsPage({ section: sectionKey }) {
 
       <div className={section.bannerClass}>
         <h1 className="max-w-6xl mx-auto px-6 py-3 text-center text-white font-bold tracking-wide uppercase text-sm sm:text-base">
-          {content.title}
+          {t(content.title)}
         </h1>
       </div>
-
-      <div className="max-w-6xl mx-auto px-6 pt-4 text-sm text-gray-500 w-full">{section.label}</div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-6 flex-1 w-full">
         {sectionKey === 'talk' && !speechRecognitionSupported && (
           <p className="mb-6 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Tarayıcın sesli konuşmayı desteklemiyor. Mikrofonla konuşmak için Chrome veya Edge kullan; bu tarayıcıda
-            yazarak devam edebilirsin.
+            {t(
+              "Your browser doesn't support voice conversation. Use Chrome or Edge to talk with your microphone; in this browser you can continue by typing."
+            )}
           </p>
         )}
 
@@ -81,12 +85,12 @@ export default function AiLevelsPage({ section: sectionKey }) {
                   {level.code}
                 </span>
                 <span className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm px-4 py-2.5">
-                  <span className="block text-white font-bold text-sm leading-tight">{level.name}</span>
-                  <span className="block text-white/80 text-xs">{content.cardSubtitle}</span>
+                  <span className="block text-white font-bold text-sm leading-tight">{t(level.name)}</span>
+                  <span className="block text-white/80 text-xs">{t(content.cardSubtitle)}</span>
                 </span>
               </div>
               <div className="p-4 bg-white">
-                <p className="text-sm font-medium text-gray-800 leading-snug">{content.cardText(level.code)}</p>
+                <p className="text-sm font-medium text-gray-800 leading-snug">{t(content.cardText, { code: level.code })}</p>
               </div>
             </Link>
           ))}
@@ -94,7 +98,7 @@ export default function AiLevelsPage({ section: sectionKey }) {
 
         {recent.length > 0 && (
           <section className="mt-14">
-            <h2 className="mb-4 text-base font-bold text-gray-900">{content.recentTitle}</h2>
+            <h2 className="mb-4 text-base font-bold text-gray-900">{t(content.recentTitle)}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {recent.map((c) => (
                 <Link
@@ -108,7 +112,7 @@ export default function AiLevelsPage({ section: sectionKey }) {
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-medium text-gray-800">{c.title}</span>
                     <span className="block text-xs text-gray-400">
-                      {c.level} · {new Date(c.updatedAt).toLocaleDateString('tr-TR')}
+                      {c.level} · {new Date(c.updatedAt).toLocaleDateString(dateLocale())}
                     </span>
                   </span>
                 </Link>

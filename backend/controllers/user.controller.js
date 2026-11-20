@@ -2,11 +2,21 @@ const bcrypt = require('bcryptjs');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const { User, Topic, Classroom, Assignment } = require('../models');
-const { dayKey, currentStreak } = require('../utils/badgeEngine');
+const { dayKey, currentStreak, evaluateBadges } = require('../utils/badgeEngine');
 const { appendProgressEntry } = require('../utils/progress.util');
 const { getRequiredTopicCount } = require('../utils/levelProgress.util');
 
 const me = asyncHandler(async (req, res) => {
+  // Profil açılınca rozetler yeniden kontrol edilir: yeni eklenen rozetlerin şartını zaten sağlayanlar da kazanır.
+  const plainUser = await User.findById(req.user.id);
+  if (!plainUser) throw new ApiError(404, 'Kullanıcı bulunamadı.');
+  // Otomatik maillerin dili: kullanıcının son kullandığı arayüz dili.
+  if (plainUser.language !== req.lang) {
+    plainUser.language = req.lang;
+    await plainUser.save();
+  }
+  await evaluateBadges(plainUser);
+
   const user = await User.findById(req.user.id).populate('badges').populate('progress.topicId');
 
   const streak = currentStreak(user.progress.map((p) => dayKey(p.completedAt)));
@@ -63,6 +73,15 @@ const updateProfile = asyncHandler(async (req, res) => {
   await user.save();
 
   res.json({ success: true, message: 'Profil güncellendi.', data: { user: user.toSafeJSON() } });
+});
+
+// E-posta tercihleri (şimdilik sadece seri hatırlatma maili).
+const updatePreferences = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) throw new ApiError(404, 'Kullanıcı bulunamadı.');
+  user.emailReminders = req.body.emailReminders;
+  await user.save();
+  res.json({ success: true, message: 'Tercihlerin kaydedildi.', data: { user: user.toSafeJSON() } });
 });
 
 // İlk girişteki seviye seçimi ("Yeni başlıyorum" → A1, "Seviyemi biliyorum" → seçilen seviye).
@@ -123,4 +142,4 @@ const deleteAccount = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Hesap silindi.' });
 });
 
-module.exports = { me, addProgress, updateProfile, setLevel, changePassword, deleteAccount };
+module.exports = { me, addProgress, updateProfile, updatePreferences, setLevel, changePassword, deleteAccount };

@@ -11,32 +11,40 @@ import {
   Flame,
   ChevronLeft,
   ChevronRight,
-  BookOpenText,
-  BookMarked,
+  Badge,
+  Book,
+  File,
+  NotebookPen,
   BookOpen,
-  PenLine,
   Headphones,
   Link2,
   UserRound,
   GraduationCap,
   ClipboardCheck,
   ArrowRight,
+  Mic,
+  MessageCircle,
 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { useGetMeQuery } from '@/services/usersApi';
+import { useGetMeQuery, useGetBadgesQuery } from '@/services/usersApi';
+import { useGetConversationsQuery } from '@/services/aiChatApi';
 import { CATEGORIES, LEVELS, CATEGORY_THEME, DEFAULT_THEME } from '@/lib/constants';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
+import { tk, dateLocale } from '@/i18n';
 
-// Kategori ikonları (Strengths by Category, Recent Activity, Topics to Review).
+// Kategori ikonları (Strengths by Category, Recent Activity, Topics to Review) — navbar menüleriyle aynı.
 const CATEGORY_ICONS = {
-  grammar: BookOpenText,
-  vocabulary: BookMarked,
-  reading: BookOpen,
-  writing: PenLine,
+  grammar: Badge,
+  vocabulary: Book,
+  reading: File,
+  writing: NotebookPen,
   listening: Headphones,
 };
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WEEKDAYS = [tk('Mon'), tk('Tue'), tk('Wed'), tk('Thu'), tk('Fri'), tk('Sat'), tk('Sun')];
 
 function scoreColor(score) {
   if (score >= 80) return 'text-emerald-600';
@@ -45,7 +53,7 @@ function scoreColor(score) {
 }
 
 function formatDate(value) {
-  return new Date(value).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(value).toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 // Yerel (tarayıcı saat dilimine göre) gün anahtarı — tarih gösterimiyle ve kullanıcının
@@ -172,35 +180,52 @@ function StatCard({ icon: Icon, iconClass, value, label, hint }) {
   );
 }
 
+// AI pratiği satırları: biten konulu sohbetlerin sonuç puanlarının (1–10) ortalaması, yüzde olarak.
+// Renkler AI bölümleriyle aynı (Talking teal, Chatting indigo).
+const AI_STRENGTHS = [
+  { slug: 'talk', label: tk('Talking'), icon: Mic, text: 'text-teal-600', solid: 'bg-teal-600' },
+  { slug: 'chat', label: tk('Chatting'), icon: MessageCircle, text: 'text-indigo-600', solid: 'bg-indigo-600' },
+];
+
 function StrengthsCard({ progress }) {
-  const stats = CATEGORIES.map((category) => {
-    const entries = progress.filter((e) => entryCategory(e) === category.slug);
-    const average = entries.length ? Math.round(entries.reduce((s, e) => s + e.score, 0) / entries.length) : null;
-    return { ...category, average };
-  });
+  const { t } = useTranslation();
+  const { data: aiData } = useGetConversationsQuery();
+  const conversations = aiData?.data?.conversations ?? [];
+
+  const stats = [
+    ...CATEGORIES.map((category) => {
+      const entries = progress.filter((e) => entryCategory(e) === category.slug);
+      const average = entries.length ? Math.round(entries.reduce((s, e) => s + e.score, 0) / entries.length) : null;
+      const theme = CATEGORY_THEME[category.slug] ?? DEFAULT_THEME;
+      return { ...category, average, Icon: CATEGORY_ICONS[category.slug] ?? BookOpen, text: theme.text, solid: theme.solid };
+    }),
+    ...AI_STRENGTHS.map((ai) => {
+      const scores = conversations.filter((c) => c.mode === ai.slug && c.result?.score).map((c) => c.result.score * 10);
+      const average = scores.length ? Math.round(scores.reduce((s, n) => s + n, 0) / scores.length) : null;
+      return { ...ai, average, Icon: ai.icon };
+    }),
+  ];
 
   return (
     <Card className="p-5 sm:p-6">
-      <CardTitle icon={BarChart3}>Strengths by Category</CardTitle>
+      <CardTitle icon={BarChart3}>{t('Strengths by category')}</CardTitle>
       <div className="space-y-4">
-        {stats.map((stat) => {
-          const Icon = CATEGORY_ICONS[stat.slug] ?? BookOpen;
-          // Sitedeki kategori renkleri (ders sayfaları ve navbar ile aynı): grammar mavi, vocabulary pembe...
-          const theme = CATEGORY_THEME[stat.slug] ?? DEFAULT_THEME;
+        {stats.map(({ Icon, ...stat }) => {
+          // Sitedeki renkler (ders sayfaları ve navbar ile aynı): grammar mavi, vocabulary pembe, talking teal...
           return (
             <div key={stat.slug} className="flex items-center gap-3">
-              <Icon size={20} className={`shrink-0 ${theme.text}`} aria-hidden="true" />
-              <span className="w-24 shrink-0 text-sm text-gray-700">{stat.label}</span>
+              <Icon size={20} className={`shrink-0 ${stat.text}`} aria-hidden="true" />
+              <span className="w-24 shrink-0 text-sm text-gray-700">{t(stat.label)}</span>
               <div className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden">
                 {stat.average !== null && (
-                  <div className={`h-full rounded-full ${theme.solid}`} style={{ width: `${stat.average}%` }} />
+                  <div className={`h-full rounded-full ${stat.solid}`} style={{ width: `${stat.average}%` }} />
                 )}
               </div>
               <span className="w-28 shrink-0 text-right text-sm">
                 {stat.average !== null ? (
                   <span className="font-bold text-gray-900">{stat.average}%</span>
                 ) : (
-                  <span className="text-gray-400">Not started yet</span>
+                  <span className="text-gray-400">{t('Not started yet')}</span>
                 )}
               </span>
             </div>
@@ -212,8 +237,9 @@ function StrengthsCard({ progress }) {
 }
 
 function ActivityRow({ entry }) {
+  const { t } = useTranslation();
   const topic = entry.topicId;
-  const title = entry.topicTitle || topic?.title || 'Removed lesson';
+  const title = (topic?.title && localized(topic)) || entry.topicTitle || t('Removed lesson');
   const content = (
     <>
       <CategoryChip category={entryCategory(entry)} />
@@ -234,15 +260,16 @@ function ActivityRow({ entry }) {
 }
 
 function RecentActivityCard({ progress }) {
+  const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   const sorted = [...progress].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
   const visible = sorted.slice(0, showAll ? 20 : 5);
 
   return (
     <Card className="p-5 sm:p-6">
-      <CardTitle icon={Clock}>Recent Activity</CardTitle>
+      <CardTitle icon={Clock}>{t('Recent activity')}</CardTitle>
       {sorted.length === 0 ? (
-        <p className="text-sm text-gray-400">You haven't completed any topics yet.</p>
+        <p className="text-sm text-gray-400">{t("You haven't completed any topics yet.")}</p>
       ) : (
         <>
           <div className="divide-y divide-gray-100">
@@ -256,7 +283,7 @@ function RecentActivityCard({ progress }) {
               onClick={() => setShowAll((v) => !v)}
               className="mt-3 mx-auto flex items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
             >
-              {showAll ? 'Show less' : 'View all activity'}
+              {showAll ? t('Show less') : t('View all activity')}
               <ArrowRight size={16} className={showAll ? '-rotate-90' : ''} aria-hidden="true" />
             </button>
           )}
@@ -268,6 +295,7 @@ function RecentActivityCard({ progress }) {
 
 // Seri kartı: solda seri sayısı, sağda çalışılan günleri işaretleyen aylık takvim.
 function StreakCard({ progress }) {
+  const { t } = useTranslation();
   const streak = currentStreak(progress);
   const activeDays = useMemo(() => new Set(progress.map((p) => dayKey(p.completedAt))), [progress]);
   const [month, setMonth] = useState(() => {
@@ -289,14 +317,14 @@ function StreakCard({ progress }) {
       <div className="grid gap-6 sm:grid-cols-[150px_minmax(0,1fr)]">
         <div>
           <CardTitle icon={Flame} iconClass="text-orange-500">
-            Your Streak
+            {t('Your streak')}
           </CardTitle>
           <div className="rounded-xl bg-emerald-50/70 px-4 py-6 text-center">
             <p className="text-5xl font-extrabold text-gray-900 tabular-nums">{streak}</p>
-            <p className="text-sm font-medium text-gray-600">Day{streak === 1 ? '' : 's'}</p>
-            <p className="mt-4 text-sm font-semibold text-gray-800">{streak ? 'Keep going! 🔥' : 'Start today!'}</p>
+            <p className="text-sm font-medium text-gray-600">{streak === 1 ? t('Day') : t('Days')}</p>
+            <p className="mt-4 text-sm font-semibold text-gray-800">{streak ? `${t('Keep going!')} 🔥` : t('Start today!')}</p>
             <p className="text-xs text-gray-500">
-              {streak ? 'Reach a higher streak.' : 'Complete a topic to begin.'}
+              {streak ? t('Reach a higher streak.') : t('Complete a topic to begin.')}
             </p>
           </div>
         </div>
@@ -306,18 +334,18 @@ function StreakCard({ progress }) {
             <button
               type="button"
               onClick={() => changeMonth(-1)}
-              aria-label="Previous month"
+              aria-label={t('Previous month')}
               className="p-1 rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-700"
             >
               <ChevronLeft size={18} />
             </button>
             <p className="font-bold text-gray-900">
-              {month.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              {month.toLocaleDateString(dateLocale(), { month: 'long', year: 'numeric' })}
             </p>
             <button
               type="button"
               onClick={() => changeMonth(1)}
-              aria-label="Next month"
+              aria-label={t('Next month')}
               className="p-1 rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-700"
             >
               <ChevronRight size={18} />
@@ -326,7 +354,7 @@ function StreakCard({ progress }) {
           <div className="grid grid-cols-7 gap-y-1 text-center text-xs">
             {WEEKDAYS.map((d) => (
               <span key={d} className="pb-1 font-medium text-gray-400">
-                {d}
+                {t(d)}
               </span>
             ))}
             {cells.map((date, i) => {
@@ -355,6 +383,7 @@ function StreakCard({ progress }) {
 }
 
 function TopicsToReviewCard({ progress }) {
+  const { t } = useTranslation();
   const latestByTopic = new Map();
   progress.forEach((entry) => {
     const key = entry.topicId?._id ?? entry.topicTitle;
@@ -365,13 +394,14 @@ function TopicsToReviewCard({ progress }) {
 
   return (
     <Card className="p-5 sm:p-6">
-      <CardTitle icon={BookOpen}>Topics to Review</CardTitle>
+      <CardTitle icon={BookOpen}>{t('Topics to review')}</CardTitle>
       {weakest.length === 0 ? (
-        <p className="text-sm text-gray-400">Complete some topics and we'll suggest what to review.</p>
+        <p className="text-sm text-gray-400">{t("Complete some topics and we'll suggest what to review.")}</p>
       ) : (
         <div className="divide-y divide-gray-100">
           {weakest.map((entry) => {
-            const title = entry.topicTitle || entry.topicId?.title || 'Deleted topic';
+            const title =
+              (entry.topicId?.title && localized(entry.topicId)) || entry.topicTitle || t('Deleted topic');
             const content = (
               <>
                 <CategoryChip category={entryCategory(entry)} size={10} fallback={Pencil} />
@@ -400,50 +430,70 @@ function TopicsToReviewCard({ progress }) {
   );
 }
 
+// Tüm rozetler: kazanılanlar renkli, henüz kazanılmayanlar soluk (üzerine gelince nasıl kazanılacağı yazar).
 function BadgesCard({ badges }) {
+  const { t } = useTranslation();
+  const { data } = useGetBadgesQuery();
+  const allBadges = data?.data?.badges ?? badges;
+  const earnedIds = new Set(badges.filter(Boolean).map((b) => b._id));
+  // Kazanılanlar önce, sonra kazanılmayanlar (kendi içlerinde rozet sırası korunur).
+  const sorted = [...allBadges].sort((a, b) => Number(earnedIds.has(b._id)) - Number(earnedIds.has(a._id)));
+
   return (
     <Card className="p-5 sm:p-6">
-      <CardTitle icon={Star} iconClass="text-amber-400 fill-amber-400">
-        Badges
-      </CardTitle>
-      {badges.length === 0 ? (
-        <div className="text-center">
-          <p className="text-sm text-gray-500">No badges earned yet — complete topics to start earning some.</p>
-          <span className="mt-4 mx-auto w-14 h-14 rounded-full bg-gray-100 border-4 border-gray-200 flex items-center justify-center">
-            <Star size={22} className="text-gray-400" aria-hidden="true" />
+      <CardTitle
+        icon={Star}
+        iconClass="text-amber-400 fill-amber-400"
+        action={
+          <span className="text-sm font-semibold text-gray-500 tabular-nums">
+            {earnedIds.size} / {allBadges.length}
           </span>
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {badges.map((badge) => (
-            <span
+        }
+      >
+        {t('Badges')}
+      </CardTitle>
+      {earnedIds.size === 0 && (
+        <p className="mb-4 text-sm text-gray-500">{t('No badges earned yet — complete topics, exams and AI practice to earn them.')}</p>
+      )}
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-2 gap-y-4">
+        {sorted.map((badge) => {
+          const earned = earnedIds.has(badge._id);
+          return (
+            <div
               key={badge._id}
-              title={badge.description}
-              className="flex items-center gap-1.5 rounded-full border border-emerald-100 bg-white pl-1.5 pr-3 py-1.5 shadow-sm"
+              title={earned ? t(badge.description) : `${t('Locked')} — ${t(badge.description)}`}
+              className="flex flex-col items-center text-center"
             >
-              <span className="w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center text-sm">
+              <span
+                className={`flex h-12 w-12 items-center justify-center rounded-full text-2xl ${
+                  earned ? 'bg-amber-50 ring-2 ring-amber-200' : 'bg-gray-100 grayscale opacity-40'
+                }`}
+              >
                 {badge.icon}
               </span>
-              <span className="text-xs font-medium text-gray-700">{badge.title}</span>
-            </span>
-          ))}
-        </div>
-      )}
+              <span className={`mt-1.5 text-[11px] font-medium leading-tight ${earned ? 'text-gray-800' : 'text-gray-400'}`}>
+                {t(badge.title)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </Card>
   );
 }
 
 function QuickLinksCard({ isPremium, hasLevel }) {
+  const { t } = useTranslation();
   const links = [
-    { to: '/profile/edit', label: 'Edit Profile', icon: UserRound },
-    isPremium && { to: '/school', label: 'Manage My Classes', icon: GraduationCap },
-    { to: '/exams', label: 'Level Exams', icon: ClipboardCheck },
-    !hasLevel && { to: '/placement-test', label: 'Take the Level Test', icon: BarChart3 },
+    { to: '/profile/edit', label: tk('Edit profile'), icon: UserRound },
+    isPremium && { to: '/school', label: tk('Manage my classes'), icon: GraduationCap },
+    { to: '/exams', label: tk('Level Exams'), icon: ClipboardCheck },
+    !hasLevel && { to: '/placement-test', label: tk('Take the Level Test'), icon: BarChart3 },
   ].filter(Boolean);
 
   return (
     <Card className="p-5 sm:p-6">
-      <CardTitle icon={Link2}>Quick Links</CardTitle>
+      <CardTitle icon={Link2}>{t('Quick links')}</CardTitle>
       <div className="divide-y divide-gray-100">
         {links.map(({ to, label, icon: Icon }) => (
           <Link
@@ -452,7 +502,7 @@ function QuickLinksCard({ isPremium, hasLevel }) {
             className="group flex items-center gap-3 py-3 text-sm font-medium text-gray-800 hover:text-emerald-700"
           >
             <Icon size={19} className="text-emerald-600" aria-hidden="true" />
-            {label}
+            {t(label)}
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
         ))}
@@ -462,13 +512,14 @@ function QuickLinksCard({ isPremium, hasLevel }) {
 }
 
 function StartCta() {
+  const { t } = useTranslation();
   return (
     <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-100 via-emerald-50 to-emerald-200 px-6 py-7 sm:px-10 flex flex-col md:flex-row md:items-center gap-6">
       <TargetIllustration className="hidden sm:block w-24 h-24 shrink-0" />
       <div className="flex-1">
-        <p className="text-xl sm:text-2xl font-bold text-gray-900">Not sure where to start?</p>
+        <p className="text-xl sm:text-2xl font-bold text-gray-900">{t('Not sure where to start?')}</p>
         <p className="mt-1 text-sm sm:text-base text-gray-600">
-          Take the free Level Test and we'll recommend the right lessons for you — or check a level with an exam.
+          {t("Take the free Level Test and we'll recommend the right lessons for you — or check a level with an exam.")}
         </p>
       </div>
       <div className="flex flex-col gap-3 shrink-0 md:w-56">
@@ -476,13 +527,13 @@ function StartCta() {
           to="/placement-test"
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-white text-gray-900 font-semibold px-5 py-3 shadow-sm hover:bg-emerald-50 transition-colors"
         >
-          Take the Level Test <ArrowRight size={18} aria-hidden="true" />
+          {t('Take the Level Test')} <ArrowRight size={18} aria-hidden="true" />
         </Link>
         <Link
           to="/exams"
           className="inline-flex items-center justify-center rounded-xl bg-emerald-600 text-white font-semibold px-5 py-3 hover:bg-emerald-700 transition-colors"
         >
-          Browse exams
+          {t('Browse exams')}
         </Link>
       </div>
     </section>
@@ -490,7 +541,10 @@ function StartCta() {
 }
 
 export default function ProfilePage() {
-  const { data, isLoading, isError } = useGetMeQuery();
+  const { t } = useTranslation();
+  usePageTitle(t('My profile'));
+  // Profil her açılışta yenilenir: backend bu sırada rozetleri de yeniden kontrol eder.
+  const { data, isLoading, isError } = useGetMeQuery(undefined, { refetchOnMountOrArgChange: true });
   const user = data?.data?.user;
 
   if (isLoading || isError || !user) {
@@ -500,7 +554,7 @@ export default function ProfilePage() {
         <p
           className={`max-w-6xl mx-auto px-6 py-20 text-sm flex-1 ${isLoading ? 'text-gray-400' : 'text-rose-500'}`}
         >
-          {isLoading ? 'Loading profile...' : "Couldn't load your profile. Please try again."}
+          {isLoading ? t('Loading profile...') : t("Couldn't load your profile. Please try again.")}
         </p>
         <Footer />
       </div>
@@ -547,18 +601,22 @@ export default function ProfilePage() {
                   <>
                     <span className="inline-flex items-center gap-1.5">
                       <BarChart3 size={16} className="text-emerald-600" aria-hidden="true" />
-                      Level: <strong className="font-semibold text-gray-900">{user.level}</strong>
+                      {t('Level:')} <strong className="font-semibold text-gray-900">{user.level}</strong>
                     </span>
                     <span className="inline-flex items-center gap-1.5">
                       <Trophy size={16} className="text-amber-500" aria-hidden="true" />
                       {nextLevel
-                        ? `${levelProgress?.completed ?? 0}/${levelProgress?.total ?? 0} topics until ${nextLevel.code}`
-                        : 'Highest level reached'}
+                        ? t('{{done}}/{{total}} topics until {{next}}', {
+                            done: levelProgress?.completed ?? 0,
+                            total: levelProgress?.total ?? 0,
+                            next: nextLevel.code,
+                          })
+                        : t('Highest level reached')}
                     </span>
                   </>
                 ) : (
                   <Link to="/placement-test" className="font-semibold text-emerald-700 hover:text-emerald-800">
-                    Take the Level Test to find your level →
+                    {t('Take the Level Test to find your level →')}
                   </Link>
                 )}
               </div>
@@ -579,12 +637,12 @@ export default function ProfilePage() {
 
         {/* Özet kartları */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard icon={Trophy} iconClass="text-amber-500" value={totalPoints} label="Points" />
+          <StatCard icon={Trophy} iconClass="text-amber-500" value={totalPoints} label={t('Points')} />
           <StatCard
             icon={CircleCheck}
             iconClass="text-white fill-emerald-500"
             value={topicsCompleted}
-            label="Topics Completed"
+            label={t('Topics completed')}
           />
           <Card className="p-5 flex flex-col items-center justify-center text-center">
             {averageScore !== null ? (
@@ -592,13 +650,13 @@ export default function ProfilePage() {
             ) : (
               <p className="text-3xl font-extrabold text-gray-300 py-5">—</p>
             )}
-            <p className="mt-1 text-sm text-gray-500">Average Score</p>
+            <p className="mt-1 text-sm text-gray-500">{t('Average score')}</p>
           </Card>
           <StatCard
             icon={Star}
             iconClass="text-emerald-500 fill-emerald-500"
             value={user.badges.length}
-            label="Badges Earned"
+            label={t('Badges earned')}
           />
         </div>
 

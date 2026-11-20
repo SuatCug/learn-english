@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import AuthLayout from '@/components/auth/AuthLayout';
@@ -9,6 +11,7 @@ import { useForgotPasswordMutation, useVerifyResetCodeMutation, useResetPassword
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
 import { validateNewPassword, PASSWORD_MIN_LENGTH } from '@/lib/password';
+import { takeReturnTo } from '@/lib/returnTo';
 
 const PRIMARY_BUTTON =
   'w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors';
@@ -19,10 +22,11 @@ function ErrorBox({ children }) {
 }
 
 function BackToLogin() {
+  const { t } = useTranslation();
   return (
     <p className="text-center text-sm text-gray-500 mt-6">
       <Link to="/login" className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold">
-        Giriş ekranına dön
+        {t('Back to login')}
       </Link>
     </p>
   );
@@ -32,6 +36,8 @@ function BackToLogin() {
 // Kod doğrulanınca backend kısa ömürlü bir sıfırlama izni (resetToken) verir; yeni şifre onunla kaydedilir
 // ve kullanıcı oturum açmış olarak ana sayfaya yönlendirilir.
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation();
+  usePageTitle(t('Forgot your password?'));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -86,7 +92,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     const code = digits.join('');
     if (code.length !== CODE_LENGTH) {
-      setError('Lütfen 6 haneli kodun tamamını gir.');
+      setError(t('Please enter the full 6-digit code.'));
       return;
     }
     submitCode(code);
@@ -101,13 +107,13 @@ export default function ForgotPasswordPage() {
       return;
     }
     if (password !== passwordConfirm) {
-      setError('Şifreler eşleşmiyor.');
+      setError(t("Passwords don't match."));
       return;
     }
     try {
       const data = await resetPassword({ email, resetToken, password }).unwrap();
       dispatch(setCredentials(data.data));
-      navigate('/', { replace: true });
+      navigate(takeReturnTo(), { replace: true });
     } catch (err) {
       setError(getErrorMessage(err));
       // İzin süresi dolduysa baştan başlatılır.
@@ -124,15 +130,15 @@ export default function ForgotPasswordPage() {
 
       {step === 'email' && (
         <>
-          <h1 className="text-3xl font-bold text-gray-900 text-center">Şifremi unuttum</h1>
+          <h1 className="text-3xl font-bold text-gray-900 text-center">{t('Forgot your password?')}</h1>
           <p className="text-sm text-gray-500 mt-2 text-center">
-            Hesabının e-posta adresini gir, sana 6 haneli bir sıfırlama kodu gönderelim.
+            {t("Enter your account's email address and we'll send you a 6-digit reset code.")}
           </p>
 
           <form onSubmit={handleEmailSubmit} className="mt-6 space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                E-posta
+                {t('Email')}
               </label>
               <input
                 id="email"
@@ -142,7 +148,7 @@ export default function ForgotPasswordPage() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ornek@eposta.com"
+                placeholder={t('name@example.com')}
                 className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
               />
             </div>
@@ -150,7 +156,7 @@ export default function ForgotPasswordPage() {
             <ErrorBox>{error}</ErrorBox>
 
             <button type="submit" disabled={sending} className={PRIMARY_BUTTON}>
-              {sending ? 'Gönderiliyor...' : 'Kod gönder'}
+              {sending ? t('Sending...') : t('Send code')}
             </button>
           </form>
 
@@ -160,10 +166,13 @@ export default function ForgotPasswordPage() {
 
       {step === 'code' && (
         <>
-          <h1 className="text-3xl font-bold text-gray-900 text-center">Kodu gir</h1>
+          <h1 className="text-3xl font-bold text-gray-900 text-center">{t('Enter the code')}</h1>
           <p className="text-sm text-gray-500 mt-3 text-center">
-            <span className="font-semibold text-gray-700">{email}</span> adresi kayıtlıysa 6 haneli bir sıfırlama
-            kodu gönderdik. Gelen kutunda göremezsen spam klasörüne de bak.
+            <Trans
+              i18nKey="If <b>{{email}}</b> is registered, we sent a 6-digit reset code. If you can't find it in your inbox, check your spam folder."
+              values={{ email }}
+              components={{ b: <span className="font-semibold text-gray-700" /> }}
+            />
           </p>
 
           <form onSubmit={handleCodeSubmit} className="mt-6">
@@ -180,11 +189,11 @@ export default function ForgotPasswordPage() {
             </div>
 
             <button type="submit" disabled={verifying} className={`mt-6 ${PRIMARY_BUTTON}`}>
-              {verifying ? 'Kontrol ediliyor...' : 'Devam et'}
+              {verifying ? t('Checking...') : t('Continue')}
             </button>
           </form>
 
-          <p className="text-xs text-gray-400 mt-3 text-center">Kod 15 dakika geçerlidir.</p>
+          <p className="text-xs text-gray-400 mt-3 text-center">{t('The code is valid for {{minutes}} minutes.', { minutes: 15 })}</p>
 
           <div className="mt-5 text-center space-y-2">
             <button
@@ -193,7 +202,7 @@ export default function ForgotPasswordPage() {
               disabled={sending}
               className="text-sm text-gray-900 hover:underline font-semibold disabled:opacity-60"
             >
-              {sending ? 'Gönderiliyor...' : 'Kodu tekrar gönder'}
+              {sending ? t('Sending...') : t('Resend code')}
             </button>
             {info && <p className="text-xs text-gray-500">{info}</p>}
             <div>
@@ -206,7 +215,7 @@ export default function ForgotPasswordPage() {
                 }}
                 className="text-sm text-gray-500 hover:text-gray-700 hover:underline"
               >
-                E-posta adresini değiştir
+                {t('Change email address')}
               </button>
             </div>
           </div>
@@ -217,38 +226,42 @@ export default function ForgotPasswordPage() {
 
       {step === 'password' && (
         <>
-          <h1 className="text-3xl font-bold text-gray-900 text-center">Yeni şifre belirle</h1>
+          <h1 className="text-3xl font-bold text-gray-900 text-center">{t('Set a new password')}</h1>
           <p className="text-sm text-gray-500 mt-2 text-center">
-            <span className="font-semibold text-gray-700">{email}</span> hesabı için yeni şifreni gir.
+            <Trans
+              i18nKey="Enter a new password for <b>{{email}}</b>."
+              values={{ email }}
+              components={{ b: <span className="font-semibold text-gray-700" /> }}
+            />
           </p>
 
           <form onSubmit={handlePasswordSubmit} className="mt-6 space-y-4">
             <PasswordField
               id="new-password"
-              label="Yeni şifre"
+              label={t('New password')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={`En az ${PASSWORD_MIN_LENGTH} karakter`}
+              placeholder={t('At least {{min}} characters', { min: PASSWORD_MIN_LENGTH })}
               autoComplete="new-password"
             />
             <PasswordField
               id="new-password-confirm"
-              label="Yeni şifre (tekrar)"
+              label={t('Confirm new password')}
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
-              placeholder="Yeni şifreni tekrar gir"
+              placeholder={t('Enter your new password again')}
               autoComplete="new-password"
             />
 
             <ErrorBox>{error}</ErrorBox>
 
             <button type="submit" disabled={saving} className={PRIMARY_BUTTON}>
-              {saving ? 'Kaydediliyor...' : 'Şifreyi değiştir'}
+              {saving ? t('Saving...') : t('Change password')}
             </button>
           </form>
 
           <p className="text-xs text-gray-400 mt-3 text-center">
-            Şifreni değiştirdikten sonra otomatik olarak giriş yapılır.
+            {t("You'll be logged in automatically after changing your password.")}
           </p>
         </>
       )}

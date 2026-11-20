@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, useLocation, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { rememberReturnTo } from '@/lib/returnTo';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import {
@@ -20,10 +22,14 @@ import FadeImage from '@/components/FadeImage';
 import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrations';
 import { VOCABULARY_EXPLANATIONS } from '@/lib/vocabularyExplanations';
 import VocabularyExplanation from '@/components/lesson/VocabularyExplanation';
+import { Trans, useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
+import { tk } from '@/i18n';
 
 const TABS = [
-  { key: 'exercises', label: 'Exercises' },
-  { key: 'explanation', label: 'Explanation' },
+  { key: 'exercises', label: tk('Exercises') },
+  { key: 'explanation', label: tk('Explanation') },
 ];
 
 const EXERCISE_NUMBERS = [1, 2, 3];
@@ -31,6 +37,7 @@ const EXERCISE_NUMBERS = [1, 2, 3];
 // İlerleme kaydedilince yeni rozet kazanılmışsa veya seviye atlanmışsa, kullanıcıyı motive
 // etmek için ekranın ortasında kutlama gösterilir (küçük satır içi rozet yerine).
 function CelebrationModal({ celebration, onClose }) {
+  const { t } = useTranslation();
   if (!celebration) return null;
   const { badges, leveledUpTo } = celebration;
 
@@ -44,9 +51,13 @@ function CelebrationModal({ celebration, onClose }) {
 
         {leveledUpTo && (
           <div className="mb-4">
-            <h3 className="text-xl font-bold text-gray-900">Level Up!</h3>
+            <h3 className="text-xl font-bold text-gray-900">{t('Level Up!')}</h3>
             <p className="text-sm text-gray-500 mt-1">
-              You've reached level <span className="font-bold text-emerald-600">{leveledUpTo}</span>
+              <Trans
+                i18nKey="You've reached level <b>{{level}}</b>"
+                values={{ level: leveledUpTo }}
+                components={{ b: <span className="font-bold text-emerald-600" /> }}
+              />
             </p>
           </div>
         )}
@@ -54,7 +65,7 @@ function CelebrationModal({ celebration, onClose }) {
         {badges?.length > 0 && (
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
-              {leveledUpTo ? 'New badge too!' : badges.length > 1 ? 'New Badges Earned!' : 'New Badge Earned!'}
+              {leveledUpTo ? t('New badge too!') : badges.length > 1 ? t('New badges earned!') : t('New badge earned!')}
             </h3>
             <div className="flex flex-wrap justify-center gap-2">
               {badges.map((badge) => (
@@ -62,7 +73,7 @@ function CelebrationModal({ celebration, onClose }) {
                   key={badge._id}
                   className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1.5 text-sm font-medium text-gray-700"
                 >
-                  {badge.icon} {badge.title}
+                  {badge.icon} {t(badge.title)}
                 </span>
               ))}
             </div>
@@ -74,7 +85,7 @@ function CelebrationModal({ celebration, onClose }) {
           onClick={onClose}
           className="mt-6 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2.5 transition-colors"
         >
-          Awesome!
+          {t('Awesome!')}
         </button>
       </div>
     </div>
@@ -85,17 +96,18 @@ function CelebrationModal({ celebration, onClose }) {
 // (test-english.com'un "this, that, these, those" Exercise 3 tarzı: talimat + örnek satırı).
 const EXERCISE_INSTRUCTIONS = {
   3: {
-    text: 'Rewrite the sentences with the new subject, using the correct form of the verb.',
+    text: tk('Rewrite the sentences with the new subject, using the correct form of the verb.'),
     example: { given: 'I like tea.', arrowSubject: 'She', blank: 'likes', rest: 'tea.' },
   },
 };
 
 function ExercisePager({ active, onChange, numbers, theme }) {
+  const { t } = useTranslation();
   if (numbers.length <= 1) return null;
 
   return (
     <div className="flex items-center flex-wrap gap-2 sm:gap-2.5 sm:shrink-0">
-      <span className="text-xs sm:text-sm text-gray-400 uppercase tracking-wide">Exercises:</span>
+      <span className="text-xs sm:text-sm text-gray-400 uppercase tracking-wide">{t('Exercises:')}</span>
       {numbers.map((n) => (
         <button
           key={n}
@@ -202,6 +214,7 @@ function InlineBlankInput({ value, onChange, disabled, result, index, theme }) {
 }
 
 function WritingBlanksExercise({ passage, questions, answers, onChange, resultsById, disabled, theme }) {
+  const { t } = useTranslation();
   const { wordBank, body } = parseWritingPassage(passage);
   const segments = body.split('___');
   const wrongResults = questions
@@ -212,7 +225,7 @@ function WritingBlanksExercise({ passage, questions, answers, onChange, resultsB
     <div>
       {wordBank.length > 0 && (
         <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 mb-6 text-base text-gray-700">
-          <span className="font-semibold text-gray-500 mr-2">Word box:</span>
+          <span className="font-semibold text-gray-500 mr-2">{t('Word box:')}</span>
           {wordBank.join('  –  ')}
         </div>
       )}
@@ -242,7 +255,7 @@ function WritingBlanksExercise({ passage, questions, answers, onChange, resultsB
         <div className="mt-4 space-y-1.5">
           {wrongResults.map(({ q, index, result }) => (
             <p key={q.id} className="text-sm text-rose-600">
-              Blank {index + 1}: correct answer is{' '}
+              {t('Blank {{n}}: correct answer is', { n: index + 1 })}{' '}
               <span className="font-semibold">{String(result.correctAnswer)}</span>
               {result.explanation && <span className="text-gray-500"> — {result.explanation}</span>}
             </p>
@@ -304,6 +317,7 @@ function OptionsQuestionItem({ question, index, value, onChange, result, disable
 }
 
 function ExerciseItem({ question, index, value, onChange, result, disabled, theme }) {
+  const { t } = useTranslation();
   const status = result ? (result.correct ? 'correct' : 'incorrect') : null;
 
   const borderClass =
@@ -323,7 +337,7 @@ function ExerciseItem({ question, index, value, onChange, result, disabled, them
       {result && (
         <div className="ml-9 sm:ml-10 mt-2 text-sm">
           {!result.correct && (
-            <p className="text-rose-600 font-medium">Correct answer: {String(result.correctAnswer)}</p>
+            <p className="text-rose-600 font-medium">{t('Correct answer: {{answer}}', { answer: String(result.correctAnswer) })}</p>
           )}
           {result.explanation && <p className="text-gray-500 mt-0.5">{result.explanation}</p>}
         </div>
@@ -333,24 +347,25 @@ function ExerciseItem({ question, index, value, onChange, result, disabled, them
 }
 
 function LessonLoadError() {
+  const { t } = useTranslation();
   return (
     <div className="py-16 text-center">
       <p className="text-4xl mb-3">😕</p>
-      <p className="text-gray-800 font-semibold">We couldn't load this lesson.</p>
-      <p className="text-gray-500 text-sm mt-1">It may have been removed, or the connection dropped.</p>
+      <p className="text-gray-800 font-semibold">{t("We couldn't load this lesson.")}</p>
+      <p className="text-gray-500 text-sm mt-1">{t('It may have been removed, or the connection dropped.')}</p>
       <div className="mt-6 flex items-center justify-center gap-3">
         <button
           type="button"
           onClick={() => window.location.reload()}
           className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 text-sm transition-colors"
         >
-          Try again
+          {t('Try again')}
         </button>
         <Link
           to="/"
           className="rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold px-5 py-2.5 text-sm hover:bg-gray-50 transition-colors"
         >
-          Back to home
+          {t('Back to home')}
         </Link>
       </div>
     </div>
@@ -358,6 +373,7 @@ function LessonLoadError() {
 }
 
 export default function LessonPage() {
+  const { t } = useTranslation();
   const { topicId } = useParams();
   const [searchParams] = useSearchParams();
   const assignmentId = searchParams.get('assignmentId');
@@ -369,7 +385,11 @@ export default function LessonPage() {
     isLoading: questionsLoading,
     isError: questionsError,
   } = useGetTopicQuestionsQuery(topicId);
-  const { data: meData } = useGetMeQuery();
+  // Misafir (giriş yapmamış) dersleri çözebilir ama ilerleme kaydedemez; kullanıcı bilgisi sadece girişliyken istenir.
+  const token = useSelector((state) => state.auth.token);
+  const isGuest = !token;
+  const location = useLocation();
+  const { data: meData } = useGetMeQuery(undefined, { skip: isGuest });
   const [checkAnswers, { isLoading: checking }] = useCheckAnswersMutation();
   const [addProgress, { isLoading: saving }] = useAddProgressMutation();
 
@@ -421,6 +441,7 @@ export default function LessonPage() {
     }));
 
   const topic = topicData?.data?.topic;
+  usePageTitle(localized(topic));
   const passage = questionsData?.data?.passage;
   const allQuestions = questionsData?.data?.questions ?? [];
   const availableExercises = [...new Set(allQuestions.map((q) => q.exerciseGroup ?? 1))].sort((a, b) => a - b);
@@ -430,7 +451,7 @@ export default function LessonPage() {
   // Listening'de passage transkripttir: dinlerken okunmasın diye sadece cevaplar kontrol edilince açılır.
   const isListening = topic?.category === 'listening';
   const categoryInfo = topic ? CATEGORIES.find((c) => c.slug === topic.category) : null;
-  const categoryLabel = categoryInfo?.label ?? topic?.category;
+  const categoryLabel = t(categoryInfo?.label ?? topic?.category ?? '');
   const bannerClass = (topic && CATEGORY_BANNER_CLASS[topic.category]) ?? DEFAULT_BANNER_CLASS;
   const theme = (topic && CATEGORY_THEME[topic.category]) ?? DEFAULT_THEME;
   const grammarExplanation = topic ? GRAMMAR_EXPLANATIONS[`${topic.level}::${topic.title}`] : null;
@@ -520,7 +541,7 @@ export default function LessonPage() {
         err?.data?.message ||
         err?.data?.errors?.[0]?.message ||
         err?.error ||
-        'Kaydedilemedi. Lütfen tekrar deneyin.';
+        t("Couldn't save. Please try again.");
       setSaveErrorByExercise((prev) => ({ ...prev, [activeExercise]: message }));
     }
   };
@@ -583,7 +604,7 @@ export default function LessonPage() {
       {!isLoading && topic && (
         <div className={bannerClass}>
           <h1 className="max-w-6xl mx-auto px-6 py-3 text-center text-white font-bold tracking-wide uppercase text-sm sm:text-base">
-            {topic.title}
+            {localized(topic)}
           </h1>
         </div>
       )}
@@ -595,9 +616,9 @@ export default function LessonPage() {
           </Link>{' '}
           /{' '}
           <Link to={`/topics/${topic.category}/${topic.level}`} className={theme.hoverText}>
-            {topic.level} {categoryLabel} lessons and exercises
+            {t('{{level}} {{category}} lessons and exercises', { level: topic.level, category: categoryLabel })}
           </Link>{' '}
-          / <span className="text-gray-700">{topic.title}</span>
+          / <span className="text-gray-700">{localized(topic)}</span>
         </div>
       )}
 
@@ -606,11 +627,12 @@ export default function LessonPage() {
           <div className="rounded-lg bg-sky-50 border border-sky-100 px-4 py-2.5 text-sm text-sky-800 flex items-center gap-2">
             <span aria-hidden="true">🎓</span>
             <span>
-              This is a classroom assignment — your score will be saved to your{' '}
-              <Link to={`/classroom/${classroomId}`} className="font-semibold underline hover:text-sky-900">
-                classroom
-              </Link>
-              .
+              <Trans
+                i18nKey="This is a classroom assignment — your score will be saved to your <link>classroom</link>."
+                components={{
+                  link: <Link to={`/classroom/${classroomId}`} className="font-semibold underline hover:text-sky-900" />,
+                }}
+              />
             </span>
           </div>
         </div>
@@ -634,7 +656,7 @@ export default function LessonPage() {
                         : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                   >
-                    {tab.label}
+                    {t(tab.label)}
                   </button>
                 ))}
               </div>
@@ -643,7 +665,7 @@ export default function LessonPage() {
                 {activeTab === 'exercises' && (
                   <>
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
-                      <h2 className={`text-xl sm:text-2xl font-bold ${theme.text} break-words`}>{topic.title}</h2>
+                      <h2 className={`text-xl sm:text-2xl font-bold ${theme.text} break-words`}>{localized(topic)}</h2>
                       <ExercisePager
                         active={activeExercise}
                         onChange={handleExerciseChange}
@@ -651,12 +673,12 @@ export default function LessonPage() {
                         theme={theme}
                       />
                     </div>
-                    <p className="text-base font-semibold text-gray-700 mb-4">Exercise {activeExercise}</p>
+                    <p className="text-base font-semibold text-gray-700 mb-4">{t('Exercise {{n}}', { n: activeExercise })}</p>
 
                     {showCompletedBanner && (
                       <div className={`flex flex-wrap items-center justify-between gap-3 rounded-lg ${theme.lightBg} border ${theme.borderLighter} px-4 py-3 mb-6`}>
                         <span className={`text-sm ${theme.text} font-medium`}>
-                          ✓ You've already completed this exercise.
+                          ✓ {t("You've already completed this exercise.")}
                         </span>
                         <div className="flex flex-wrap items-center gap-2">
                           <button
@@ -665,14 +687,14 @@ export default function LessonPage() {
                             disabled={loadingAnswerKey}
                             className={`rounded-lg border ${theme.borderLight} ${theme.text} font-semibold px-5 py-2 text-sm ${theme.lightBgHover} disabled:opacity-50 transition-colors`}
                           >
-                            {loadingAnswerKey ? 'Loading...' : 'See Answers'}
+                            {loadingAnswerKey ? t('Loading...') : t('See answers')}
                           </button>
                           <button
                             type="button"
                             onClick={handlePracticeAgain}
                             className={`rounded-lg ${theme.solid} ${theme.solidHover} text-white font-semibold px-5 py-2 text-sm transition-colors`}
                           >
-                            Try Again
+                            {t('Try again')}
                           </button>
                         </div>
                       </div>
@@ -680,7 +702,7 @@ export default function LessonPage() {
 
                     {viewingAnswers && !resultsById && (
                       <p className={`text-xs font-medium ${theme.text} mb-4`}>
-                        Showing your submitted answers below — this isn't a new attempt.
+                        {t("Showing your submitted answers below — this isn't a new attempt.")}
                       </p>
                     )}
 
@@ -692,7 +714,7 @@ export default function LessonPage() {
                             {passage && displayResultsById && (
                               <details className={`rounded-xl border ${theme.borderLighter} bg-white mb-6`}>
                                 <summary className={`cursor-pointer select-none px-4 sm:px-6 py-3 text-sm font-semibold ${theme.text}`}>
-                                  Show transcript
+                                  {t('Show transcript')}
                                 </summary>
                                 <div className="px-4 sm:px-6 pb-5 text-base text-gray-700 leading-relaxed space-y-3">
                                   {passage.split('\n\n').map((paragraph, i) => (
@@ -715,10 +737,10 @@ export default function LessonPage() {
                         {EXERCISE_INSTRUCTIONS[activeExercise] ? (
                           <>
                             <div className="rounded-lg bg-gray-50 border border-gray-100 px-4 py-3 mb-4 text-base text-gray-600">
-                              {EXERCISE_INSTRUCTIONS[activeExercise].text}
+                              {t(EXERCISE_INSTRUCTIONS[activeExercise].text)}
                             </div>
                             <p className="text-base italic text-gray-500 mb-6">
-                              EXAMPLE: {EXERCISE_INSTRUCTIONS[activeExercise].example.given} ⇒{' '}
+                              {t('EXAMPLE:')} {EXERCISE_INSTRUCTIONS[activeExercise].example.given} ⇒{' '}
                               {EXERCISE_INSTRUCTIONS[activeExercise].example.arrowSubject}{' '}
                               <span className="not-italic font-medium bg-gray-100 border border-gray-200 rounded px-2 py-0.5">
                                 {EXERCISE_INSTRUCTIONS[activeExercise].example.blank}
@@ -736,7 +758,7 @@ export default function LessonPage() {
 
                         {questions.length === 0 && (
                           <div className="rounded-xl border border-gray-100 p-10 text-center text-gray-400 text-sm">
-                            No exercises here yet — coming soon.
+                            {t('No exercises here yet — coming soon.')}
                           </div>
                         )}
 
@@ -791,7 +813,7 @@ export default function LessonPage() {
                               disabled={!allAnswered || checking}
                               className={`rounded-lg ${theme.solid} ${theme.solidHover} disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-8 py-2.5 transition-colors`}
                             >
-                              {checking ? 'Checking...' : 'Check Answers'}
+                              {checking ? t('Checking...') : t('Check answers')}
                             </button>
                           </div>
                         )}
@@ -800,37 +822,62 @@ export default function LessonPage() {
 
                     {resultsById && (
                       <div className={`mt-6 rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-4 sm:p-5`}>
-                        <p className="text-lg font-bold text-gray-900">You scored {score}%</p>
+                        <p className="text-lg font-bold text-gray-900">{t('You scored {{score}}%', { score })}</p>
                         <p className="text-sm text-gray-500 mt-1">
-                          {Object.values(resultsById).filter((r) => r.correct).length} / {questions.length} correct
+                          {t('{{correct}} / {{total}} correct', {
+                            correct: Object.values(resultsById).filter((r) => r.correct).length,
+                            total: questions.length,
+                          })}
                         </p>
 
                         {!saved ? (
                           <div className="mt-4">
                             <div className="flex flex-wrap gap-3">
-                              <button
-                                type="button"
-                                onClick={handleSaveProgress}
-                                disabled={saving}
-                                className={`rounded-lg ${theme.solid} ${theme.solidHover} disabled:opacity-50 text-white font-semibold px-5 py-2.5 text-sm transition-colors`}
-                              >
-                                {saving ? 'Saving...' : 'Save Progress'}
-                              </button>
+                              {isGuest ? (
+                                <Link
+                                  to="/login"
+                                  onClick={() => rememberReturnTo(location.pathname + location.search)}
+                                  className={`rounded-lg ${theme.solid} ${theme.solidHover} text-white font-semibold px-5 py-2.5 text-sm transition-colors`}
+                                >
+                                  {t('Log in to save your progress')}
+                                </Link>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={handleSaveProgress}
+                                  disabled={saving}
+                                  className={`rounded-lg ${theme.solid} ${theme.solidHover} disabled:opacity-50 text-white font-semibold px-5 py-2.5 text-sm transition-colors`}
+                                >
+                                  {saving ? t('Saving...') : t('Save progress')}
+                                </button>
+                              )}
                               <button
                                 type="button"
                                 onClick={handleReset}
                                 className="rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold px-5 py-2.5 text-sm hover:bg-gray-50 transition-colors"
                               >
-                                Try Again
+                                {t('Try again')}
                               </button>
                             </div>
+                            {isGuest && (
+                              <p className="text-sm text-gray-500 mt-2">
+                                {t('Free account: save your scores, keep a streak and earn badges.')}{' '}
+                                <Link
+                                  to="/register"
+                                  onClick={() => rememberReturnTo(location.pathname + location.search)}
+                                  className={`font-semibold ${theme.text} hover:underline`}
+                                >
+                                  {t('Sign up')}
+                                </Link>
+                              </p>
+                            )}
                             {saveError && (
                               <p className="text-sm text-rose-600 font-medium mt-2">⚠ {saveError}</p>
                             )}
                           </div>
                         ) : (
                           <div className="mt-4">
-                            <p className={`text-sm ${theme.text} font-medium`}>✓ Progress saved!</p>
+                            <p className={`text-sm ${theme.text} font-medium`}>✓ {t('Progress saved!')}</p>
                             {awardedBadges && awardedBadges.length > 0 && (
                               <div className="flex flex-wrap gap-2 mt-3">
                                 {awardedBadges.map((badge) => (
@@ -838,7 +885,7 @@ export default function LessonPage() {
                                     key={badge._id}
                                     className={`inline-flex items-center gap-1.5 bg-white border ${theme.borderLight} rounded-full px-3 py-1.5 text-sm font-medium text-gray-700`}
                                   >
-                                    {badge.icon} {badge.title}
+                                    {badge.icon} {t(badge.title)}
                                   </span>
                                 ))}
                               </div>
@@ -849,7 +896,7 @@ export default function LessonPage() {
                                 onClick={handleReset}
                                 className="rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold px-5 py-2.5 text-sm hover:bg-gray-50 transition-colors"
                               >
-                                Try Again
+                                {t('Try again')}
                               </button>
                               {nextExerciseNumber !== undefined && (
                                 <button
@@ -857,7 +904,7 @@ export default function LessonPage() {
                                   onClick={handleNextExercise}
                                   className={`rounded-lg ${theme.solid} ${theme.solidHover} text-white font-semibold px-5 py-2.5 text-sm transition-colors`}
                                 >
-                                  Next Exercise →
+                                  {t('Next exercise →')}
                                 </button>
                               )}
                             </div>
@@ -890,7 +937,7 @@ export default function LessonPage() {
                       />
                     ) : (
                       <div className="text-sm text-gray-700 leading-relaxed">
-                        {topic.description || 'No explanation added yet — coming soon.'}
+                        {topic.description || t('No explanation added yet — coming soon.')}
                       </div>
                     )}
                   </>
@@ -900,7 +947,7 @@ export default function LessonPage() {
 
             <aside className="lg:w-64 shrink-0">
               <p className="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-3">
-                Related lessons
+                {t('Related lessons')}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
                 {relatedTopics.map((related) => {
@@ -918,11 +965,11 @@ export default function LessonPage() {
                           <span className="text-3xl">{categoryInfo?.icon}</span>
                         )}
                       </div>
-                      <p className="px-3 py-2.5 text-sm font-medium text-gray-800 leading-snug line-clamp-2">{related.title}</p>
+                      <p className="px-3 py-2.5 text-sm font-medium text-gray-800 leading-snug line-clamp-2">{localized(related)}</p>
                     </Link>
                   );
                 })}
-                {relatedTopics.length === 0 && <p className="text-sm text-gray-400">No other lessons yet.</p>}
+                {relatedTopics.length === 0 && <p className="text-sm text-gray-400">{t('No other lessons yet.')}</p>}
               </div>
             </aside>
           </div>

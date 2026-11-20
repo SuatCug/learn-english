@@ -19,6 +19,23 @@ const conversationSchema = new mongoose.Schema(
     // Konu kartından açıldıysa konunun slug'ı (data/aiTopics.js); serbest sohbette null.
     topic: { type: String, default: null },
     messages: [messageSchema],
+    // Konulu sohbet bitti mi (mesaj sınırına ulaşıldı ya da öğrenci "Bitir"e bastı). Bitince yeni mesaj gönderilemez.
+    finished: { type: Boolean, default: false },
+    // Bitişte AI'nın değerlendirmesi (sonuç ekranı). Değerlendirme başarısız olursa null kalır, tekrar istenebilir.
+    result: {
+      type: new mongoose.Schema(
+        {
+          score: Number,
+          summary: String,
+          mistakes: [{ _id: false, wrong: String, correct: String, explanation: String }],
+          strengths: [String],
+          usefulPhrases: [{ _id: false, phrase: String, meaning: String }],
+          nextStep: String,
+        },
+        { _id: false }
+      ),
+      default: null,
+    },
   },
   { timestamps: true }
 );

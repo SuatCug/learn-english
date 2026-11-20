@@ -7,6 +7,9 @@ import { CATEGORIES, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from '@/lib/c
 import { cloudinaryUrl } from '@/lib/cloudinary';
 import FadeImage from '@/components/FadeImage';
 import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrations';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
 
 const PALETTES = [
   'from-emerald-500 to-emerald-700',
@@ -75,7 +78,7 @@ function TopicCard({
           <span className="text-white text-xs font-bold tracking-wide">learnenglish</span>
         </div>
         <div className="p-4 bg-white text-center min-h-[4.5rem] flex items-center justify-center">
-          <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-2">{topic.title}</p>
+          <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-2">{localized(topic)}</p>
         </div>
       </Link>
     </div>
@@ -83,9 +86,11 @@ function TopicCard({
 }
 
 export default function TopicListPage() {
+  const { t } = useTranslation();
   const { category, level } = useParams();
   const categoryInfo = CATEGORIES.find((c) => c.slug === category);
-  const categoryLabel = categoryInfo?.label ?? category;
+  const categoryLabel = t(categoryInfo?.label ?? category);
+  usePageTitle(t('{{level}} {{category}} Lessons and Exercises', { level, category: categoryLabel }));
 
   const { data, isLoading, isError } = useGetTopicsQuery({ category, level });
   const topics = data?.data?.topics ?? [];
@@ -107,7 +112,7 @@ export default function TopicListPage() {
 
       <div className={bannerClass}>
         <h1 className="max-w-6xl mx-auto px-6 py-3 text-center text-white font-bold tracking-wide uppercase text-sm sm:text-base">
-          {level} {categoryLabel} Lessons and Exercises
+          {t('{{level}} {{category}} Lessons and Exercises', { level, category: categoryLabel })}
         </h1>
       </div>
 
@@ -115,13 +120,13 @@ export default function TopicListPage() {
         <Link to="/" className="hover:text-emerald-600">
           {categoryLabel}
         </Link>{' '}
-        / {level} {categoryLabel} lessons and exercises
+        / {t('{{level}} {{category}} lessons and exercises', { level, category: categoryLabel })}
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-6 flex-1 w-full">
-        {isError && <p className="text-rose-500 text-sm py-10">Couldn't load topics. Please try again.</p>}
+        {isError && <p className="text-rose-500 text-sm py-10">{t("Couldn't load topics. Please try again.")}</p>}
         {!isLoading && !isError && topics.length === 0 && (
-          <p className="text-gray-400 text-sm py-10">No topics yet for this level.</p>
+          <p className="text-gray-400 text-sm py-10">{t('No topics yet for this level.')}</p>
         )}
 
         {!isError && (isLoading || topics.length > 0) && (

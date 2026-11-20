@@ -2,6 +2,9 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { INFO_CONTENT } from '@/lib/infoContent';
+import { INFO_CONTENT_TR } from '@/lib/infoContent.tr';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 
 function SectionList({ list }) {
   if (list.type === 'ordered') {
@@ -61,8 +64,11 @@ function InfoSection({ section }) {
 }
 
 export default function InfoPage() {
+  const { t, i18n } = useTranslation();
   const { slug } = useParams();
-  const content = INFO_CONTENT[slug];
+  // Seçili dile göre içerik (Türkçe: infoContent.tr.js).
+  const content = (i18n.language === 'tr' ? INFO_CONTENT_TR : INFO_CONTENT)[slug];
+  usePageTitle(content?.title);
 
   if (!content) return <Navigate to="/" replace />;
 
@@ -82,7 +88,7 @@ export default function InfoPage() {
         ))}
 
         <Link to="/" className="inline-block text-base font-semibold text-emerald-600 hover:text-emerald-700">
-          ← Back to home
+          ← {t('Back to home')}
         </Link>
       </div>
 

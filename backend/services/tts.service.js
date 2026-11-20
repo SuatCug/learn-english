@@ -158,4 +158,13 @@ const synthesize = (text, level = 'B1') => {
   return job;
 };
 
-module.exports = { synthesize, isAvailable, VOICE };
+// Sunucu açılınca her seviyenin Piper işlemini önceden başlatır: ilk açılışta model ~10 sn'de yüklendiği için,
+// ısıtılmazsa her seviyede ilk sesli cevap çok gecikiyordu. Seviyeler sırayla ısıtılır (aynı anda 4 model yüklenmesin).
+const warmUp = async () => {
+  if (!isAvailable()) return;
+  for (const level of Object.keys(STYLE)) {
+    await synthesize('Hello.', level).catch(() => {});
+  }
+};
+
+module.exports = { synthesize, isAvailable, warmUp, VOICE };

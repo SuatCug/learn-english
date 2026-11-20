@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -9,9 +10,20 @@ const synthSupported = typeof window !== 'undefined' && 'speechSynthesis' in win
 // Düşük seviyelerde AI daha yavaş konuşur.
 const RATE_BY_LEVEL = { A1: 0.8, A2: 0.88, B1: 0.95, B2: 1 };
 
+// Sunucu sesi (Piper Cori) kadın sesi; tarayıcı sesine düşüldüğünde de kadın sesi seçilir ki konuşma partneri
+// (Emma) tutarlı olsun. Tarayıcılar sesin cinsiyetini vermediği için bilinen kadın ses adlarına bakılır:
+// Edge: Aria, Jenny, Ava, Emma, Michelle, Sonia, Libby · Chrome: "Google US English", "Google UK English Female"
+// · Windows: Zira, Hazel, Susan · macOS/iOS: Samantha, Karen, Moira, Tessa, Serena.
+const FEMALE_VOICE =
+  /\b(aria|jenny|ava|emma|michelle|sonia|libby|maisie|zira|hazel|susan|samantha|karen|moira|tessa|serena|victoria|allison|female)\b|google us english/i;
+
 function pickEnglishVoice() {
   const voices = window.speechSynthesis.getVoices().filter((v) => v.lang?.toLowerCase().startsWith('en'));
+  const female = voices.filter((v) => FEMALE_VOICE.test(v.name));
   return (
+    female.find((v) => v.lang === 'en-US' && /natural|online/i.test(v.name)) ||
+    female.find((v) => v.lang === 'en-US') ||
+    female[0] ||
     voices.find((v) => v.lang === 'en-US' && /natural|online/i.test(v.name)) ||
     voices.find((v) => v.lang === 'en-US' && /google/i.test(v.name)) ||
     voices.find((v) => v.lang === 'en-US') ||
@@ -54,13 +66,13 @@ export function useSpeechRecognition({ onFinal }) {
     };
     recognition.onerror = (event) => {
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-        setError('Mikrofon izni verilmedi. Adres çubuğundaki kilit simgesinden mikrofona izin ver.');
+        setError(i18n.t('Microphone permission was denied. Allow microphone access from the lock icon in the address bar.'));
       } else if (event.error === 'no-speech') {
-        setError('Ses algılanamadı. Mikrofona tıklayıp tekrar konuş.');
+        setError(i18n.t('No speech was detected. Tap the microphone and speak again.'));
       } else if (event.error === 'audio-capture') {
-        setError('Mikrofon bulunamadı. Bağlı olduğundan emin ol.');
+        setError(i18n.t('No microphone was found. Make sure it is connected.'));
       } else if (event.error !== 'aborted') {
-        setError('Ses tanıma hatası oluştu, tekrar dene.');
+        setError(i18n.t('Speech recognition failed. Please try again.'));
       }
     };
     recognition.onend = () => {
@@ -105,9 +117,13 @@ export function useSpeechSynthesis(level) {
   const abortRef = useRef(null);
   const requestIdRef = useRef(0);
   const piperUnavailableRef = useRef(false); // 503 gelirse bu sayfada bir daha denenmez
+  // Akışlı okuma kuyruğu (AI cevabı gelirken cümle cümle): { items: [{ text, blob }], playing, done, controller }
+  const queueRef = useRef(null);
 
   const stopAudio = useCallback(() => {
     requestIdRef.current += 1;
+    queueRef.current?.controller.abort();
+    queueRef.current = null;
     abortRef.current?.abort();
     abortRef.current = null;
     const audio = audioRef.current;
@@ -184,6 +200,103 @@ export function useSpeechSynthesis(level) {
     [level, token, stopAudio, speakWithBrowser]
   );
 
+  // --- Akışlı okuma: AI cevabı daha bitmeden ilk cümle seslendirilir (bekleme ~5 sn → ~3 sn). ---
+  // startStream() → her tamamlanan cümle için pushSentence(text) → cevap bitince endStream().
+  // Sesler hemen istenir (sunucu sırayla üretir), çalma sırası korunur. Sunucu ses üretemezse o cümle
+  // tarayıcının sesiyle okunur.
+  const fetchTts = useCallback(
+    async (text, signal) => {
+      const res = await fetch(`${API_URL}/ai/tts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ text, level }),
+        signal,
+      });
+      if (res.status === 503) piperUnavailableRef.current = true;
+      if (!res.ok) throw new Error(`TTS ${res.status}`);
+      return res.blob();
+    },
+    [level, token]
+  );
+
+  const finishIfDrained = useCallback((queue) => {
+    if (queueRef.current === queue && queue.done && !queue.playing && queue.items.length === 0) {
+      queueRef.current = null;
+      setSpeaking(false);
+    }
+  }, []);
+
+  const playNext = useCallback(
+    (queue) => {
+      if (queueRef.current !== queue || queue.playing) return;
+      const item = queue.items.shift();
+      if (!item) {
+        finishIfDrained(queue);
+        return;
+      }
+      queue.playing = true;
+      const done = () => {
+        queue.playing = false;
+        playNext(queue);
+      };
+      item.blob
+        .then((blob) => {
+          if (queueRef.current !== queue) return;
+          const audio = new Audio(URL.createObjectURL(blob));
+          audioRef.current = audio;
+          audio.onended = () => {
+            URL.revokeObjectURL(audio.src);
+            if (audioRef.current === audio) audioRef.current = null;
+            done();
+          };
+          audio.onerror = audio.onended;
+          return audio.play();
+        })
+        .catch(() => {
+          if (queueRef.current !== queue) return;
+          // Sunucu sesi yoksa bu cümle tarayıcının sesiyle okunur; bitince sıradaki cümleye geçilir.
+          if (!synthSupported) return done();
+          const utterance = new SpeechSynthesisUtterance(item.text);
+          const voice = pickEnglishVoice();
+          if (voice) utterance.voice = voice;
+          utterance.lang = voice?.lang || 'en-US';
+          utterance.rate = RATE_BY_LEVEL[level] ?? 0.95;
+          utterance.onend = done;
+          utterance.onerror = done;
+          window.speechSynthesis.speak(utterance);
+        });
+    },
+    [finishIfDrained, level]
+  );
+
+  const startStream = useCallback(() => {
+    stopAudio();
+    if (synthSupported) window.speechSynthesis.cancel();
+    queueRef.current = { items: [], playing: false, done: false, controller: new AbortController() };
+    setSpeaking(true);
+  }, [stopAudio]);
+
+  const pushSentence = useCallback(
+    (text) => {
+      const queue = queueRef.current;
+      if (!queue || !text.trim()) return;
+      const blob = piperUnavailableRef.current
+        ? Promise.reject(new Error('Piper yok'))
+        : fetchTts(text, queue.controller.signal);
+      blob.catch(() => {}); // çalma sırası gelene kadar beklerken "yakalanmamış hata" uyarısı olmasın
+      queue.items.push({ text, blob });
+      playNext(queue);
+    },
+    [fetchTts, playNext]
+  );
+
+  const endStream = useCallback(() => {
+    const queue = queueRef.current;
+    if (!queue) return;
+    queue.done = true;
+    finishIfDrained(queue);
+  }, [finishIfDrained]);
+
   const stopSpeaking = useCallback(() => {
     stopAudio();
     if (synthSupported) window.speechSynthesis.cancel();
@@ -205,7 +318,7 @@ export function useSpeechSynthesis(level) {
     };
   }, []);
 
-  return { supported: true, speaking, speak, stopSpeaking };
+  return { supported: true, speaking, speak, stopSpeaking, startStream, pushSentence, endStream };
 }
 
 export const speechRecognitionSupported = Boolean(Recognition);

@@ -10,14 +10,18 @@ import { AI_SECTIONS, conversationPath, aiTopicImage } from '@/lib/aiSections';
 import { getErrorMessage } from '@/lib/getErrorMessage';
 import { speechRecognitionSupported } from '@/hooks/useSpeech';
 import { aiChatApi, useGetTopicsQuery, useCreateConversationMutation } from '@/services/aiChatApi';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
+import { tk } from '@/i18n';
 
 // /topics/:category/:level (TopicListPage) ile aynı kart tasarımı; kapakta görsel yerine gradyan + emoji.
 // AI Talk ve AI Chat aynı konuları kullanır; renkler bölüme göre.
 const SECTION_UI = {
   talk: {
     mode: 'talk',
-    heading: (level) => `${level} Talking Topics`,
-    crumb: (level) => `${level} speaking topics`,
+    heading: tk('{{level}} Talking Topics'),
+    crumb: tk('{{level}} speaking topics'),
     crumbHover: 'hover:text-teal-600',
     palettes: [
       'from-teal-500 to-teal-700',
@@ -31,8 +35,8 @@ const SECTION_UI = {
   },
   chat: {
     mode: 'chat',
-    heading: (level) => `${level} Chatting Topics`,
-    crumb: (level) => `${level} chat topics`,
+    heading: tk('{{level}} Chatting Topics'),
+    crumb: tk('{{level}} chat topics'),
     crumbHover: 'hover:text-indigo-600',
     palettes: [
       'from-indigo-500 to-indigo-700',
@@ -87,19 +91,21 @@ function TopicCard({ topic, index, level, bannerClass, palettes, disabled, onSta
         <span className="text-white text-xs font-bold tracking-wide">learnenglish</span>
       </div>
       <div className="p-4 bg-white text-center min-h-[5.5rem] flex flex-col items-center justify-center gap-1">
-        <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-1">{topic.title}</p>
-        <p className="text-xs text-gray-500 leading-snug line-clamp-2">{topic.description}</p>
+        <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-1">{localized(topic)}</p>
+        <p className="text-xs text-gray-500 leading-snug line-clamp-2">{localized(topic, 'description')}</p>
       </div>
     </button>
   );
 }
 
 export default function AiTopicsPage({ section: sectionKey = 'chat' }) {
+  const { t } = useTranslation();
   const { level } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const section = AI_SECTIONS[sectionKey];
   const ui = SECTION_UI[sectionKey];
+  usePageTitle(t(ui.heading, { level }));
   const validLevel = LEVELS.some((l) => l.code === level);
 
   const { data, isLoading, isError } = useGetTopicsQuery(level, { skip: !validLevel });
@@ -132,28 +138,29 @@ export default function AiTopicsPage({ section: sectionKey = 'chat' }) {
 
       <div className={section.bannerClass}>
         <h1 className="max-w-6xl mx-auto px-6 py-3 text-center text-white font-bold tracking-wide uppercase text-sm sm:text-base">
-          {ui.heading(level)}
+          {t(ui.heading, { level })}
         </h1>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pt-4 text-sm text-gray-500 w-full">
         <Link to={section.path} className={ui.crumbHover}>
-          {section.label}
+          {t(section.label)}
         </Link>{' '}
-        / {ui.crumb(level)}
+        / {t(ui.crumb, { level })}
       </div>
 
       {sectionKey === 'talk' && !speechRecognitionSupported && (
         <div className="max-w-6xl mx-auto px-6 pt-4 w-full">
           <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Tarayıcın sesli konuşmayı desteklemiyor. Mikrofonla konuşmak için Chrome veya Edge kullan; bu tarayıcıda
-            yazarak devam edebilirsin.
+            {t(
+              "Your browser doesn't support voice conversation. Use Chrome or Edge to talk with your microphone; in this browser you can continue by typing."
+            )}
           </p>
         </div>
       )}
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-6 flex-1 w-full">
-        {isError && <p className="text-rose-500 text-sm py-10">Couldn't load topics. Please try again.</p>}
+        {isError && <p className="text-rose-500 text-sm py-10">{t("Couldn't load topics. Please try again.")}</p>}
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
         {!isError && (

@@ -6,6 +6,9 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { useGetClassroomQuery, useGetClassroomResultsQuery } from '@/services/classroomApi';
 import { LEVELS } from '@/lib/constants';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
 
 // Seviyeleri A ve B kademelerine ayırıp nokta rengini buna göre belirler; gerçek kod (A2, B1 vb.) yine de gösterilir.
 function levelDotColor(level) {
@@ -36,6 +39,7 @@ function StatCard({ icon: Icon, value, label }) {
 }
 
 function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onToggle }) {
+  const { t } = useTranslation();
   const canExpand = isTeacher && assignments && assignments.length > 0;
   const completedCount = canExpand
     ? assignments.filter((a) => resultsRow?.scores?.[a.id]?.completed).length
@@ -52,14 +56,14 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
           <p className="text-sm font-medium text-gray-900 truncate">{student.name}</p>
           <p className="text-xs text-gray-400 truncate flex items-center gap-1.5">
             <span className={`w-1.5 h-1.5 rounded-full ${levelDotColor(student.level)}`} />
-            {student.level || 'No level'} · {student.email}
+            {student.level || t('No level')} · {student.email}
           </p>
         </div>
 
         {progressPercent !== null && (
           <div className="hidden sm:block w-32 shrink-0">
             <div className="flex items-center justify-between text-[10px] text-gray-400 mb-1">
-              <span>Progress</span>
+              <span>{t('Progress')}</span>
               <span className="font-semibold text-gray-600">{progressPercent}%</span>
             </div>
             <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
@@ -69,7 +73,7 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
         )}
 
         <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2.5 py-1 shrink-0">
-          {student.points ?? 0} pts
+          {t('{{points}} pts', { points: student.points ?? 0 })}
         </span>
 
         {canExpand && (
@@ -78,7 +82,7 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
             onClick={onToggle}
             className="shrink-0 flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-emerald-600 transition-colors"
           >
-            View
+            {t('View')}
             <ChevronRight className={`h-3.5 w-3.5 transition-transform ${expanded ? 'rotate-90' : ''}`} />
           </button>
         )}
@@ -90,11 +94,11 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
             const cell = resultsRow?.scores?.[a.id];
             return (
               <div key={a.id} className="flex items-center justify-between gap-3 text-sm">
-                <span className="text-gray-600 truncate min-w-0">{a.topicTitle}</span>
+                <span className="text-gray-600 truncate min-w-0">{localized(a, 'topicTitle')}</span>
                 {cell?.completed ? (
                   <span className="font-semibold text-emerald-700 shrink-0">{cell.score}</span>
                 ) : (
-                  <span className="text-gray-400 shrink-0">Not completed</span>
+                  <span className="text-gray-400 shrink-0">{t('Not completed')}</span>
                 )}
               </div>
             );
@@ -106,6 +110,7 @@ function StudentRow({ student, isTeacher, resultsRow, assignments, expanded, onT
 }
 
 export default function ClassroomStudentsPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const currentUserId = useSelector((state) => state.auth.user?.id);
   const { data, isLoading, isError } = useGetClassroomQuery(id);
@@ -115,6 +120,7 @@ export default function ClassroomStudentsPage() {
   const [sortBy, setSortBy] = useState('points');
 
   const classroom = data?.data?.classroom;
+  usePageTitle(classroom?.name ? `${t('Students')} · ${classroom.name}` : t('Students'));
   const isTeacher = classroom && classroom.teacherId?._id === currentUserId;
 
   const { data: resultsData } = useGetClassroomResultsQuery(id, { skip: !isTeacher });
@@ -162,30 +168,32 @@ export default function ClassroomStudentsPage() {
 
       <div className="max-w-4xl mx-auto px-6 pb-20 pt-4 flex-1 w-full">
         <Link to={`/classroom/${id}`} className="inline-block text-sm text-gray-500 hover:text-emerald-600 mb-6">
-          ← Back to room
+          ← {t('Back to room')}
         </Link>
 
-        {isLoading && <p className="text-gray-400 text-sm py-10">Loading students...</p>}
-        {isError && <p className="text-rose-500 text-sm py-10">Couldn't load this room.</p>}
+        {isLoading && <p className="text-gray-400 text-sm py-10">{t('Loading students...')}</p>}
+        {isError && <p className="text-rose-500 text-sm py-10">{t("Couldn't load this room.")}</p>}
 
         {!isLoading && classroom && (
           <>
-            <h2 className="text-2xl font-bold text-gray-900">Students</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t('Students')}</h2>
             <p className="text-sm text-gray-500 mt-1">
-              {allStudents.length} student{allStudents.length === 1 ? '' : 's'} in this room
+              {allStudents.length === 1
+                ? t('1 student in this room')
+                : t('{{count}} students in this room', { count: allStudents.length })}
             </p>
 
             {isTeacher && allStudents.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
-                <StatCard icon={Users} value={activeThisWeekCount} label="Active This Week" />
-                <StatCard icon={CheckCircle2} value={completedTopicTodayCount} label="Topics Completed Today" />
+                <StatCard icon={Users} value={activeThisWeekCount} label={t('Active this week')} />
+                <StatCard icon={CheckCircle2} value={completedTopicTodayCount} label={t('Topics completed today')} />
                 <StatCard icon={TrendingUp} value={avgProgress !== null ? `${avgProgress}%` : '—'} label="Avg. Score" />
               </div>
             )}
 
             {allStudents.length === 0 ? (
               <div className="rounded-xl border border-gray-100 p-10 text-center text-gray-400 text-sm mt-6">
-                No students have joined yet — share the join code to get started.
+                {t('No students have joined yet — share the join code to get started.')}
               </div>
             ) : (
               <>
@@ -196,7 +204,7 @@ export default function ClassroomStudentsPage() {
                       type="text"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search students..."
+                      placeholder={t('Search students...')}
                       className="w-full rounded-lg border border-gray-200 pl-9 pr-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400"
                     />
                   </div>
@@ -205,10 +213,10 @@ export default function ClassroomStudentsPage() {
                     onChange={(e) => setLevelFilter(e.target.value)}
                     className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400"
                   >
-                    <option value="all">All Levels</option>
+                    <option value="all">{t('All levels')}</option>
                     {LEVELS.map((l) => (
                       <option key={l.code} value={l.code}>
-                        {l.code} — {l.name}
+                        {l.code} — {t(l.name)}
                       </option>
                     ))}
                   </select>
@@ -217,14 +225,14 @@ export default function ClassroomStudentsPage() {
                     onChange={(e) => setSortBy(e.target.value)}
                     className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400"
                   >
-                    <option value="points">Sort by: Points</option>
-                    <option value="name">Sort by: Name</option>
+                    <option value="points">{t('Sort by: Points')}</option>
+                    <option value="name">{t('Sort by: Name')}</option>
                   </select>
                 </div>
 
                 <div className="rounded-xl border border-gray-100 divide-y divide-gray-100 mt-4">
                   {filteredStudents.length === 0 ? (
-                    <p className="text-sm text-gray-400 px-5 py-6 text-center">No students match your search.</p>
+                    <p className="text-sm text-gray-400 px-5 py-6 text-center">{t('No students match your search.')}</p>
                   ) : (
                     filteredStudents.map((s) => (
                       <StudentRow

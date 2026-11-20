@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import AuthBrand from '@/components/auth/AuthBrand';
@@ -7,10 +8,12 @@ import ResendVerificationButton from '@/components/auth/ResendVerificationButton
 import { useVerifyEmailCodeMutation } from '@/services/authApi';
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import { takeReturnTo } from '@/lib/returnTo';
 
 // Kayıt sonrası (ve doğrulanmamış hesapla girişte) gösterilen ekran: mailde gelen 6 haneli kod girilir.
 // Kod doğruysa backend oturum token'ı döner; kullanıcı direkt giriş yapmış olarak ana sayfaya gider.
 export default function VerifyCodeScreen({ email, onBack }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [verifyCode, { isLoading }] = useVerifyEmailCodeMutation();
@@ -24,7 +27,7 @@ export default function VerifyCodeScreen({ email, onBack }) {
     try {
       const data = await verifyCode({ email, code }).unwrap();
       dispatch(setCredentials(data.data));
-      navigate('/', { replace: true });
+      navigate(takeReturnTo(), { replace: true });
     } catch (err) {
       setError(getErrorMessage(err));
       setDigits(emptyCode());
@@ -36,7 +39,7 @@ export default function VerifyCodeScreen({ email, onBack }) {
     e.preventDefault();
     const code = digits.join('');
     if (code.length !== CODE_LENGTH) {
-      setError('Lütfen 6 haneli kodun tamamını gir.');
+      setError(t('Please enter the full 6-digit code.'));
       return;
     }
     submit(code);
@@ -46,10 +49,13 @@ export default function VerifyCodeScreen({ email, onBack }) {
     <>
       <AuthBrand />
 
-      <h1 className="text-3xl font-bold text-gray-900 text-center">E-postanı doğrula</h1>
+      <h1 className="text-3xl font-bold text-gray-900 text-center">{t('Verify your email')}</h1>
       <p className="text-sm text-gray-500 mt-3 text-center">
-        <span className="font-semibold text-gray-700">{email}</span> adresine 6 haneli bir doğrulama kodu
-        gönderdik. Kodu aşağıya gir. Gelen kutunda göremezsen spam klasörüne de bak.
+        <Trans
+          i18nKey="We sent a 6-digit verification code to <b>{{email}}</b>. Enter it below. If you can't find it in your inbox, check your spam folder."
+          values={{ email }}
+          components={{ b: <span className="font-semibold text-gray-700" /> }}
+        />
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6">
@@ -64,11 +70,11 @@ export default function VerifyCodeScreen({ email, onBack }) {
           disabled={isLoading}
           className="mt-6 w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors"
         >
-          {isLoading ? 'Doğrulanıyor...' : 'Doğrula'}
+          {isLoading ? t('Verifying...') : t('Verify')}
         </button>
       </form>
 
-      <p className="text-xs text-gray-400 mt-3 text-center">Kod 30 dakika geçerlidir.</p>
+      <p className="text-xs text-gray-400 mt-3 text-center">{t('The code is valid for {{minutes}} minutes.', { minutes: 30 })}</p>
 
       <div className="mt-5">
         <ResendVerificationButton email={email} />
@@ -81,7 +87,7 @@ export default function VerifyCodeScreen({ email, onBack }) {
             onClick={onBack}
             className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold"
           >
-            Giriş ekranına dön
+            {t('Back to login')}
           </button>
         </p>
       )}

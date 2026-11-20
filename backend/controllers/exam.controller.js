@@ -2,6 +2,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const { User } = require('../models');
 const { EXAM_LEVELS, buildExam, toPublicExam, countQuestions } = require('../data/levelExams');
+const { evaluateBadges } = require('../utils/badgeEngine');
 
 // Sınavlar statik veriden (data/levelExams.js) kurulur; veritabanına seed edilmez.
 // Her seviye için tek bir kez kurulup bellekte tutulur.
@@ -39,10 +40,9 @@ const getExam = asyncHandler(async (req, res) => {
   res.json({ success: true, data: { exam: toPublicExam(exam) } });
 });
 
-const submitExam = asyncHandler(async (req, res) => {
-  const exam = getExamOrThrow(req.params.level);
-  const answers = req.body.answers || {};
-
+// Cevapları puanlar (veritabanına dokunmaz; tests/exam.test.js ile test edilir).
+// Büyük/küçük harf ve fazla boşluk önemsenmez; boş bırakılan soru yanlış sayılır.
+const scoreExam = (exam, answers = {}) => {
   const statsBySection = {};
   const results = {};
   let score = 0;
@@ -66,6 +66,12 @@ const submitExam = asyncHandler(async (req, res) => {
   const maxScore = countQuestions(exam);
   const percent = Math.round((score / maxScore) * 100);
   const passed = percent >= exam.passPercent;
+  return { score, maxScore, percent, passed, statsBySection, results };
+};
+
+const submitExam = asyncHandler(async (req, res) => {
+  const exam = getExamOrThrow(req.params.level);
+  const { score, maxScore, percent, passed, statsBySection, results } = scoreExam(exam, req.body.answers || {});
 
   // Listening transkriptleri sınav bittikten sonra cevap incelemesinde gösterilir.
   const transcripts = exam.sections.find((s) => s.key === 'listening').groups.map((g) => g.transcript);
@@ -86,6 +92,7 @@ const submitExam = asyncHandler(async (req, res) => {
   };
   user.examResults = [...(user.examResults || []).filter((r) => r.level !== exam.level), entry];
   await user.save();
+  const newlyAwardedBadges = await evaluateBadges(user);
 
   res.json({
     success: true,
@@ -100,9 +107,10 @@ const submitExam = asyncHandler(async (req, res) => {
       statsBySection,
       results,
       transcripts,
+      newlyAwardedBadges,
       user: user.toSafeJSON(),
     },
   });
 });
 
-module.exports = { listExams, getExam, submitExam };
+module.exports = { listExams, getExam, submitExam, scoreExam, EXAMS };

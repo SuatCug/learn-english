@@ -1,14 +1,15 @@
 // Seviye sınavları (Exams) için ortak görünüm ayarları. Tüm sınav ekranları tek renk (sitenin yeşili) kullanır.
-import { Headphones, BookOpen, MessageCircleMore, Bookmark, Pencil } from 'lucide-react';
+import { tk } from '@/i18n';
 
-// Bölüm -> ikon (sınavlar sayfası ve sınav giriş ekranı).
-export const EXAM_SECTION_ICONS = {
-  listening: Headphones,
-  reading: BookOpen,
-  grammar: MessageCircleMore,
-  vocabulary: Bookmark,
-  writing: Pencil,
-};
+// Sınav bölüm yönergeleri backend'den İngilizce gelir (backend/data/levelExams.js SECTION_META) ve ekranda
+// t(section.instructions) ile çevrilir. Bu liste sadece çeviri kontrolü içindir (npm run i18n:check);
+// backend'de yönerge değişirse burası ve i18n/tr.js de güncellenmeli.
+export const EXAM_SECTION_TEXTS = [
+  tk('Listen to each recording and choose the best answer (A, B, C or D) for each question.'),
+  tk('Read each text carefully and choose the best answer (A, B, C or D) for each question.'),
+  tk('Choose the best option (A, B, C or D) to complete each sentence.'),
+  tk('Complete each text by typing the correct word from the word box into each gap. Use each word once.'),
+];
 
 // ListeningPlayer'ın beklediği tema (sınav ekranı yeşil temayı kullanır).
 export const EXAM_PLAYER_THEME = {

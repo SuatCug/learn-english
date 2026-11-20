@@ -27,6 +27,10 @@ import { useGetTopicsQuery } from '@/services/topicsApi';
 import { useGetMeQuery } from '@/services/usersApi';
 import { CATEGORIES, LEVELS } from '@/lib/constants';
 import { roomColor, CATEGORY_COLORS } from '@/lib/rooms';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
+import i18n, { dateLocale } from '@/i18n';
 
 // Oda detay sayfası: odanın renginde başlık (öğretmene katılma kodu), solda ödevler, sağda canlı oyun ve sınıf kartları.
 
@@ -42,21 +46,23 @@ const DAY = 24 * 60 * 60 * 1000;
 
 function formatDate(value) {
   if (!value) return '—';
-  return new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  return new Date(value).toLocaleDateString(dateLocale(), { month: 'short', day: 'numeric' });
 }
 
 // Teslim tarihine göre rozet: geçmiş → kırmızı, 2 gün içinde → turuncu, diğer → gri.
+// Render sırasında çağrılır; metinler seçili dilde döner.
 function dueStatus(value) {
-  if (!value) return { label: 'No due date', className: 'bg-gray-100 text-gray-600' };
+  if (!value) return { label: i18n.t('No due date'), className: 'bg-gray-100 text-gray-600' };
   const end = new Date(value);
   end.setHours(23, 59, 59, 999);
   const diff = end.getTime() - Date.now();
-  if (diff < 0) return { label: `Overdue · ${formatDate(value)}`, className: 'bg-rose-50 text-rose-700' };
-  if (diff < 2 * DAY) return { label: `Due soon · ${formatDate(value)}`, className: 'bg-amber-50 text-amber-700' };
-  return { label: `Due ${formatDate(value)}`, className: 'bg-gray-100 text-gray-600' };
+  if (diff < 0) return { label: i18n.t('Overdue · {{date}}', { date: formatDate(value) }), className: 'bg-rose-50 text-rose-700' };
+  if (diff < 2 * DAY) return { label: i18n.t('Due soon · {{date}}', { date: formatDate(value) }), className: 'bg-amber-50 text-amber-700' };
+  return { label: i18n.t('Due {{date}}', { date: formatDate(value) }), className: 'bg-gray-100 text-gray-600' };
 }
 
 function CopyButton({ value, className = '' }) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
     try {
@@ -68,7 +74,7 @@ function CopyButton({ value, className = '' }) {
     }
   };
   return (
-    <button type="button" onClick={handleCopy} title="Copy" aria-label="Copy join code" className={className}>
+    <button type="button" onClick={handleCopy} title={t('Copy')} aria-label={t('Copy join code')} className={className}>
       {copied ? <Check size={16} /> : <Copy size={16} />}
     </button>
   );
@@ -89,7 +95,8 @@ function TopicIcon({ category }) {
 
 function topicMeta(topic) {
   const category = CATEGORIES.find((c) => c.slug === topic?.category)?.label;
-  return [topic?.level, category].filter(Boolean).join(' · ');
+  const translated = category ? i18n.t(category) : null;
+  return [topic?.level, translated].filter(Boolean).join(' · ');
 }
 
 function Card({ children, className = '' }) {
@@ -97,6 +104,7 @@ function Card({ children, className = '' }) {
 }
 
 function AssignForm({ classroomId, onDone }) {
+  const { t } = useTranslation();
   const [category, setCategory] = useState('grammar');
   const [level, setLevel] = useState('A1');
   const [topicId, setTopicId] = useState('');
@@ -115,14 +123,14 @@ function AssignForm({ classroomId, onDone }) {
       await createAssignment({ id: classroomId, topicId, dueDate }).unwrap();
       onDone();
     } catch (err) {
-      setError(err?.data?.message || 'Could not assign this topic.');
+      setError(err?.data?.message || t("Couldn't assign this topic."));
     }
   };
 
   return (
     <div className="border-t border-gray-100 bg-gray-50/60 px-5 sm:px-6 py-5 space-y-5">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Category</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">{t('Category')}</p>
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map(({ slug, label }) => {
             const Icon = CATEGORY_ICONS[slug];
@@ -142,7 +150,7 @@ function AssignForm({ classroomId, onDone }) {
                 style={active ? { backgroundColor: color, borderColor: color } : undefined}
               >
                 <Icon size={15} />
-                {label}
+                {t(label)}
               </button>
             );
           })}
@@ -150,7 +158,7 @@ function AssignForm({ classroomId, onDone }) {
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Level</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">{t('Level')}</p>
         <div className="inline-flex rounded-full bg-white border border-gray-200 p-1">
           {LEVELS.map(({ code }) => (
             <button
@@ -172,23 +180,23 @@ function AssignForm({ classroomId, onDone }) {
 
       <div className="grid sm:grid-cols-[minmax(0,1fr)_auto] gap-4">
         <label className="block min-w-0">
-          <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Lesson</span>
+          <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">{t('Lesson')}</span>
           <select
             value={topicId}
             onChange={(e) => setTopicId(e.target.value)}
             disabled={topicsLoading}
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 disabled:bg-gray-50"
           >
-            <option value="">{topicsLoading ? 'Loading lessons…' : 'Choose a lesson…'}</option>
+            <option value="">{topicsLoading ? t('Loading lessons…') : t('Choose a lesson…')}</option>
             {topics.map((t) => (
               <option key={t._id} value={t._id}>
-                {t.title}
+                {localized(t)}
               </option>
             ))}
           </select>
         </label>
         <label className="block">
-          <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Due date</span>
+          <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">{t('Due date')}</span>
           <span className="relative block">
             <CalendarDays className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
@@ -209,7 +217,7 @@ function AssignForm({ classroomId, onDone }) {
           onClick={onDone}
           className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
         >
-          Cancel
+          {t('Cancel')}
         </button>
         <button
           type="button"
@@ -217,7 +225,7 @@ function AssignForm({ classroomId, onDone }) {
           onClick={handleAssign}
           className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          {submitting ? 'Assigning...' : 'Assign lesson'}
+          {submitting ? t('Assigning...') : t('Assign lesson')}
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
@@ -226,20 +234,21 @@ function AssignForm({ classroomId, onDone }) {
 }
 
 function DeleteAssignmentConfirm({ open, onCancel, onConfirm, deleting }) {
+  const { t } = useTranslation();
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4" onClick={onCancel}>
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-lg font-bold text-gray-900 mb-2">Delete this assignment?</h3>
-        <p className="text-sm text-gray-500 mb-6">Students' scores for it will no longer be tracked.</p>
+        <h3 className="text-lg font-bold text-gray-900 mb-2">{t('Delete this assignment?')}</h3>
+        <p className="text-sm text-gray-500 mb-6">{t("Students' scores for it will no longer be tracked.")}</p>
         <div className="flex gap-2 justify-center">
           <button
             type="button"
             onClick={onCancel}
             className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
           >
-            Cancel
+            {t('Cancel')}
           </button>
           <button
             type="button"
@@ -247,7 +256,7 @@ function DeleteAssignmentConfirm({ open, onCancel, onConfirm, deleting }) {
             disabled={deleting}
             className="rounded-lg bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-semibold text-sm px-4 py-2 transition-colors"
           >
-            {deleting ? 'Deleting...' : 'Delete'}
+            {deleting ? t('Deleting...') : t('Delete')}
           </button>
         </div>
       </div>
@@ -265,6 +274,7 @@ function EmptyAssignments({ text }) {
 }
 
 function TeacherAssignments({ classroomId, assignments }) {
+  const { t } = useTranslation();
   const [formOpen, setFormOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
   const [deleteAssignment, { isLoading: deleting }] = useDeleteAssignmentMutation();
@@ -282,7 +292,7 @@ function TeacherAssignments({ classroomId, assignments }) {
     <Card className="overflow-hidden">
       <div className="flex items-center justify-between gap-3 px-5 sm:px-6 py-4">
         <h2 className="text-lg font-bold text-gray-900">
-          Assignments <span className="text-gray-400 font-semibold">{assignments.length}</span>
+          {t('Assignments')} <span className="text-gray-400 font-semibold">{assignments.length}</span>
         </h2>
         <button
           type="button"
@@ -292,7 +302,7 @@ function TeacherAssignments({ classroomId, assignments }) {
           }`}
         >
           {formOpen ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          {formOpen ? 'Close' : 'Assign a lesson'}
+          {formOpen ? t('Close') : t('Assign a lesson')}
         </button>
       </div>
 
@@ -300,7 +310,7 @@ function TeacherAssignments({ classroomId, assignments }) {
 
       {assignments.length === 0 ? (
         <div className="border-t border-gray-100">
-          <EmptyAssignments text="No assignments yet. Assign a lesson to get your class started." />
+          <EmptyAssignments text={t('No assignments yet. Assign a lesson to get your class started.')} />
         </div>
       ) : (
         <ul className="border-t border-gray-100 divide-y divide-gray-100">
@@ -311,7 +321,7 @@ function TeacherAssignments({ classroomId, assignments }) {
                 <TopicIcon category={a.topicId?.category} />
                 <Link to={`/lesson/${a.topicId?._id}?classroomId=${classroomId}`} className="min-w-0 flex-1">
                   <span className="block font-semibold text-gray-900 truncate group-hover:text-emerald-700">
-                    {a.topicId?.title ?? 'Deleted lesson'}
+                    {localized(a.topicId) ?? t('Deleted lesson')}
                   </span>
                   <span className="block text-xs text-gray-500">{topicMeta(a.topicId)}</span>
                 </Link>
@@ -321,8 +331,8 @@ function TeacherAssignments({ classroomId, assignments }) {
                 <button
                   type="button"
                   onClick={() => setPendingDeleteId(a._id)}
-                  aria-label="Delete assignment"
-                  title="Delete assignment"
+                  aria-label={t('Delete assignment')}
+                  title={t('Delete assignment')}
                   className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-gray-300 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                 >
                   <Trash2 size={16} />
@@ -344,6 +354,7 @@ function TeacherAssignments({ classroomId, assignments }) {
 }
 
 function StudentAssignments({ classroomId, assignments }) {
+  const { t } = useTranslation();
   const { data: meData } = useGetMeQuery();
   const progress = meData?.data?.user?.progress;
 
@@ -361,18 +372,18 @@ function StudentAssignments({ classroomId, assignments }) {
     <Card className="overflow-hidden">
       <div className="flex items-center justify-between gap-3 px-5 sm:px-6 py-4">
         <h2 className="text-lg font-bold text-gray-900">
-          Assignments <span className="text-gray-400 font-semibold">{assignments.length}</span>
+          {t('Assignments')} <span className="text-gray-400 font-semibold">{assignments.length}</span>
         </h2>
         {assignments.length > 0 && (
           <span className="text-sm text-gray-500">
-            {doneCount}/{assignments.length} done
+            {t('{{done}}/{{total}} done', { done: doneCount, total: assignments.length })}
           </span>
         )}
       </div>
 
       {assignments.length === 0 ? (
         <div className="border-t border-gray-100">
-          <EmptyAssignments text="No assignments yet — check back later." />
+          <EmptyAssignments text={t('No assignments yet — check back later.')} />
         </div>
       ) : (
         <ul className="border-t border-gray-100 divide-y divide-gray-100">
@@ -383,7 +394,7 @@ function StudentAssignments({ classroomId, assignments }) {
               <li key={a._id} className="flex items-center gap-3 px-5 sm:px-6 py-3.5">
                 <TopicIcon category={a.topicId?.category} />
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold text-gray-900 truncate">{a.topicId?.title ?? 'Deleted lesson'}</span>
+                  <span className="block font-semibold text-gray-900 truncate">{localized(a.topicId) ?? t('Deleted lesson')}</span>
                   <span className="block text-xs text-gray-500">
                     {topicMeta(a.topicId)}
                     {!entry && <span className="sm:hidden"> · {status.label}</span>}
@@ -402,7 +413,7 @@ function StudentAssignments({ classroomId, assignments }) {
                       to={`/lesson/${a.topicId?._id}?assignmentId=${a._id}&classroomId=${classroomId}`}
                       className="shrink-0 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2 transition-colors"
                     >
-                      Start
+                      {t('Start')}
                     </Link>
                   </>
                 )}
@@ -416,6 +427,7 @@ function StudentAssignments({ classroomId, assignments }) {
 }
 
 function LiveGameCard({ classroomId, isTeacher }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [code, setCode] = useState('');
 
@@ -432,8 +444,8 @@ function LiveGameCard({ classroomId, isTeacher }) {
           <Gamepad2 size={20} />
         </span>
         <div>
-          <p className="font-bold text-gray-900">Live game</p>
-          <p className="text-xs text-gray-500">{isTeacher ? 'Quiz your class in real time.' : 'Got a game code? Jump in.'}</p>
+          <p className="font-bold text-gray-900">{t('Live game')}</p>
+          <p className="text-xs text-gray-500">{isTeacher ? t('Quiz your class in real time.') : t('Got a game code? Jump in.')}</p>
         </div>
       </div>
       {isTeacher ? (
@@ -442,7 +454,7 @@ function LiveGameCard({ classroomId, isTeacher }) {
           onClick={() => navigate(`/classroom/${classroomId}/game/new`)}
           className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 transition-colors"
         >
-          Start a game
+          {t('Start a game')}
         </button>
       ) : (
         <form onSubmit={handleJoin} className="flex gap-2">
@@ -450,16 +462,16 @@ function LiveGameCard({ classroomId, isTeacher }) {
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="Game code"
+            placeholder={t('Game code')}
             maxLength={6}
-            aria-label="Game code"
+            aria-label={t('Game code')}
             className="min-w-0 flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold uppercase tracking-widest text-center text-gray-900 placeholder:tracking-normal placeholder:font-normal placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-indigo-300"
           />
           <button
             type="submit"
             className="shrink-0 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 transition-colors"
           >
-            Join
+            {t('Join')}
           </button>
         </form>
       )}
@@ -468,31 +480,33 @@ function LiveGameCard({ classroomId, isTeacher }) {
 }
 
 function ClassCard({ classroom, classroomId, isTeacher }) {
+  const { t } = useTranslation();
   const count = classroom.students.length;
   return (
     <Card className="p-5">
-      <p className="font-bold text-gray-900 mb-3">Class</p>
+      <p className="font-bold text-gray-900 mb-3">{t('Class')}</p>
       {!isTeacher && (
         <p className="flex items-center justify-between text-sm py-2 border-b border-gray-100">
-          <span className="text-gray-500">Teacher</span>
+          <span className="text-gray-500">{t('Teacher')}</span>
           <span className="font-semibold text-gray-900 truncate ml-3">{classroom.teacherId?.name ?? '—'}</span>
         </p>
       )}
       <p className="flex items-center justify-between text-sm py-2">
-        <span className="text-gray-500">Students</span>
+        <span className="text-gray-500">{t('Students')}</span>
         <span className="font-semibold text-gray-900">{count}</span>
       </p>
       <Link
         to={`/classroom/${classroomId}/students`}
         className="mt-2 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-semibold px-4 py-2 transition-colors"
       >
-        <Users size={16} /> {isTeacher ? 'Students & results' : 'See classmates'}
+        <Users size={16} /> {isTeacher ? t('Students & results') : t('See classmates')}
       </Link>
     </Card>
   );
 }
 
 function RoomHeader({ classroom, isTeacher }) {
+  const { t } = useTranslation();
   const color = roomColor(classroom._id);
   const count = classroom.students.length;
 
@@ -503,7 +517,7 @@ function RoomHeader({ classroom, isTeacher }) {
       <div className="absolute right-40 -bottom-28 w-56 h-56 rounded-full bg-white/10" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-8 sm:pb-10">
         <Link to="/school" className="inline-flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-white mb-6">
-          <ArrowLeft size={16} /> School Mode
+          <ArrowLeft size={16} /> {t('School Mode')}
         </Link>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div className="flex items-center gap-4 min-w-0">
@@ -513,15 +527,15 @@ function RoomHeader({ classroom, isTeacher }) {
             <div className="min-w-0">
               <h1 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight break-words">{classroom.name}</h1>
               <p className="mt-1 text-sm text-white/85">
-                {isTeacher ? 'You teach this class' : `Teacher: ${classroom.teacherId?.name ?? '—'}`} · {count} student
-                {count === 1 ? '' : 's'}
+                {isTeacher ? t('You teach this class') : t('Teacher: {{name}}', { name: classroom.teacherId?.name ?? '—' })} ·{' '}
+                {count === 1 ? t('1 student') : t('{{count}} students', { count })}
               </p>
             </div>
           </div>
 
           {isTeacher && (
             <div className="shrink-0 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-5 py-3 text-white">
-              <p className="text-xs font-semibold uppercase tracking-wide text-white/75 mb-1">Join code</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-white/75 mb-1">{t('Join code')}</p>
               <div className="flex items-center gap-3">
                 <span className="text-2xl font-extrabold tracking-[0.25em]">{classroom.joinCode}</span>
                 <CopyButton
@@ -538,11 +552,13 @@ function RoomHeader({ classroom, isTeacher }) {
 }
 
 export default function ClassroomDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const currentUserId = useSelector((state) => state.auth.user?.id);
   const { data, isLoading, isError } = useGetClassroomQuery(id);
 
   const classroom = data?.data?.classroom;
+  usePageTitle(classroom?.name ?? t('School Mode'));
   const assignments = data?.data?.assignments ?? [];
   const isTeacher = Boolean(classroom && classroom.teacherId?._id === currentUserId);
 
@@ -553,12 +569,12 @@ export default function ClassroomDetailPage() {
       {classroom && <RoomHeader classroom={classroom} isTeacher={isTeacher} />}
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
-        {isLoading && <p className="text-gray-400 text-sm py-10">Loading room...</p>}
+        {isLoading && <p className="text-gray-400 text-sm py-10">{t('Loading room...')}</p>}
         {isError && (
           <div className="py-10">
-            <p className="text-rose-500 text-sm mb-3">Couldn't load this room.</p>
+            <p className="text-rose-500 text-sm mb-3">{t("Couldn't load this room.")}</p>
             <Link to="/school" className="text-sm font-semibold text-emerald-700 hover:underline">
-              ← Back to School Mode
+              ← {t('Back to School Mode')}
             </Link>
           </div>
         )}

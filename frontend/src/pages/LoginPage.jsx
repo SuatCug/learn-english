@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import AuthLayout from '@/components/auth/AuthLayout';
@@ -9,8 +11,11 @@ import VerifyCodeScreen from '@/components/auth/VerifyCodeScreen';
 import { useLoginMutation } from '@/services/authApi';
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import { takeReturnTo } from '@/lib/returnTo';
 
 export default function LoginPage() {
+  const { t } = useTranslation();
+  usePageTitle(t('Log in'));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -30,7 +35,7 @@ export default function LoginPage() {
     try {
       const data = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...data.data, remember }));
-      navigate('/');
+      navigate(takeReturnTo(), { replace: true });
     } catch (err) {
       setError(getErrorMessage(err));
       if (err?.data?.code === 'EMAIL_NOT_VERIFIED') setUnverifiedEmail(email);
@@ -49,13 +54,13 @@ export default function LoginPage() {
     <AuthLayout>
       <AuthBrand />
 
-      <h1 className="text-3xl font-bold text-gray-900 text-center">Giriş Yap</h1>
-      <p className="text-sm text-gray-500 mt-2 text-center">E-posta ve şifrenizi giriniz.</p>
+      <h1 className="text-3xl font-bold text-gray-900 text-center">{t('Log in')}</h1>
+      <p className="text-sm text-gray-500 mt-2 text-center">{t('Enter your email and password.')}</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-            E-posta
+            {t('Email')}
           </label>
           <input
             id="email"
@@ -64,17 +69,17 @@ export default function LoginPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="ornek@eposta.com"
+            placeholder={t('name@example.com')}
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
         <PasswordField
           id="password"
-          label="Şifre"
+          label={t('Password')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Şifreniz"
+          placeholder={t('Your password')}
           autoComplete="current-password"
         />
 
@@ -86,14 +91,14 @@ export default function LoginPage() {
               onChange={(e) => setRemember(e.target.checked)}
               className="rounded border-gray-300 accent-gray-900 focus:ring-gray-900"
             />
-            Beni hatırla
+            {t('Remember me')}
           </label>
           <Link
             to="/forgot-password"
             state={{ email }}
             className="text-emerald-600 hover:text-emerald-700 hover:underline font-medium"
           >
-            Şifremi unuttum?
+            {t('Forgot your password?')}
           </Link>
         </div>
 
@@ -107,7 +112,7 @@ export default function LoginPage() {
             onClick={() => setShowCodeScreen(true)}
             className="w-full rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold h-10 text-[15px] transition-colors"
           >
-            Doğrulama kodunu gir
+            {t('Enter verification code')}
           </button>
         )}
 
@@ -116,16 +121,16 @@ export default function LoginPage() {
           disabled={isLoading}
           className="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors"
         >
-          {isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+          {isLoading ? t('Logging in...') : t('Log in')}
         </button>
       </form>
 
       <GoogleSignInButton />
 
       <p className="text-center text-sm text-gray-500 mt-6">
-        Hesabın yok mu?{' '}
+        {t("Don't have an account?")}{' '}
         <Link to="/register" className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold">
-          Kayıt Ol
+          {t('Sign up')}
         </Link>
       </p>
     </AuthLayout>

@@ -3,6 +3,7 @@ const { User, Classroom } = require('../models');
 const { appendProgressEntry } = require('../utils/progress.util');
 const gameSession = require('../services/gameSession.service');
 const registerAiChatSocket = require('./aiChat.socket');
+const { localizeSocket } = require('../i18n');
 
 const GAME_OVER_CLEANUP_MS = 30000;
 
@@ -81,6 +82,8 @@ function registerGameSockets(io) {
   });
 
   io.on('connection', (socket) => {
+    // Giden mesajları istemcinin diline çevirir; olay işleyicilerinden önce çağrılmalı.
+    localizeSocket(socket);
     registerAiChatSocket(socket);
 
     socket.on('game:create', async ({ classroomId, category, level }, callback) => {

@@ -2,7 +2,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const { Badge } = require('../models');
 
 const list = asyncHandler(async (req, res) => {
-  const badges = await Badge.find().sort({ createdAt: 1 });
+  const badges = await Badge.find().sort({ order: 1, createdAt: 1 });
   res.json({ success: true, data: { badges } });
 });
 

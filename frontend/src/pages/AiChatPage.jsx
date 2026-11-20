@@ -12,39 +12,61 @@ import {
   Volume2,
   Keyboard,
   Lightbulb,
+  Flag,
 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { getSocket, disconnectSocket } from '@/lib/socket';
 import { LEVELS } from '@/lib/constants';
-import { AI_SECTIONS, sectionOfMode, conversationPath, splitTip, aiTopicImage } from '@/lib/aiSections';
+import {
+  AI_SECTIONS,
+  sectionOfMode,
+  conversationPath,
+  splitTip,
+  takeSpeakableSentences,
+  aiTopicImage,
+  levelPath,
+} from '@/lib/aiSections';
 import AiIllustration from '@/components/ai/AiIllustration';
+import AiChatResult from '@/components/ai/AiChatResult';
+import { getErrorMessage } from '@/lib/getErrorMessage';
 import { useSpeechRecognition, useSpeechSynthesis } from '@/hooks/useSpeech';
-import { aiChatApi, useGetConversationsQuery, useGetConversationQuery, useGetTopicsQuery } from '@/services/aiChatApi';
+import { useTranslation } from 'react-i18next';
+import { localized } from '@/lib/localize';
+import usePageTitle from '@/hooks/usePageTitle';
+import { tk } from '@/i18n';
+import {
+  aiChatApi,
+  useGetConversationsQuery,
+  useGetConversationQuery,
+  useGetTopicsQuery,
+  useFinishConversationMutation,
+  useCreateConversationMutation,
+} from '@/services/aiChatApi';
 
 // Sohbet açılınca karşı tarafın ilk mesajından önce "yazıyor…" animasyonunun süresi.
 const OPENER_TYPING_MS = 1200;
 
 const MODE_INFO = {
   talk: {
-    label: 'Speaking',
-    title: 'Talking practice',
-    description: 'Tap the microphone and speak in English. Your partner listens, answers out loud and helps with your mistakes.',
+    label: tk('Speaking'),
+    title: tk('Talking practice'),
+    description: tk('Tap the microphone and speak in English. Your partner listens, answers out loud and helps with your mistakes.'),
     icon: Mic,
-    placeholder: 'Type in English instead...',
+    placeholder: tk('Type in English instead...'),
   },
   chat: {
-    label: 'Chat',
-    title: 'Chatting practice',
-    description: 'Practise English by chatting. Your partner answers at your level and gently fixes your mistakes.',
+    label: tk('Chat'),
+    title: tk('Chatting practice'),
+    description: tk('Practise English by chatting. Your partner answers at your level and gently fixes your mistakes.'),
     icon: MessageCircle,
-    placeholder: 'Write a message in English...',
+    placeholder: tk('Write a message in English...'),
   },
   writing: {
-    label: 'Writing',
-    title: 'Check my writing',
-    description: 'Paste a sentence, paragraph or essay. Get a corrected version, explanations and a score.',
+    label: tk('Writing'),
+    title: tk('Check my writing'),
+    description: tk('Paste a sentence, paragraph or essay. Get a corrected version, explanations and a score.'),
     icon: NotebookPen,
-    placeholder: 'Paste or write your English text here... (Ctrl + Enter to send)',
+    placeholder: tk('Paste or write your English text here... (Ctrl + Enter to send)'),
   },
 };
 
@@ -95,8 +117,9 @@ function FormattedText({ text }) {
 }
 
 function TypingDots() {
+  const { t } = useTranslation();
   return (
-    <span className="flex gap-1 py-1.5" aria-label="Typing">
+    <span className="flex gap-1 py-1.5" aria-label={t('Typing')}>
       {[0, 150, 300].map((delay) => (
         <span key={delay} className="h-2 w-2 animate-bounce rounded-full bg-gray-300" style={{ animationDelay: `${delay}ms` }} />
       ))}
@@ -105,6 +128,7 @@ function TypingDots() {
 }
 
 function MessageBubble({ role, content, typing, talkMode, onSpeak }) {
+  const { t } = useTranslation();
   if (role === 'user') {
     return (
       <div className="flex justify-end">
@@ -137,7 +161,7 @@ function MessageBubble({ role, content, typing, talkMode, onSpeak }) {
               onClick={() => onSpeak?.(spoken)}
               className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-700"
             >
-              <Volume2 size={14} aria-hidden="true" /> Listen again
+              <Volume2 size={14} aria-hidden="true" /> {t('Listen again')}
             </button>
           )}
         </div>
@@ -156,11 +180,12 @@ function MessageBubble({ role, content, typing, talkMode, onSpeak }) {
 
 // Talk modunda alttaki büyük mikrofon alanı.
 function MicPanel({ status, interim, onMicClick, onStopSpeaking, disabled }) {
+  const { t } = useTranslation();
   const labels = {
-    idle: 'Tap to speak',
-    listening: 'Listening... tap when you finish',
-    thinking: 'Thinking...',
-    speaking: 'Speaking... tap to stop',
+    idle: t('Tap to speak'),
+    listening: t('Listening... tap when you finish'),
+    thinking: t('Thinking...'),
+    speaking: t('Speaking... tap to stop'),
   };
 
   const handleClick = () => {
@@ -172,7 +197,7 @@ function MicPanel({ status, interim, onMicClick, onStopSpeaking, disabled }) {
     <div className="flex flex-col items-center gap-2">
       {status === 'listening' && (
         <p className="min-h-[1.5rem] max-w-xl text-center text-[15px] text-gray-700">
-          {interim || <span className="text-gray-400">Say something in English...</span>}
+          {interim || <span className="text-gray-400">{t('Say something in English...')}</span>}
         </p>
       )}
       <button
@@ -197,6 +222,7 @@ function MicPanel({ status, interim, onMicClick, onStopSpeaking, disabled }) {
 }
 
 export default function AiChatPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -216,12 +242,22 @@ export default function AiChatPage() {
     refetchOnMountOrArgChange: true,
   });
   const conversation = convoData?.data?.conversation?._id === id ? convoData.data.conversation : null;
+  const rules = convoData?.data?.rules;
 
   const [messages, setMessages] = useState([]);
   const [streaming, setStreaming] = useState(null); // null = cevap beklenmiyor, string = gelen cevap
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [typeInstead, setTypeInstead] = useState(false);
+  // Konulu sohbetin bitişi ve sonuç ekranı.
+  const [finished, setFinished] = useState(false);
+  const [result, setResult] = useState(null);
+  const [evaluatingId, setEvaluatingId] = useState(null); // değerlendirmesi beklenen sohbetin id'si
+  const [newBadges, setNewBadges] = useState([]); // bu sohbetin bitişiyle kazanılan rozetler
+  const [evalError, setEvalError] = useState('');
+  const [restarting, setRestarting] = useState(false);
+  const [finishConversation] = useFinishConversationMutation();
+  const [createConversation] = useCreateConversationMutation();
 
   const activeIdRef = useRef(id);
   const lastSentRef = useRef('');
@@ -238,6 +274,9 @@ export default function AiChatPage() {
   const topicImage = conversation?.topic ? aiTopicImage(level, conversation.topic) : null;
   const { data: topicsData } = useGetTopicsQuery(level, { skip: !conversation?.topic });
   const topicInfo = topicsData?.data?.topics?.find((t) => t.slug === conversation?.topic);
+  // Konulu sohbetin adı konu kartından (seçili dilde); serbest/eski sohbetlerde kayıtlı başlık.
+  const conversationTitle = topicInfo ? localized(topicInfo) : conversation?.title;
+  usePageTitle(conversationTitle ?? t(sectionInfo.label));
   // Sohbet sadece karşı tarafın ilk mesajından ibaretse (öğrenci henüz yazmadıysa) önce "yazıyor…" gösterilir.
   const conversationId = conversation?._id ?? null;
   const onlyOpener = Boolean(conversation) && messages.length === 1 && messages[0].role === 'assistant';
@@ -256,7 +295,13 @@ export default function AiChatPage() {
     setPanelColor(null);
   }
 
-  const { speaking, speak, stopSpeaking } = useSpeechSynthesis(level);
+  const { speaking, speak, stopSpeaking, startStream, pushSentence, endStream } = useSpeechSynthesis(level);
+  // Talking'de akışlı okuma: AI cevabı gelirken tamamlanan cümleler hemen seslendirilir.
+  const streamTextRef = useRef('');
+  const spokenIndexRef = useRef(0);
+  const speechStreamActiveRef = useRef(false);
+  const onReplyDeltaRef = useRef(null);
+  const onReplyErrorRef = useRef(null);
   const recognition = useSpeechRecognition({ onFinal: (text) => send(text) });
   const showTextInput = !talkMode || typeInstead || !recognition.supported;
 
@@ -266,6 +311,8 @@ export default function AiChatPage() {
   if (conversation !== syncedConversation) {
     setSyncedConversation(conversation);
     setMessages(conversation?.messages ?? []);
+    setFinished(Boolean(conversation?.finished));
+    setResult(conversation?.result ?? null);
   }
   const [prevId, setPrevId] = useState(id);
   if (id !== prevId) {
@@ -274,11 +321,59 @@ export default function AiChatPage() {
     setError('');
     setInput('');
     setTypeInstead(false);
+    setEvalError('');
+    setRestarting(false);
+    setNewBadges([]);
+  }
+
+  // Mesaj sınırı (sadece konulu sohbetlerde): öğrenci turnLimit mesaj yazınca sohbet biter.
+  const isTopic = Boolean(conversation?.topic);
+  const turnLimit = isTopic ? rules?.turnLimit : null;
+  const userTurns = messages.filter((m) => m.role === 'user').length;
+  const turnsLeft = turnLimit ? Math.max(0, turnLimit - userTurns) : null;
+  const canFinishEarly =
+    isTopic && !finished && rules && userTurns >= rules.minTurnsToFinish && streaming === null;
+
+  // Sohbeti bitirir / sonucu ister (otomatik bitişte, "Bitir" butonunda ve "Tekrar dene"de).
+  function requestResult(cid = conversationId, { keepSpeaking = false } = {}) {
+    if (!cid) return;
+    if (!keepSpeaking) stopSpeaking();
+    if (recognition.listening) recognition.stop();
+    setFinished(true);
+    setEvalError('');
+    setEvaluatingId(cid);
+    finishConversation(cid)
+      .unwrap()
+      .then((res) => {
+        if (cid !== activeIdRef.current) return;
+        setResult(res.data.conversation.result);
+        setNewBadges(res.data.newlyAwardedBadges ?? []);
+        dispatch(aiChatApi.util.upsertQueryData('getConversation', cid, { ...res, data: { ...res.data, rules } }));
+      })
+      .catch((err) => {
+        if (cid === activeIdRef.current) setEvalError(getErrorMessage(err));
+      })
+      .finally(() => setEvaluatingId((prev) => (prev === cid ? null : prev)));
+  }
+
+  // Sonuç ekranından aynı konuyu baştan başlatır.
+  async function restartTopic() {
+    if (!conversation) return;
+    setRestarting(true);
+    try {
+      const res = await createConversation({ mode: conversation.mode, level, topic: conversation.topic }).unwrap();
+      await dispatch(aiChatApi.util.upsertQueryData('getConversation', res.data.conversation._id, res));
+      navigate(conversationPath(res.data.conversation));
+    } catch (err) {
+      setEvalError(getErrorMessage(err));
+      setRestarting(false);
+    }
   }
 
   // Socket olayları hangi sohbete ait, render dışında güncel tutulur.
   useEffect(() => {
     activeIdRef.current = id;
+    speechStreamActiveRef.current = false;
     stopSpeaking();
   }, [id, stopSpeaking]);
 
@@ -296,10 +391,40 @@ export default function AiChatPage() {
     return () => stopSpeaking();
   }, [talkMode, openerVisible, openerText, speak, stopSpeaking]);
 
-  // Sesli modda AI cevabı bitince "Tip" satırı hariç sesli okunur.
+  // Sesli modda AI cevabı cümle cümle okunur ("Tip" satırı hariç): cevap gelirken tamamlanan cümleler
+  // sıraya eklenir, cevap bitince kalan kısım eklenip sıra kapatılır.
   useEffect(() => {
-    onReplyDoneRef.current = (message) => {
-      if (talkMode) speak(splitTip(message.content).spoken);
+    onReplyDeltaRef.current = (chunk) => {
+      if (!talkMode) return;
+      if (!speechStreamActiveRef.current) {
+        speechStreamActiveRef.current = true;
+        streamTextRef.current = '';
+        spokenIndexRef.current = 0;
+        startStream();
+      }
+      streamTextRef.current += chunk;
+      const { chunk: sentences, next } = takeSpeakableSentences(streamTextRef.current, spokenIndexRef.current, false);
+      spokenIndexRef.current = next;
+      if (sentences) pushSentence(sentences);
+    };
+    onReplyErrorRef.current = () => {
+      if (!speechStreamActiveRef.current) return;
+      speechStreamActiveRef.current = false;
+      stopSpeaking();
+    };
+    onReplyDoneRef.current = (message, isFinished) => {
+      if (talkMode) {
+        if (speechStreamActiveRef.current) {
+          speechStreamActiveRef.current = false;
+          const { chunk: rest } = takeSpeakableSentences(message.content, spokenIndexRef.current, true);
+          if (rest) pushSentence(rest);
+          endStream();
+        } else {
+          speak(splitTip(message.content).spoken);
+        }
+      }
+      // Son mesaj da cevaplandı: sohbet bitti, sonuç hazırlanır (veda cümlesi okunmaya devam eder).
+      if (isFinished) requestResult(activeIdRef.current, { keepSpeaking: true });
     };
   });
 
@@ -323,19 +448,21 @@ export default function AiChatPage() {
     const onDelta = ({ conversationId, chunk }) => {
       if (conversationId !== activeIdRef.current) return;
       setStreaming((prev) => (prev ?? '') + chunk);
+      onReplyDeltaRef.current?.(chunk);
     };
-    const onDone = ({ conversationId, message }) => {
+    const onDone = ({ conversationId, message, finished: isFinished }) => {
       dispatch(aiChatApi.util.invalidateTags(['AiConversations']));
       if (conversationId !== activeIdRef.current) return;
       setStreaming(null);
       setMessages((prev) => [...prev, message]);
-      onReplyDoneRef.current?.(message);
+      onReplyDoneRef.current?.(message, isFinished);
       inputRef.current?.focus();
     };
     const onError = ({ conversationId, message }) => {
       dispatch(aiChatApi.util.invalidateTags(['AiConversations']));
       if (conversationId !== activeIdRef.current) return;
       setStreaming(null);
+      onReplyErrorRef.current?.();
       setMessages((prev) => prev.slice(0, -1)); // cevapsız kalan mesajı geri al
       setInput(lastSentRef.current);
       setError(message);
@@ -356,7 +483,7 @@ export default function AiChatPage() {
 
   function send(text = input) {
     const content = text.trim();
-    if (!content || streaming !== null || openerPending || !id) return;
+    if (!content || streaming !== null || openerPending || !id || finished) return;
 
     setError('');
     setInput('');
@@ -371,7 +498,7 @@ export default function AiChatPage() {
           setStreaming(null);
           setMessages((prev) => prev.slice(0, -1));
           if (!talkMode || typeInstead) setInput(content);
-          setError(err ? 'Sunucuya ulaşılamadı. Bağlantını kontrol et.' : ack.message);
+          setError(err ? t("Couldn't reach the server. Check your connection.") : ack.message);
           return;
         }
         dispatch(aiChatApi.util.invalidateTags(['AiConversations']));
@@ -429,7 +556,7 @@ export default function AiChatPage() {
               </span>
               <p className="mt-3 text-2xl font-bold leading-tight text-gray-900">{levelName}</p>
               <p className="mt-1 text-sm text-gray-600">
-                {talkMode ? 'Speaking practice' : 'Chat practice'}
+                {talkMode ? t('Speaking Practice') : t('Chat Practice')}
               </p>
             </div>
             {topicImage ? (
@@ -442,8 +569,8 @@ export default function AiChatPage() {
                   className="block aspect-[1200/630] w-full object-cover"
                 />
                 <div className="px-6 pt-2">
-                  <p className="text-lg font-bold text-gray-900">{conversation.title}</p>
-                  {topicInfo?.description && <p className="mt-1 text-sm text-gray-700">{topicInfo.description}</p>}
+                  <p className="text-lg font-bold text-gray-900">{conversationTitle}</p>
+                  {topicInfo?.description && <p className="mt-1 text-sm text-gray-700">{localized(topicInfo, 'description')}</p>}
                 </div>
               </div>
             ) : (
@@ -458,15 +585,26 @@ export default function AiChatPage() {
           {/* Üst bilgi şeridi */}
           <div className={`flex items-center gap-3 px-4 py-3 text-white ${sectionInfo.bannerClass}`}>
             <info.icon size={18} className="shrink-0" aria-hidden="true" />
-            <h1 className="min-w-0 truncate font-semibold">{conversation ? conversation.title : sectionInfo.label}</h1>
+            <h1 className="min-w-0 truncate font-semibold">{conversation ? conversationTitle : t(sectionInfo.label)}</h1>
+            {turnLimit && (
+              <span
+                className="ml-auto shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-xs font-semibold tabular-nums"
+                title={t('Your messages in this conversation')}
+              >
+                {t('{{done}} / {{total}} messages', { done: Math.min(userTurns, turnLimit), total: turnLimit })}
+              </span>
+            )}
             {usage && (
-              <span className="ml-auto shrink-0 text-xs text-white/80 tabular-nums" title="Messages today">
-                {usage.usedToday} / {usage.dailyLimit} today
+              <span
+                className={`${turnLimit ? 'hidden sm:inline' : 'ml-auto'} shrink-0 text-xs text-white/80 tabular-nums`}
+                title={t('Messages today')}
+              >
+                {t('{{used}} / {{limit}} today', { used: usage.usedToday, limit: usage.dailyLimit })}
               </span>
             )}
             {conversation && (
               <span className={`shrink-0 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-gray-700 ${usage ? '' : 'ml-auto'}`}>
-                {conversation.level} · {info.label}
+                {conversation.level} · {t(info.label)}
               </span>
             )}
           </div>
@@ -475,19 +613,21 @@ export default function AiChatPage() {
             <div className="mx-auto max-w-3xl space-y-4">
               {loadingConvo && !conversation && (
                 <div className="flex justify-center py-10 text-gray-400">
-                  <Loader2 className="animate-spin" aria-label="Loading" />
+                  <Loader2 className="animate-spin" aria-label={t('Loading...')} />
                 </div>
               )}
-              {convoError && <p className="text-center text-sm text-red-600">Sohbet bulunamadı.</p>}
+              {convoError && <p className="text-center text-sm text-red-600">{t('Conversation not found.')}</p>}
 
               {conversation && messages.length === 0 && streaming === null && (
                 <div className="py-8 text-center">
                   <info.icon size={30} className="mx-auto" style={{ color: 'var(--section-color)' }} aria-hidden="true" />
-                  <p className="mt-3 font-semibold text-gray-900">{info.title}</p>
-                  <p className="mx-auto mt-1 max-w-md text-sm text-gray-500">{info.description}</p>
+                  <p className="mt-3 font-semibold text-gray-900">{t(info.title)}</p>
+                  <p className="mx-auto mt-1 max-w-md text-sm text-gray-500">{t(info.description)}</p>
                   {talkMode && !recognition.supported && (
                     <p className="mx-auto mt-3 max-w-md rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                      Tarayıcın sesli konuşmayı desteklemiyor (Chrome veya Edge kullan). Şimdilik yazarak devam edebilirsin.
+                      {t(
+                        "Your browser doesn't support voice conversation. Use Chrome or Edge to talk with your microphone; in this browser you can continue by typing."
+                      )}
                     </p>
                   )}
                 </div>
@@ -505,7 +645,7 @@ export default function AiChatPage() {
               {/* Hazır cevaplar: konunun ilk sorusuna uygun 3 cevap; öğrenci ilk mesajını gönderince kaybolur. */}
               {suggestions.length > 0 && (
                 <div className="flex flex-col items-end gap-2 pt-1">
-                  <p className="text-xs text-gray-400">Not sure what to say? Try one of these:</p>
+                  <p className="text-xs text-gray-400">{t('Not sure what to say? Try one of these:')}</p>
                   <div className="flex flex-wrap justify-end gap-2">
                     {suggestions.map((s) => (
                       <button
@@ -522,15 +662,54 @@ export default function AiChatPage() {
                 </div>
               )}
               {streaming !== null && <MessageBubble role="assistant" content={streaming} typing talkMode={talkMode} />}
+
+              {/* Sohbet bitti: sonuç ekranı (puan, hatalar, faydalı ifadeler). */}
+              {finished && streaming === null && conversation && (
+                <div className="pt-4">
+                  <AiChatResult
+                    result={result}
+                    newBadges={newBadges}
+                    userTurns={userTurns}
+                    loading={evaluatingId === conversationId}
+                    error={evalError || t('Your results are not ready yet.')}
+                    onRetry={() => requestResult()}
+                    onRestart={restartTopic}
+                    restarting={restarting}
+                    topicsPath={levelPath(section, level)}
+                    onTopics={() => navigate(levelPath(section, level))}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
-          {conversation && (
+          {conversation && !finished && (
             <div className="border-t border-gray-100 bg-white px-4 py-3">
               <div className="mx-auto max-w-3xl">
                 {shownError && <p className="mb-2 text-center text-sm text-red-600">{shownError}</p>}
+                {/* Konulu sohbette kalan mesaj bilgisi ve erken bitirme. */}
+                {turnLimit && (turnsLeft <= 2 || canFinishEarly) && (
+                  <div className="mb-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm">
+                    {turnsLeft <= 2 && turnsLeft > 0 && (
+                      <span className="text-gray-500">
+                        {turnsLeft === 1
+                          ? t('Last message! Then you will see your results.')
+                          : t('{{count}} messages left.', { count: turnsLeft })}
+                      </span>
+                    )}
+                    {canFinishEarly && (
+                      <button
+                        type="button"
+                        onClick={() => requestResult()}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 font-medium text-gray-600 hover:bg-gray-50"
+                      >
+                        <Flag size={14} aria-hidden="true" /> {t('Finish and see results')}
+                      </button>
+                    )}
+                  </div>
+                )}
                 {limitReached && !shownError && (
-                  <p className="mb-2 text-center text-sm text-amber-700">Günlük mesaj sınırına ulaştın. Yarın tekrar gel! 🙂</p>
+                  <p className="mb-2 text-center text-sm text-amber-700">{t("You've reached today's message limit. Come back tomorrow!")} 🙂</p>
                 )}
 
                 {talkMode && !showTextInput && (
@@ -545,8 +724,8 @@ export default function AiChatPage() {
                     <button
                       type="button"
                       onClick={() => setTypeInstead(true)}
-                      title="Type instead"
-                      aria-label="Type instead"
+                      title={t('Type instead')}
+                      aria-label={t('Type instead')}
                       className="absolute bottom-1 right-0 rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
                     >
                       <Keyboard size={20} />
@@ -566,8 +745,8 @@ export default function AiChatPage() {
                       <button
                         type="button"
                         onClick={() => setTypeInstead(false)}
-                        title="Speak instead"
-                        aria-label="Speak instead"
+                        title={t('Speak instead')}
+                        aria-label={t('Speak instead')}
                         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-gray-500 hover:bg-gray-100"
                       >
                         <Mic size={20} />
@@ -578,7 +757,7 @@ export default function AiChatPage() {
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder={info.placeholder}
+                      placeholder={t(info.placeholder)}
                       rows={mode === 'writing' ? 5 : 1}
                       maxLength={4000}
                       disabled={limitReached}
@@ -589,7 +768,7 @@ export default function AiChatPage() {
                     <button
                       type="submit"
                       disabled={!input.trim() || streaming !== null || openerPending || limitReached}
-                      aria-label="Send"
+                      aria-label={t('Send')}
                       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:brightness-95 disabled:!bg-gray-200 disabled:text-gray-400"
                       style={{ backgroundColor: 'var(--section-color)' }}
                     >

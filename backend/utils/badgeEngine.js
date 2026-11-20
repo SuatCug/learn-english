@@ -1,4 +1,4 @@
-const { Badge, Topic } = require('../models');
+const { Badge, Topic, Conversation } = require('../models');
 
 const dayKey = (date) => new Date(date).toISOString().slice(0, 10);
 
@@ -35,50 +35,81 @@ const currentStreak = (days) => {
   return streak;
 };
 
-const criteriaCheckers = {
-  topics_completed: (user) => {
-    // Canlı oyun (Live Game) kayıtlarının topicId'si yoktur — gerçek bir konu tamamlanmış sayılmaz.
-    const distinctTopics = new Set(user.progress.filter((p) => p.topicId).map((p) => p.topicId.toString()));
-    return (badge) => distinctTopics.size >= badge.criteriaValue;
-  },
-  perfect_score: (user) => {
-    const perfectCount = user.progress.filter((p) => p.score === 100).length;
-    return (badge) => perfectCount >= badge.criteriaValue;
-  },
-  streak: (user) => {
-    const days = new Set(user.progress.map((p) => dayKey(p.completedAt)));
-    const streak = longestStreak(days);
-    return (badge) => streak >= badge.criteriaValue;
-  },
-};
+// Rozet koşullarının hesaplanması için kullanıcının tüm etkinliklerinden tek seferde özet çıkarır:
+// dersler (progress), sınavlar (examResults), Level Test, AI sohbetleri (Conversation) ve canlı oyunlar.
+const buildStats = async (user) => {
+  // Canlı oyun (Live Game) kayıtlarının topicId'si yoktur — gerçek bir konu tamamlanmış sayılmaz.
+  const lessonEntries = user.progress.filter((p) => p.topicId);
+  const completedTopicIds = new Set(lessonEntries.map((p) => p.topicId.toString()));
 
-// Kullanıcının ilerlemesine göre henüz kazanılmamış rozetleri kontrol edip kazandırır.
-const evaluateBadges = async (user) => {
-  const candidateBadges = await Badge.find({ _id: { $nin: user.badges } });
-  if (!candidateBadges.length) return [];
+  const topicsByCategory = {};
+  lessonEntries.forEach((p) => {
+    if (!p.category) return;
+    (topicsByCategory[p.category] ??= new Set()).add(p.topicId.toString());
+  });
 
-  const completedTopicIds = new Set(user.progress.filter((p) => p.topicId).map((p) => p.topicId.toString()));
   let levelCompleted = false;
   if (user.level) {
     const levelTopicIds = await Topic.find({ level: user.level }).distinct('_id');
     levelCompleted = levelTopicIds.length > 0 && levelTopicIds.every((id) => completedTopicIds.has(id.toString()));
   }
 
-  const simpleCheckers = {
-    topics_completed: criteriaCheckers.topics_completed(user),
-    perfect_score: criteriaCheckers.perfect_score(user),
-    streak: criteriaCheckers.streak(user),
-    level_completed: (badge) => levelCompleted && badge.criteriaValue <= 1,
+  // Sonucu (değerlendirmesi) alınmış AI sohbetleri: moda göre sayı ve en yüksek puan.
+  const aiRows = await Conversation.aggregate([
+    { $match: { userId: user._id, finished: true, 'result.score': { $ne: null } } },
+    { $group: { _id: '$mode', count: { $sum: 1 }, best: { $max: '$result.score' } } },
+  ]);
+  const aiCount = Object.fromEntries(aiRows.map((r) => [r._id, r.count]));
+  const aiBest = aiRows.reduce((max, r) => Math.max(max, r.best ?? 0), 0);
+
+  return {
+    topicsCompleted: completedTopicIds.size,
+    topicsByCategory,
+    levelCompleted,
+    perfectCount: lessonEntries.filter((p) => p.score === 100).length,
+    longestStreak: longestStreak(new Set(user.progress.map((p) => dayKey(p.completedAt)))),
+    placementCompleted: Boolean(user.placementTestCompleted),
+    examsPassed: new Set((user.examResults ?? []).filter((r) => r.passed).map((r) => r.level)).size,
+    aiCount,
+    aiBest,
+    gamesPlayed: user.progress.filter((p) => p.source === 'game').length,
   };
+};
 
-  const newlyAwarded = candidateBadges.filter((badge) => simpleCheckers[badge.criteriaType]?.(badge));
+// Her koşul türü için: (özet, rozet) → kazanıldı mı.
+const criteriaCheckers = {
+  topics_completed: (s, b) => s.topicsCompleted >= b.criteriaValue,
+  level_completed: (s) => s.levelCompleted,
+  perfect_score: (s, b) => s.perfectCount >= b.criteriaValue,
+  streak: (s, b) => s.longestStreak >= b.criteriaValue,
+  category_topics: (s, b) => (s.topicsByCategory[b.criteriaCategory]?.size ?? 0) >= b.criteriaValue,
+  placement_completed: (s) => s.placementCompleted,
+  exams_passed: (s, b) => s.examsPassed >= b.criteriaValue,
+  ai_conversations: (s, b) => (s.aiCount[b.criteriaCategory] ?? 0) >= b.criteriaValue,
+  ai_high_score: (s, b) => s.aiBest >= b.criteriaValue,
+  games_played: (s, b) => s.gamesPlayed >= b.criteriaValue,
+};
 
-  if (newlyAwarded.length) {
-    user.badges.push(...newlyAwarded.map((b) => b._id));
-    await user.save();
-  }
+// Kullanıcının henüz kazanmadığı rozetleri kontrol edip kazandırır; yeni kazanılanları döndürür.
+// Ders/oyun bitişinde, sınav ve Level Test gönderiminde, AI sohbeti bitişinde ve profil açılışında çağrılır.
+const evaluateBadges = async (user) => {
+  const allBadges = await Badge.find().sort({ order: 1 });
+
+  // Artık var olmayan rozetlere (eski seed'lerde silinip yeniden yaratılanlar) kalan bağlantıları temizle,
+  // aynı rozetin tekrarını da at.
+  const existingIds = new Set(allBadges.map((b) => b._id.toString()));
+  const earnedIds = new Set(user.badges.map((id) => id.toString()).filter((id) => existingIds.has(id)));
+  const cleaned = earnedIds.size !== user.badges.length;
+  if (cleaned) user.badges = [...earnedIds];
+
+  const candidateBadges = allBadges.filter((b) => !earnedIds.has(b._id.toString()));
+  const stats = candidateBadges.length ? await buildStats(user) : null;
+  const newlyAwarded = candidateBadges.filter((badge) => criteriaCheckers[badge.criteriaType]?.(stats, badge));
+
+  if (newlyAwarded.length) user.badges.push(...newlyAwarded.map((b) => b._id));
+  if (newlyAwarded.length || cleaned) await user.save();
 
   return newlyAwarded;
 };
 
-module.exports = { evaluateBadges, dayKey, currentStreak };
+module.exports = { evaluateBadges, dayKey, currentStreak, longestStreak, criteriaCheckers };

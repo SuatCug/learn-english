@@ -1,30 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Clock,
-  TriangleAlert,
-  CheckCircle2,
-  XCircle,
-  ChevronLeft,
-  ChevronRight,
-  ClipboardCheck,
-  Timer,
-  Trophy,
-  BarChart3,
-  Info,
-  ArrowRight,
-} from 'lucide-react';
+import { Clock, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ListeningPlayer from '@/components/lesson/ListeningPlayer';
 import { useGetExamQuery, useSubmitExamMutation } from '@/services/examsApi';
 import { setCredentials } from '@/app/authSlice';
 import { cloudinaryAudioUrl } from '@/lib/cloudinary';
-import { EXAM_PLAYER_THEME, EXAM_SECTION_ICONS } from '@/lib/exams';
-import ExamIllustration from '@/components/exams/ExamIllustration';
-import StartConfirmModal from '@/components/exams/StartConfirmModal';
+import { EXAM_PLAYER_THEME } from '@/lib/exams';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import NewBadges from '@/components/NewBadges';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 
 const VALID_LEVELS = ['A1', 'A2', 'B1', 'B2'];
 const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
@@ -65,6 +53,7 @@ function NumberBadge({ number, small = false }) {
 }
 
 function MCQuestion({ question, number, value, onChange, result }) {
+  const { t } = useTranslation();
   const reviewing = Boolean(result);
   return (
     <div className="mb-6">
@@ -96,13 +85,14 @@ function MCQuestion({ question, number, value, onChange, result }) {
             </button>
           );
         })}
-        {reviewing && !isAnswered(value) && <p className="text-xs text-rose-600">Not answered</p>}
+        {reviewing && !isAnswered(value) && <p className="text-xs text-rose-600">{t('Not answered')}</p>}
       </div>
     </div>
   );
 }
 
 function WritingGroup({ group, numbers, answers, onChange, results }) {
+  const { t } = useTranslation();
   const segments = group.passage.split('___');
   const reviewing = Boolean(results);
 
@@ -110,7 +100,7 @@ function WritingGroup({ group, numbers, answers, onChange, results }) {
     <div className="mb-10">
       {group.title && <h3 className="font-semibold text-gray-900 mb-3">{group.title}</h3>}
       <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 mb-3 text-sm text-gray-700 flex flex-wrap gap-2 items-center">
-        <span className="font-semibold text-gray-500 mr-1">Word box:</span>
+        <span className="font-semibold text-gray-500 mr-1">{t('Word box:')}</span>
         {group.wordBank.map((word) => (
           <span key={word} className="rounded-md bg-white border border-gray-200 px-2 py-0.5">
             {word}
@@ -137,7 +127,7 @@ function WritingGroup({ group, numbers, answers, onChange, results }) {
                     autoComplete="off"
                     autoCapitalize="off"
                     spellCheck={false}
-                    aria-label={`Gap ${numbers[question.id]}`}
+                    aria-label={t('Gap {{n}}', { n: numbers[question.id] })}
                     className={`inline-block w-28 sm:w-32 max-w-full rounded border bg-white px-2 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:text-gray-700 ${stateClass}`}
                   />
                   {result && !result.correct && (
@@ -155,6 +145,7 @@ function WritingGroup({ group, numbers, answers, onChange, results }) {
 
 // Bir bölümün tüm gruplarını (kayıt/metin + sorular) çizer; review modunda sonuçlarla renklendirir.
 function SectionBody({ section, numbers, answers, onChange, results, transcripts }) {
+  const { t } = useTranslation();
   if (section.key === 'writing') {
     return section.groups.map((group, g) => (
       <WritingGroup key={g} group={group} numbers={numbers} answers={answers} onChange={onChange} results={results} />
@@ -165,7 +156,11 @@ function SectionBody({ section, numbers, answers, onChange, results, transcripts
     <div key={g} className="mb-10">
       {group.title && (
         <h3 className="font-semibold text-gray-900 mb-3">
-          {section.key === 'listening' ? `Recording ${g + 1}: ` : section.key === 'reading' ? `Text ${g + 1}: ` : ''}
+          {section.key === 'listening'
+            ? `${t('Recording {{n}}', { n: g + 1 })}: `
+            : section.key === 'reading'
+              ? `${t('Text {{n}}', { n: g + 1 })}: `
+              : ''}
           {group.title}
         </h3>
       )}
@@ -174,7 +169,7 @@ function SectionBody({ section, numbers, answers, onChange, results, transcripts
 
       {results && transcripts?.[g] && section.key === 'listening' && (
         <details className="mb-5 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
-          <summary className="cursor-pointer font-semibold text-gray-800">Show transcript</summary>
+          <summary className="cursor-pointer font-semibold text-gray-800">{t('Show transcript')}</summary>
           <p className="mt-3 whitespace-pre-line leading-relaxed">{transcripts[g]}</p>
         </details>
       )}
@@ -200,203 +195,27 @@ function SectionBody({ section, numbers, answers, onChange, results, transcripts
 }
 
 function SectionHeader({ section, index, total }) {
+  const { t } = useTranslation();
   const count = section.groups.reduce((n, g) => n + g.questions.length, 0);
   return (
     <>
       <div className="bg-emerald-600 rounded-lg px-5 py-3 mb-2">
         <p className="text-white font-bold uppercase tracking-wide text-sm">
-          Part {index + 1}
-          {total ? ` of ${total}` : ''} — {section.label} ({count} questions)
+          {total ? t('Part {{n}} of {{total}}', { n: index + 1, total }) : t('Part {{n}}', { n: index + 1 })} —{' '}
+          {t(section.label)} ({t('{{count}} questions', { count })})
         </p>
       </div>
-      <p className="text-sm text-gray-500 mb-6">{section.instructions}</p>
+      <p className="text-sm text-gray-500 mb-6">{t(section.instructions)}</p>
     </>
   );
 }
 
-const sectionFormat = (section) => {
-  if (section.key === 'listening') return `${section.groups.length} recordings`;
-  if (section.key === 'reading') return `${section.groups.length} texts`;
-  if (section.key === 'writing') return `${section.groups.length} texts, word box`;
-  return 'Multiple choice (A–D)';
-};
-
-function StatItem({ icon: Icon, title, subtitle }) {
-  return (
-    <div className="flex items-center gap-4">
-      <Icon size={30} strokeWidth={2} className="shrink-0 text-emerald-600" aria-hidden="true" />
-      <div>
-        <p className="font-bold text-gray-900 leading-tight">{title}</p>
-        <p className="text-sm text-gray-500">{subtitle}</p>
-      </div>
-    </div>
-  );
-}
-
-function IntroScreen({ exam, previousResult, onStart }) {
-  const [confirming, setConfirming] = useState(false);
-  const closeConfirm = useCallback(() => setConfirming(false), []);
-
-  return (
-    <section className="relative isolate overflow-hidden bg-gradient-to-b from-emerald-50/80 via-white to-emerald-50/50 flex-1">
-      {/* Alttaki yumuşak yeşil dalga */}
-      <svg
-        className="absolute inset-x-0 bottom-0 -z-10 w-full h-24 sm:h-32 text-emerald-100/70"
-        viewBox="0 0 1440 120"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path fill="currentColor" d="M0 70c180-40 360-40 540-10s360 50 540 20 270-50 360-40v80H0Z" />
-      </svg>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-16 sm:pb-24">
-        <div className="grid gap-6 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
-          {/* Sol: başlık + genel bakış */}
-          <div className="min-w-0">
-            <h1 className="mt-2 text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900">
-              <span className="text-emerald-600">{exam.level}</span> Level Exam
-            </h1>
-            <p className="mt-3 text-base sm:text-lg text-gray-600">
-              This exam checks your English at {exam.level} level across five skills. You need {exam.passPercent}% or
-              more to pass.
-            </p>
-
-            {previousResult && (
-              <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                <TriangleAlert size={18} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
-                <p className="text-sm text-amber-800 leading-relaxed">
-                  You've already taken this exam — your last score was {previousResult.score} /{' '}
-                  {previousResult.maxScore} ({previousResult.percent}%). Your new result will replace it, and your
-                  best score will be kept.
-                </p>
-              </div>
-            )}
-
-            <div className="mt-6 rounded-2xl border border-gray-100 bg-white shadow-sm p-4 sm:p-6">
-              <h2 className="flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-900 mb-4">
-                <span className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
-                  <ClipboardCheck size={20} aria-hidden="true" />
-                </span>
-                Exam Overview
-              </h2>
-
-              <div className="overflow-hidden rounded-xl border border-gray-100">
-                <table className="w-full text-sm sm:text-[15px]">
-                  <thead>
-                    <tr className="bg-emerald-50 text-gray-600 text-xs uppercase tracking-wide">
-                      <th className="text-left px-3 sm:px-5 py-3 font-semibold">Part</th>
-                      <th className="hidden sm:table-cell text-left px-5 py-3 font-semibold">Format</th>
-                      <th className="text-right px-3 sm:px-5 py-3 font-semibold">Questions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {exam.sections.map((section, i) => {
-                      const Icon = EXAM_SECTION_ICONS[section.key] ?? ClipboardCheck;
-                      const count = section.groups.reduce((n, g) => n + g.questions.length, 0);
-                      return (
-                        <tr key={section.key}>
-                          <td className="px-3 sm:px-5 py-3 text-gray-800">
-                            <span className="flex items-center gap-3">
-                              <Icon size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
-                              <span>
-                                {i + 1}. {section.label}
-                                {/* Telefonda format sütunu gizli; bilgi bölüm adının altında gösterilir. */}
-                                <span className="block sm:hidden text-xs text-gray-500">{sectionFormat(section)}</span>
-                              </span>
-                            </span>
-                          </td>
-                          <td className="hidden sm:table-cell px-5 py-3 text-gray-600">{sectionFormat(section)}</td>
-                          <td className="px-3 sm:px-5 py-3 text-right text-gray-800 tabular-nums">{count}</td>
-                        </tr>
-                      );
-                    })}
-                    <tr className="bg-emerald-50 font-bold text-emerald-800">
-                      <td className="px-3 sm:px-5 py-3.5 sm:hidden">
-                        <span className="flex items-center gap-3">
-                          <Clock size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
-                          Total · {exam.durationMinutes} min
-                        </span>
-                      </td>
-                      <td className="hidden sm:table-cell px-5 py-3.5" colSpan={2}>
-                        <span className="flex items-center gap-3">
-                          <Clock size={20} className="shrink-0 text-emerald-600" aria-hidden="true" />
-                          Total · {exam.durationMinutes} minutes
-                        </span>
-                      </td>
-                      <td className="px-3 sm:px-5 py-3.5 text-right text-lg tabular-nums">{exam.maxScore}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          {/* Sağ: çizim + özet bilgiler */}
-          <div className="flex flex-col gap-4 lg:pt-2">
-            <ExamIllustration className="hidden sm:block w-full max-w-[340px] mx-auto" />
-            <div className="rounded-2xl bg-emerald-50/80 border border-emerald-100 p-5 sm:p-6 space-y-5">
-              <StatItem icon={Timer} title={`${exam.durationMinutes} minutes`} subtitle="Time for the exam" />
-              <StatItem
-                icon={Trophy}
-                title={`${exam.passPercent}% to pass`}
-                subtitle={`Get at least ${exam.passPercent}%`}
-              />
-              <StatItem icon={BarChart3} title="Improve your English" subtitle="Build your skills" />
-            </div>
-          </div>
-        </div>
-
-        {/* Alt: başlamadan önce + başlat butonu */}
-        <div className="mt-6 rounded-2xl border border-gray-100 bg-white shadow-sm p-5 sm:p-7 flex flex-col md:flex-row md:items-center gap-6">
-          <div className="flex-1 min-w-0">
-            <h2 className="flex items-center gap-3 text-lg font-bold text-gray-900 mb-3">
-              <Info size={24} className="shrink-0 fill-emerald-600 text-white" aria-hidden="true" />
-              Before you start:
-            </h2>
-            <ul className="space-y-2 text-sm sm:text-[15px] text-gray-700">
-              {[
-                `You have ${exam.durationMinutes} minutes. When the time is up, the exam is submitted automatically.`,
-                'Use headphones for the Listening part. You can play each recording as many times as you need.',
-                'You can move back and forth between the parts until you submit.',
-                'Answer every question — there is no penalty for guessing.',
-              ].map((text) => (
-                <li key={text} className="flex gap-3">
-                  <span className="mt-2 w-1.5 h-1.5 shrink-0 rounded-full bg-emerald-600" />
-                  {text}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setConfirming(true)}
-            className="shrink-0 w-full md:w-auto inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-b from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white text-lg font-bold px-10 py-4 shadow-lg shadow-emerald-600/25 transition-colors"
-          >
-            {previousResult ? 'Retake Exam' : 'Start Exam'}
-            <ArrowRight size={22} strokeWidth={2.5} aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-
-      {confirming && (
-        <StartConfirmModal
-          testName={`${exam.level} exam`}
-          questionCount={exam.maxScore}
-          durationMinutes={exam.durationMinutes}
-          onConfirm={onStart}
-          onCancel={closeConfirm}
-        />
-      )}
-    </section>
-  );
-}
-
 function ResultScreen({ exam, result, onReview }) {
+  const { t } = useTranslation();
   return (
     <div className="max-w-2xl w-full mx-auto px-4 sm:px-6 py-12 sm:py-16">
       <div className="rounded-2xl border border-emerald-100 bg-white shadow-sm p-6 sm:p-10 text-center">
-        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">{exam.title} — your result</p>
+        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">{t('{{level}} Level Exam', { level: exam.level })} — {t('your result')}</p>
         <div
           className={`inline-flex flex-col items-center justify-center w-28 h-28 rounded-full border-4 mb-4 ${
             result.passed ? 'bg-emerald-50 border-emerald-100' : 'bg-amber-50 border-amber-100'
@@ -412,26 +231,30 @@ function ResultScreen({ exam, result, onReview }) {
         <h1 className="text-xl font-bold text-gray-900 mb-1 flex items-center justify-center gap-2">
           {result.passed ? (
             <>
-              <CheckCircle2 className="text-emerald-600" size={22} aria-hidden="true" /> You passed the {exam.level} exam!
+              <CheckCircle2 className="text-emerald-600" size={22} aria-hidden="true" /> {t('You passed the {{level}} exam!', { level: exam.level })}
             </>
           ) : (
             <>
-              <XCircle className="text-amber-600" size={22} aria-hidden="true" /> Not passed yet
+              <XCircle className="text-amber-600" size={22} aria-hidden="true" /> {t('Not passed yet')}
             </>
           )}
         </h1>
         <p className="text-sm text-gray-500 mb-8">
           {result.passed
-            ? 'Great work — you have a solid command of this level.'
-            : `You need ${result.passPercent}% to pass. Review your answers and practise the weaker parts.`}
+            ? t('Great work — you have a solid command of this level.')
+            : t('You need {{percent}}% to pass. Review your answers and practise the weaker parts.', {
+                percent: result.passPercent,
+              })}
         </p>
+
+        <NewBadges badges={result.newlyAwardedBadges} className="mb-6" />
 
         <div className="rounded-xl border border-gray-100 overflow-hidden mb-8 text-left">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                <th className="text-left px-4 py-2.5 font-semibold">Part</th>
-                <th className="text-right px-4 py-2.5 font-semibold">Score</th>
+                <th className="text-left px-4 py-2.5 font-semibold">{t('Part')}</th>
+                <th className="text-right px-4 py-2.5 font-semibold">{t('Score')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -441,7 +264,7 @@ function ResultScreen({ exam, result, onReview }) {
                 return (
                   <tr key={section.key}>
                     <td className="px-4 py-2.5 text-gray-700">
-                      {section.label}
+                      {t(section.label)}
                       <div className="mt-1.5 h-1.5 rounded-full bg-gray-100 overflow-hidden">
                         <div
                           className={`h-full rounded-full ${pct >= result.passPercent ? 'bg-emerald-500' : 'bg-amber-400'}`}
@@ -465,13 +288,13 @@ function ResultScreen({ exam, result, onReview }) {
             onClick={onReview}
             className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 transition-colors"
           >
-            Review my answers
+            {t('Review my answers')}
           </button>
           <Link
             to="/exams"
             className="rounded-lg border border-gray-300 text-gray-700 font-semibold px-6 py-3 hover:bg-gray-50 transition-colors"
           >
-            Back to exams
+            {t('Back to exams')}
           </Link>
         </div>
       </div>
@@ -480,13 +303,18 @@ function ResultScreen({ exam, result, onReview }) {
 }
 
 export default function ExamPage() {
+  const { t } = useTranslation();
   const { level: rawLevel } = useParams();
   const level = String(rawLevel || '').toUpperCase();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const user = useSelector((state) => state.auth.user);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [stage, setStage] = useState('intro'); // intro | test | result | review
+  // Sınav sadece Exams sayfasındaki özet penceresinden ("Start exam") başlatılır: { start: true } ile gelinir.
+  // Doğrudan gelinirse (navbar linki, sayfa yenileme) Exams sayfasına dönülür ve o seviyenin özeti açılır.
+  const [startRequested] = useState(Boolean(location.state?.start));
+  const [stage, setStage] = useState('waiting'); // waiting (sınav yükleniyor) | test | result | review
   const [partIndex, setPartIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
@@ -504,7 +332,18 @@ export default function ExamPage() {
 
   const exam = data?.data?.exam;
   const sections = useMemo(() => exam?.sections ?? [], [exam]);
-  const previousResult = user?.examResults?.find((r) => r.level === level);
+  usePageTitle(t('{{level}} Level Exam', { level }));
+
+  // Sınav yüklenince doğrudan başlar (sayaç kurulur).
+  if (exam && stage === 'waiting' && startRequested) {
+    setSecondsLeft(exam.durationMinutes * 60);
+    setStage('test');
+  }
+
+  // "start" bilgisini adres geçmişinden sil: sınav bittikten sonra sayfa yenilenirse yeniden başlamasın.
+  useEffect(() => {
+    if (location.state?.start) navigate(location.pathname, { replace: true, state: null });
+  }, [location, navigate]);
 
   // Sınav boyunca kesintisiz soru numarası (1..55).
   const numbers = useMemo(() => {
@@ -541,15 +380,6 @@ export default function ExamPage() {
     handleSubmitRef.current = handleSubmit;
   }, [handleSubmit]);
 
-  const handleStart = () => {
-    setAnswers({});
-    setPartIndex(0);
-    setResult(null);
-    setSecondsLeft(exam.durationMinutes * 60);
-    setStage('test');
-    scrollTop();
-  };
-
   // Geri sayım; süre bitince sınav (o ana kadarki cevaplarla) otomatik gönderilir.
   useEffect(() => {
     if (stage !== 'test') return undefined;
@@ -578,6 +408,7 @@ export default function ExamPage() {
   }, [stage]);
 
   if (!isValidLevel) return <Navigate to="/exams" replace />;
+  if (!startRequested) return <Navigate to="/exams" replace state={{ open: level }} />;
 
   const currentSection = sections[partIndex];
   const isLastPart = partIndex === sections.length - 1;
@@ -595,12 +426,10 @@ export default function ExamPage() {
 
       {(isLoading || isError) && (
         <div className="flex-1 py-16 text-center text-sm">
-          {isLoading && <p className="text-gray-400">Loading exam...</p>}
-          {isError && <p className="text-rose-600">The exam couldn't be loaded. Please try again later.</p>}
+          {isLoading && <p className="text-gray-400">{t('Loading exam...')}</p>}
+          {isError && <p className="text-rose-600">{t("The exam couldn't be loaded. Please try again later.")}</p>}
         </div>
       )}
-
-      {exam && stage === 'intro' && <IntroScreen exam={exam} previousResult={previousResult} onStart={handleStart} />}
 
       {exam && stage === 'test' && currentSection && (
         <>
@@ -623,13 +452,13 @@ export default function ExamPage() {
                           : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                     }`}
                   >
-                    {section.label}
+                    {t(section.label)}
                   </button>
                 );
               })}
             </div>
             <p className="text-xs text-gray-400 mb-8">
-              {answeredCount} / {allQuestionIds.length} questions answered
+              {t('{{done}} / {{total}} questions answered', { done: answeredCount, total: allQuestionIds.length })}
             </p>
 
             <SectionHeader section={currentSection} index={partIndex} total={sections.length} />
@@ -642,7 +471,7 @@ export default function ExamPage() {
                 disabled={partIndex === 0}
                 className="inline-flex items-center gap-1 rounded-lg border border-gray-300 text-gray-700 font-semibold px-5 py-2.5 text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronLeft size={16} aria-hidden="true" /> Previous
+                <ChevronLeft size={16} aria-hidden="true" /> {t('Previous')}
               </button>
               {!isLastPart ? (
                 <button
@@ -650,7 +479,7 @@ export default function ExamPage() {
                   onClick={() => goToPart(partIndex + 1)}
                   className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 text-sm transition-colors"
                 >
-                  Next part <ChevronRight size={16} aria-hidden="true" />
+                  {t('Next part')} <ChevronRight size={16} aria-hidden="true" />
                 </button>
               ) : (
                 <button
@@ -659,7 +488,7 @@ export default function ExamPage() {
                   disabled={submitting}
                   className="rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold px-8 py-2.5 text-sm transition-colors"
                 >
-                  {submitting ? 'Scoring...' : 'Submit exam'}
+                  {submitting ? t('Scoring...') : t('Submit exam')}
                 </button>
               )}
             </div>
@@ -667,7 +496,9 @@ export default function ExamPage() {
             {confirmSubmit && (
               <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 sm:p-5 mb-6">
                 <p className="text-sm font-semibold text-amber-900">
-                  You still have {unanswered} unanswered question{unanswered === 1 ? '' : 's'}. Submit anyway?
+                  {unanswered === 1
+                    ? t('You still have 1 unanswered question. Submit anyway?')
+                    : t('You still have {{count}} unanswered questions. Submit anyway?', { count: unanswered })}
                 </p>
                 <div className="flex flex-wrap items-center gap-3 mt-3">
                   <button
@@ -676,14 +507,14 @@ export default function ExamPage() {
                     disabled={submitting}
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold px-6 py-2 text-sm transition-colors"
                   >
-                    {submitting ? 'Scoring...' : 'Yes, submit'}
+                    {submitting ? t('Scoring...') : t('Yes, submit')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirmSubmit(false)}
                     className="rounded-lg border border-gray-300 text-gray-700 hover:bg-white font-semibold px-6 py-2 text-sm transition-colors"
                   >
-                    Keep working
+                    {t('Keep working')}
                   </button>
                 </div>
               </div>
@@ -709,9 +540,9 @@ export default function ExamPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex-1 w-full">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Answer review</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{t('Answer review')}</p>
               <h1 className="text-xl font-bold text-gray-900">
-                {exam.title} — {result.score} / {result.maxScore} ({result.percent}%)
+                {t('{{level}} Level Exam', { level: exam.level })} — {result.score} / {result.maxScore} ({result.percent}%)
               </h1>
             </div>
             <button
@@ -722,7 +553,7 @@ export default function ExamPage() {
               }}
               className="rounded-lg border border-gray-300 text-gray-700 font-semibold px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
             >
-              Back to result
+              {t('Back to result')}
             </button>
           </div>
 
@@ -745,7 +576,7 @@ export default function ExamPage() {
               to="/exams"
               className="inline-flex rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 transition-colors"
             >
-              Back to exams
+              {t('Back to exams')}
             </Link>
           </div>
         </div>

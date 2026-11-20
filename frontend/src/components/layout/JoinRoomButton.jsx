@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useJoinClassroomMutation } from '@/services/classroomApi';
 
 export default function JoinRoomButton({ trigger, open: openProp, onOpenChange } = {}) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [internalOpen, setInternalOpen] = useState(false);
   const open = openProp !== undefined ? openProp : internalOpen;
@@ -31,7 +33,7 @@ export default function JoinRoomButton({ trigger, open: openProp, onOpenChange }
       const res = await joinClassroom({ joinCode: joinCode.trim().toUpperCase() }).unwrap();
       setJoinedClassroom(res.data.classroom);
     } catch (err) {
-      setError(err?.data?.message || 'Sınıfa katılamadın, kodu kontrol et.');
+      setError(err?.data?.message || t("Couldn't join the classroom. Please check the code."));
     }
   };
 
@@ -45,7 +47,7 @@ export default function JoinRoomButton({ trigger, open: openProp, onOpenChange }
           onClick={() => setOpen(true)}
           className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-gray-200 text-gray-700 text-sm font-medium px-4 py-1.5 hover:bg-gray-50 transition-colors"
         >
-          <span aria-hidden="true">🔑</span> Join Room
+          <span aria-hidden="true">🔑</span> {t('Join Room')}
         </button>
       )}
 
@@ -54,13 +56,13 @@ export default function JoinRoomButton({ trigger, open: openProp, onOpenChange }
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
             {!joinedClassroom ? (
               <form onSubmit={handleJoin}>
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Join a classroom</h3>
-                <p className="text-sm text-gray-500 mb-4">Enter the 6-character code your teacher gave you.</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">{t('Join a classroom')}</h3>
+                <p className="text-sm text-gray-500 mb-4">{t('Enter the 6-character code your teacher gave you.')}</p>
                 <input
                   type="text"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                  placeholder="e.g. A7F2K9"
+                  placeholder={t('e.g. A7F2K9')}
                   required
                   minLength={6}
                   maxLength={6}
@@ -73,23 +75,23 @@ export default function JoinRoomButton({ trigger, open: openProp, onOpenChange }
                     onClick={handleClose}
                     className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
                   >
-                    Cancel
+                    {t('Cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading || joinCode.trim().length !== 6}
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition-colors"
                   >
-                    {isLoading ? 'Joining...' : 'Join'}
+                    {isLoading ? t('Joining...') : t('Join')}
                   </button>
                 </div>
               </form>
             ) : (
               <div className="text-center">
-                <p className="text-sm text-gray-500 mb-1">You've joined!</p>
+                <p className="text-sm text-gray-500 mb-1">{t("You've joined!")}</p>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">{joinedClassroom.name}</h3>
                 <p className="text-sm text-gray-500 mb-6">
-                  Your teacher will assign lessons here — check back once they've added an assignment.
+                  {t("Your teacher will assign lessons here — check back once they've added an assignment.")}
                 </p>
                 <div className="flex gap-2 justify-center">
                   <button
@@ -97,14 +99,14 @@ export default function JoinRoomButton({ trigger, open: openProp, onOpenChange }
                     onClick={handleClose}
                     className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
                   >
-                    Close
+                    {t('Close')}
                   </button>
                   <button
                     type="button"
                     onClick={handleGoToRoom}
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2 transition-colors"
                   >
-                    Go to room →
+                    {t('Go to room →')}
                   </button>
                 </div>
               </div>

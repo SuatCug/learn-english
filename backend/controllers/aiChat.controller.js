@@ -1,8 +1,16 @@
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const { Conversation, User } = require('../models');
-const { countTodayMessages, DAILY_LIMIT } = require('../services/ai.service');
+const {
+  countTodayMessages,
+  countUserTurns,
+  evaluateConversation,
+  DAILY_LIMIT,
+  TOPIC_TURNS,
+  MIN_TURNS_TO_FINISH,
+} = require('../services/ai.service');
 const { publicTopics, findTopic } = require('../data/aiTopics');
+const { evaluateBadges } = require('../utils/badgeEngine');
 const ttsService = require('../services/tts.service');
 
 const LEVELS = ['A1', 'A2', 'B1', 'B2'];
@@ -34,7 +42,7 @@ const listTopics = asyncHandler(async (req, res) => {
 const list = asyncHandler(async (req, res) => {
   const [conversations, usedToday] = await Promise.all([
     Conversation.find({ userId: req.user.id })
-      .select('mode level title topic updatedAt createdAt')
+      .select('mode level title topic finished result.score updatedAt createdAt')
       .sort({ updatedAt: -1 })
       .limit(100),
     countTodayMessages(req.user.id),
@@ -71,14 +79,62 @@ const create = asyncHandler(async (req, res) => {
     ttsService.synthesize(topic.opener, level).catch(() => {});
   }
 
-  res.status(201).json({ success: true, data: { conversation } });
+  res.status(201).json({
+    success: true,
+    data: { conversation, rules: { turnLimit: TOPIC_TURNS, minTurnsToFinish: MIN_TURNS_TO_FINISH } },
+  });
 });
 
 // GET /api/ai/conversations/:id — tek sohbet, mesajlarıyla.
 const getOne = asyncHandler(async (req, res) => {
   const conversation = await Conversation.findOne({ _id: req.params.id, userId: req.user.id }).catch(() => null);
   if (!conversation) throw new ApiError(404, 'Sohbet bulunamadı.');
-  res.json({ success: true, data: { conversation } });
+  res.json({ success: true, data: { conversation, rules: { turnLimit: TOPIC_TURNS, minTurnsToFinish: MIN_TURNS_TO_FINISH } } });
+});
+
+// Aynı sohbet için aynı anda tek değerlendirme (çift tıklama / otomatik bitiş + buton yarışında ikinci istek bekler).
+const pendingEvaluations = new Map();
+
+// POST /api/ai/conversations/:id/finish — konulu sohbeti bitirir ve sonuç ekranı için değerlendirmeyi döndürür.
+// Sohbet zaten bittiyse ve sonucu varsa aynen döner; sonuç yoksa (önceki deneme başarısızsa) yeniden değerlendirir.
+const finish = asyncHandler(async (req, res) => {
+  const conversation = await Conversation.findOne({ _id: req.params.id, userId: req.user.id }).catch(() => null);
+  if (!conversation) throw new ApiError(404, 'Sohbet bulunamadı.');
+  if (!conversation.topic) throw new ApiError(400, 'Sadece konulu sohbetler bitirilebilir.');
+  if (conversation.result) return res.json({ success: true, data: { conversation } });
+
+  if (!conversation.finished && countUserTurns(conversation.messages) < MIN_TURNS_TO_FINISH) {
+    throw new ApiError(400, `Bitirmek için en az ${MIN_TURNS_TO_FINISH} mesaj yazmalısın.`);
+  }
+
+  const key = String(conversation._id);
+  if (!pendingEvaluations.has(key)) {
+    const job = (async () => {
+      conversation.finished = true;
+      await conversation.save();
+      try {
+        conversation.result = await evaluateConversation({
+          mode: conversation.mode,
+          level: conversation.level,
+          topic: findTopic(conversation.level, conversation.topic),
+          messages: conversation.messages,
+          lang: req.lang, // açıklamalar arayüz dilinde (Accept-Language)
+        });
+      } catch (err) {
+        console.error('AI değerlendirme hatası:', err.status, err.message);
+        throw new ApiError(502, 'Sonuçların hazırlanamadı, lütfen tekrar dene.');
+      }
+      await conversation.save();
+      // Biten sohbet rozet koşullarını (First Words, Chatterbox, Fluent Moment...) etkileyebilir.
+      const user = await User.findById(req.user.id);
+      const newlyAwardedBadges = user ? await evaluateBadges(user).catch(() => []) : [];
+      return { conversation, newlyAwardedBadges };
+    })().finally(() => pendingEvaluations.delete(key));
+    pendingEvaluations.set(key, job);
+  }
+
+  const { conversation: finished, newlyAwardedBadges } = await pendingEvaluations.get(key);
+  res.json({ success: true, data: { conversation: finished, newlyAwardedBadges } });
 });
 
 // DELETE /api/ai/conversations/:id
@@ -88,4 +144,4 @@ const remove = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Sohbet silindi.' });
 });
 
-module.exports = { tts, listTopics, list, create, getOne, remove };
+module.exports = { tts, listTopics, list, create, getOne, finish, remove };

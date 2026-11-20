@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 // Grammar konuları için tablo tabanlı "Explanation" görünümü — tablo(lar) + "Key Point"
 // kutusu + "Next: Try the Exercises" butonu. Hücre metinlerinde **kalın** işaretlenebilir.
 function renderCell(text) {
@@ -41,6 +42,7 @@ function GrammarTable({ table, theme }) {
 }
 
 export default function GrammarExplanation({ data, theme, onNext }) {
+  const { t } = useTranslation();
   const intros = Array.isArray(data.intro) ? data.intro : [data.intro];
 
   return (
@@ -84,7 +86,7 @@ export default function GrammarExplanation({ data, theme, onNext }) {
             onClick={onNext}
             className={`rounded-full ${theme.solid} ${theme.solidHover} text-white font-semibold px-6 py-3 text-sm transition-colors`}
           >
-            Next: Try the Exercises →
+            {t('Next: Try the exercises →')}
           </button>
         </div>
       )}

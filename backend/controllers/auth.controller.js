@@ -19,7 +19,8 @@ const hashToken = (token) => crypto.createHash('sha256').update(token).digest('h
 
 // Kullanıcıya yeni bir doğrulama linki (web) ve 6 haneli kod (mobil) atar, ikisini aynı mailde gönderir.
 // Ham değerler sadece mailde yer alır; veritabanında hash'leri tutulur.
-const issueVerification = async (user) => {
+// lang: mailin dili (isteğin arayüz dili, req.lang).
+const issueVerification = async (user, lang) => {
   const token = crypto.randomBytes(32).toString('hex');
   const code = crypto.randomInt(0, 1_000_000).toString().padStart(6, '0');
   user.emailVerificationToken = hashToken(token);
@@ -29,7 +30,7 @@ const issueVerification = async (user) => {
   user.emailVerificationAttempts = 0;
   user.verificationEmailSentAt = new Date();
   await user.save();
-  await sendVerificationEmail(user, { token, code });
+  await sendVerificationEmail(user, { token, code, lang });
 };
 
 // Doğrulama tamamlanınca link/kod alanları temizlenir; kullanıcı tekrar şifre girmeden oturum açmış olur.
@@ -64,7 +65,7 @@ const register = asyncHandler(async (req, res) => {
   const user = await User.create({ name, email, password: hashedPassword, emailVerified: false });
 
   try {
-    await issueVerification(user);
+    await issueVerification(user, req.lang);
   } catch (err) {
     // Mail gidemediyse kullanıcı doğrulama yapamaz; aynı e-postayla tekrar kayıt olabilmesi için silinir.
     await User.deleteOne({ _id: user._id });
@@ -159,7 +160,7 @@ const resendVerification = asyncHandler(async (req, res) => {
     if (Date.now() - sentAt < RESEND_COOLDOWN_MS) {
       throw new ApiError(429, 'Yeni bir e-posta istemeden önce biraz bekle.');
     }
-    await issueVerification(user);
+    await issueVerification(user, req.lang);
   }
 
   res.json({
@@ -291,7 +292,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     user.passwordResetTokenExpires = undefined;
     await user.save();
     try {
-      await sendPasswordResetEmail(user, { code });
+      await sendPasswordResetEmail(user, { code, lang: req.lang });
     } catch (err) {
       // Mail gidemediyse kod geçersiz sayılır ve bekleme süresi başlamaz; kullanıcı hemen tekrar deneyebilir.
       clearPasswordReset(user);

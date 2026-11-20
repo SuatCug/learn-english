@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Play, Pause, RotateCcw, Headphones } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SPEEDS = [0.75, 1, 1.25];
 
@@ -13,6 +14,7 @@ const formatTime = (seconds) => {
 // Listening konuları için ses oynatıcı: oynat/duraklat, ilerleme çubuğu, 5 sn geri sarma ve hız seçimi.
 // Tarayıcının kendi <audio> öğesini kullanır; görünüm kategori temasından gelir.
 export default function ListeningPlayer({ src, theme }) {
+  const { t } = useTranslation();
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -28,7 +30,7 @@ export default function ListeningPlayer({ src, theme }) {
     return (
       <div className={`rounded-xl border ${theme.borderLighter} ${theme.subtleBg} p-5 mb-6 flex items-center gap-3 text-sm text-gray-500`}>
         <Headphones className={`h-5 w-5 ${theme.text}`} />
-        The recording for this lesson isn't available yet — please check back soon.
+        {t("The recording for this lesson isn't available yet — please check back soon.")}
       </div>
     );
   }
@@ -65,7 +67,7 @@ export default function ListeningPlayer({ src, theme }) {
         <button
           type="button"
           onClick={toggle}
-          aria-label={playing ? 'Pause' : 'Play'}
+          aria-label={playing ? t('Pause') : t('Play')}
           className={`w-12 h-12 shrink-0 rounded-full ${theme.solid} ${theme.solidHover} text-white flex items-center justify-center transition-colors`}
         >
           {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 translate-x-[1px]" />}
@@ -79,7 +81,7 @@ export default function ListeningPlayer({ src, theme }) {
             step={0.1}
             value={Math.min(current, duration || 0)}
             onChange={(e) => seek(Number(e.target.value))}
-            aria-label="Seek"
+            aria-label={t('Seek')}
             className={`w-full cursor-pointer ${theme.accent ?? ''}`}
           />
           <div className="mt-1 flex justify-between text-xs text-gray-500 tabular-nums">
@@ -97,7 +99,7 @@ export default function ListeningPlayer({ src, theme }) {
         >
           <RotateCcw className="h-3.5 w-3.5" /> 5s
         </button>
-        <span className="ml-auto text-xs text-gray-500">Speed</span>
+        <span className="ml-auto text-xs text-gray-500">{t('Speed')}</span>
         {SPEEDS.map((value) => (
           <button
             key={value}

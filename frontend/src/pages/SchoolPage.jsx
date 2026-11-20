@@ -18,11 +18,14 @@ import PlanModal from '@/components/layout/PlanModal';
 import heroImage from '@/assets/school-hero.webp';
 import { useGetMyClassroomsQuery, useJoinClassroomMutation } from '@/services/classroomApi';
 import { roomColor } from '@/lib/rooms';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 
 // School Mode giriş sayfası: sınıf fotoğrafı, "koda katıl" (premium için ayrıca "oda kur") kartları ve kullanıcının odaları.
 
 
 function JoinCard() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
@@ -32,14 +35,14 @@ function JoinCard() {
     e.preventDefault();
     setError('');
     if (code.length !== 6) {
-      setError('Enter the 6-character code.');
+      setError(t('Enter the 6-character code.'));
       return;
     }
     try {
       const res = await joinClassroom({ joinCode: code.trim().toUpperCase() }).unwrap();
       navigate(`/classroom/${res.data.classroom._id}`);
     } catch (err) {
-      setError(err?.data?.message || 'Sınıfa katılamadın, kodu kontrol et.');
+      setError(err?.data?.message || t("Couldn't join the classroom. Please check the code."));
     }
   };
 
@@ -48,8 +51,8 @@ function JoinCard() {
       <span className="w-10 h-10 rounded-full bg-sky-50 text-sky-700 flex items-center justify-center mb-3">
         <KeyRound size={18} strokeWidth={2} />
       </span>
-      <p className="font-bold text-gray-900">Join a room</p>
-      <p className="text-sm text-gray-500 mb-4">Enter the code your teacher gave you.</p>
+      <p className="font-bold text-gray-900">{t('Join a room')}</p>
+      <p className="text-sm text-gray-500 mb-4">{t('Enter the code your teacher gave you.')}</p>
       <div className="mt-auto flex gap-2">
         <input
           type="text"
@@ -57,7 +60,7 @@ function JoinCard() {
           onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
           placeholder="A7F2K9"
           maxLength={6}
-          aria-label="Room code"
+          aria-label={t('Room code')}
           className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold tracking-[0.25em] text-center uppercase text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
         />
         <button
@@ -65,7 +68,7 @@ function JoinCard() {
           disabled={isLoading}
           className="shrink-0 rounded-lg bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition-colors"
         >
-          {isLoading ? '...' : 'Join'}
+          {isLoading ? '...' : t('Join')}
         </button>
       </div>
       {error && <p className="text-sm text-rose-600 mt-2">{error}</p>}
@@ -74,6 +77,7 @@ function JoinCard() {
 }
 
 function CreateCard({ onCreate }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -83,10 +87,10 @@ function CreateCard({ onCreate }) {
       <span className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
         <Plus size={20} strokeWidth={2} />
       </span>
-      <span className="font-bold text-gray-900">Create a room</span>
-      <span className="text-sm text-gray-500 mb-4">Open a new classroom for your students.</span>
+      <span className="font-bold text-gray-900">{t('Create a room')}</span>
+      <span className="text-sm text-gray-500 mb-4">{t('Open a new classroom for your students.')}</span>
       <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
-        Start a new class
+        {t('Start a new class')}
         <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
       </span>
     </button>
@@ -94,6 +98,7 @@ function CreateCard({ onCreate }) {
 }
 
 function CopyCode({ code }) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const handleCopy = async (e) => {
     e.preventDefault();
@@ -109,7 +114,7 @@ function CopyCode({ code }) {
     <button
       type="button"
       onClick={handleCopy}
-      title="Copy join code"
+      title={t('Copy join code')}
       className="inline-flex items-center gap-1.5 rounded-md bg-gray-50 px-2 py-1 text-xs font-bold tracking-[0.2em] text-gray-700 hover:bg-gray-100 transition-colors"
     >
       {code}
@@ -120,6 +125,7 @@ function CopyCode({ code }) {
 
 
 function RoomRow({ classroom }) {
+  const { t } = useTranslation();
   const isTeacher = classroom.role === 'teacher';
   const color = roomColor(classroom._id);
 
@@ -144,12 +150,14 @@ function RoomRow({ classroom }) {
               isTeacher ? 'bg-emerald-50 text-emerald-700' : 'bg-sky-50 text-sky-700'
             }`}
           >
-            {isTeacher ? 'Teacher' : 'Student'}
+            {isTeacher ? t('Teacher') : t('Student')}
           </span>
           <Users size={13} className="shrink-0" />
           <span className="truncate">
             {isTeacher
-              ? `${classroom.studentCount} student${classroom.studentCount === 1 ? '' : 's'}`
+              ? classroom.studentCount === 1
+                ? t('1 student')
+                : t('{{count}} students', { count: classroom.studentCount })
               : classroom.teacherId?.name ?? '—'}
           </span>
         </span>
@@ -166,21 +174,22 @@ function RoomRow({ classroom }) {
 
 // Fotoğrafın üstünde duran "My rooms" paneli; oda çoksa kendi içinde kaydırılır.
 function MyRoomsPanel({ classrooms, isLoading, isError }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-2xl bg-white/95 backdrop-blur border border-gray-100 lg:border-transparent shadow-sm lg:shadow-xl p-4 sm:p-5 w-full min-w-0">
       <div className="flex items-center justify-between gap-3 px-1 mb-2">
-        <h2 className="text-lg font-bold text-gray-900">My rooms</h2>
-        {classrooms.length > 0 && <span className="text-xs font-semibold text-gray-400">{classrooms.length} total</span>}
+        <h2 className="text-lg font-bold text-gray-900">{t('My rooms')}</h2>
+        {classrooms.length > 0 && <span className="text-xs font-semibold text-gray-400">{t('{{count}} total', { count: classrooms.length })}</span>}
       </div>
 
-      {isLoading && <p className="px-1 py-6 text-sm text-gray-400">Loading rooms...</p>}
-      {isError && <p className="px-1 py-6 text-sm text-rose-500">Couldn't load your rooms. Please try again.</p>}
+      {isLoading && <p className="px-1 py-6 text-sm text-gray-400">{t('Loading rooms...')}</p>}
+      {isError && <p className="px-1 py-6 text-sm text-rose-500">{t("Couldn't load your rooms. Please try again.")}</p>}
 
       {!isLoading && !isError && classrooms.length === 0 && (
         <div className="rounded-xl border-2 border-dashed border-gray-200 px-4 py-8 text-center">
           <School size={28} strokeWidth={1.5} className="mx-auto text-gray-300 mb-2" />
-          <p className="font-semibold text-gray-700">No rooms yet</p>
-          <p className="text-sm text-gray-500">Join with a code or create your own class.</p>
+          <p className="font-semibold text-gray-700">{t('No rooms yet')}</p>
+          <p className="text-sm text-gray-500">{t('Join with a code or create your own class.')}</p>
         </div>
       )}
 
@@ -196,6 +205,8 @@ function MyRoomsPanel({ classrooms, isLoading, isError }) {
 }
 
 export default function SchoolPage() {
+  const { t } = useTranslation();
+  usePageTitle(t('School Mode'));
   const isPremium = useSelector((state) => state.auth.user?.isPremium);
   const { data, isLoading, isError } = useGetMyClassroomsQuery();
   const classrooms = data?.data?.classrooms ?? [];
@@ -214,7 +225,7 @@ export default function SchoolPage() {
         <div className="relative h-52 sm:h-72 lg:absolute lg:inset-0 lg:h-auto lg:-z-10">
           <img
             src={heroImage}
-            alt="An instructor giving a lesson to adult students in a classroom"
+            alt={t('An instructor giving a lesson to adult students in a classroom')}
             className="w-full h-full object-cover object-[45%_40%]"
           />
           <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-gray-950/85 via-gray-950/55 to-gray-950/35" />
@@ -222,10 +233,10 @@ export default function SchoolPage() {
         <div className="max-w-6xl mx-auto w-full flex-1 px-4 sm:px-6 py-8 sm:py-12 lg:py-20 lg:min-h-[600px] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-8 lg:gap-10 items-center">
           <div className="max-w-xl min-w-0">
             <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 lg:text-white leading-tight mb-3">
-              Your classroom
+              {t('Your classroom')}
             </h1>
             <p className="text-gray-600 lg:text-white/85 text-base sm:text-lg leading-relaxed mb-7">
-              Create a room for your class, or join one with the code your teacher gave you.
+              {t('Create a room for your class, or join one with the code your teacher gave you.')}
             </p>
             {isPremium ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -240,7 +251,7 @@ export default function SchoolPage() {
                   onClick={handleCreate}
                   className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 lg:text-white/90 hover:underline"
                 >
-                  Are you a teacher? Create a room
+                  {t('Are you a teacher? Create a room')}
                   <span className="rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-wide no-underline">
                     Pro
                   </span>

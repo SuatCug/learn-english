@@ -4,6 +4,9 @@ import { useDispatch } from 'react-redux';
 import { useGoogleLoginMutation } from '@/services/authApi';
 import { setCredentials } from '@/app/authSlice';
 import { getErrorMessage } from '@/lib/getErrorMessage';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
+import { takeReturnTo } from '@/lib/returnTo';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const SCRIPT_SRC = 'https://accounts.google.com/gsi/client';
@@ -45,7 +48,8 @@ function GoogleLogo() {
 // Tıklanınca Google'ın hesap seçme popup'ı açılır; Google bir access token verir, backend
 // (POST /auth/google) bu token'ın bizim uygulamamıza ait olduğunu doğrulayıp oturum token'ımızı döner.
 // VITE_GOOGLE_CLIENT_ID tanımlı değilse buton hiç gösterilmez.
-export default function GoogleSignInButton({ label = 'Google ile devam et' }) {
+export default function GoogleSignInButton({ label }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [googleLogin, { isLoading }] = useGoogleLoginMutation();
@@ -60,7 +64,7 @@ export default function GoogleSignInButton({ label = 'Google ile devam et' }) {
       if (response.error || !response.access_token) {
         // Kullanıcı popup'ı kapattıysa hata göstermeye gerek yok.
         if (response.error && response.error !== 'popup_closed') {
-          setError('Google ile giriş yapılamadı. Lütfen tekrar dene.');
+          setError(t("Couldn't sign in with Google. Please try again."));
         }
         return;
       }
@@ -68,7 +72,7 @@ export default function GoogleSignInButton({ label = 'Google ile devam et' }) {
       try {
         const data = await googleLogin({ accessToken: response.access_token }).unwrap();
         dispatch(setCredentials(data.data));
-        navigate('/', { replace: true });
+        navigate(takeReturnTo(), { replace: true });
       } catch (err) {
         setError(getErrorMessage(err));
       }
@@ -91,7 +95,7 @@ export default function GoogleSignInButton({ label = 'Google ile devam et' }) {
         setReady(true);
       })
       .catch(() => {
-        if (!cancelled) setError('Google ile giriş şu anda kullanılamıyor.');
+        if (!cancelled) setError(i18n.t('Signing in with Google is not available right now.'));
       });
 
     return () => {
@@ -108,7 +112,7 @@ export default function GoogleSignInButton({ label = 'Google ile devam et' }) {
     <div>
       <div className="flex items-center gap-3 my-4 sm:my-5">
         <span className="h-px flex-1 bg-gray-200" />
-        <span className="text-xs text-gray-400 uppercase tracking-wide">veya</span>
+        <span className="text-xs text-gray-400 uppercase tracking-wide">{t('or')}</span>
         <span className="h-px flex-1 bg-gray-200" />
       </div>
 
@@ -122,7 +126,7 @@ export default function GoogleSignInButton({ label = 'Google ile devam et' }) {
         className="w-full flex items-center justify-center gap-2.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed text-gray-800 font-semibold h-10 text-[15px] transition-colors"
       >
         <GoogleLogo />
-        {isLoading ? 'Giriş yapılıyor...' : label}
+        {isLoading ? t('Logging in...') : (label ?? t('Continue with Google'))}
       </button>
 
       {error && (

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 // Writing konuları için "Explanation" görünümü — yazı türü rozetİ, kısa giriş, adım adım
 // paragraf planı, kategorilere ayrılmış kullanışlı ifadeler ve "Writing Tips" kutusu.
 function StructureStep({ index, step, theme }) {
@@ -31,6 +32,7 @@ function LanguageCard({ group, theme }) {
 }
 
 export default function WritingExplanation({ data, theme, onNext }) {
+  const { t } = useTranslation();
   return (
     <div>
       <div className="flex items-center flex-wrap gap-2.5 mb-1.5">
@@ -41,14 +43,14 @@ export default function WritingExplanation({ data, theme, onNext }) {
       </div>
       <p className="text-base text-gray-700 mb-6">{data.intro}</p>
 
-      <p className="text-sm font-bold text-gray-900 mb-3">How to Structure It</p>
+      <p className="text-sm font-bold text-gray-900 mb-3">{t('How to structure it')}</p>
       <div className="space-y-4 mb-8">
         {data.structure.map((step, i) => (
           <StructureStep key={step.step} index={i} step={step} theme={theme} />
         ))}
       </div>
 
-      <p className="text-sm font-bold text-gray-900 mb-3">Useful Language</p>
+      <p className="text-sm font-bold text-gray-900 mb-3">{t('Useful language')}</p>
       <div className="grid gap-4 mb-8 md:grid-cols-2">
         {data.usefulLanguage.map((group) => (
           <LanguageCard key={group.heading} group={group} theme={theme} />
@@ -57,7 +59,7 @@ export default function WritingExplanation({ data, theme, onNext }) {
 
       {data.tips && (
         <div className={`rounded-xl border-2 ${theme.border} bg-white p-4 mb-8`}>
-          <p className="font-bold text-gray-900 mb-1.5">Writing Tips</p>
+          <p className="font-bold text-gray-900 mb-1.5">{t('Writing tips')}</p>
           <ul className="text-sm text-gray-700 space-y-1">
             {data.tips.map((tip) => (
               <li key={tip} className="flex gap-2">
@@ -76,7 +78,7 @@ export default function WritingExplanation({ data, theme, onNext }) {
             onClick={onNext}
             className={`rounded-full ${theme.solid} ${theme.solidHover} text-white font-semibold px-6 py-3 text-sm transition-colors`}
           >
-            Next: Try the Exercise →
+            {t('Next: Try the exercise →')}
           </button>
         </div>
       )}

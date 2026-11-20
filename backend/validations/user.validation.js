@@ -15,6 +15,10 @@ const updateProfileRules = [
   body('email').trim().isEmail().withMessage('Geçerli bir e-posta adresi giriniz.').normalizeEmail(),
 ];
 
+const preferencesRules = [
+  body('emailReminders').isBoolean().withMessage('emailReminders true veya false olmalıdır.'),
+];
+
 // Mevcut şifre, şifresi olan hesaplar için controller'da zorunlu tutulur (Google ile açılmış hesapların şifresi yoktur).
 const changePasswordRules = [
   body('currentPassword').optional().isString(),
@@ -27,4 +31,4 @@ const setLevelRules = [
   body('level').isIn(LEVEL_ORDER).withMessage(`Seviye şunlardan biri olmalıdır: ${LEVEL_ORDER.join(', ')}.`),
 ];
 
-module.exports = { progressRules, updateProfileRules, changePasswordRules, deleteAccountRules, setLevelRules };
+module.exports = { progressRules, updateProfileRules, preferencesRules, changePasswordRules, deleteAccountRules, setLevelRules };

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import usePageTitle from '@/hooks/usePageTitle';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '@/components/auth/AuthLayout';
 import AuthBrand from '@/components/auth/AuthBrand';
@@ -10,6 +12,8 @@ import { getErrorMessage } from '@/lib/getErrorMessage';
 import { validateNewPassword, PASSWORD_MIN_LENGTH } from '@/lib/password';
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
+  usePageTitle(t('Sign up'));
   const navigate = useNavigate();
   const [register, { isLoading }] = useRegisterMutation();
 
@@ -31,7 +35,7 @@ export default function RegisterPage() {
       return;
     }
     if (password !== confirmPassword) {
-      setError('Şifreler birbiriyle uyuşmuyor.');
+      setError(t("Passwords don't match."));
       return;
     }
 
@@ -55,13 +59,13 @@ export default function RegisterPage() {
     <AuthLayout>
       <AuthBrand />
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">Kayıt Ol</h1>
-      <p className="text-sm text-gray-500 mt-2 text-center">Ücretsiz hesap oluşturarak öğrenmeye başla.</p>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">{t('Sign up')}</h1>
+      <p className="text-sm text-gray-500 mt-2 text-center">{t('Create a free account and start learning.')}</p>
 
       <form onSubmit={handleSubmit} className="mt-5 sm:mt-6 space-y-3 sm:space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
-            Ad Soyad
+            {t('Full name')}
           </label>
           <input
             id="name"
@@ -70,14 +74,14 @@ export default function RegisterPage() {
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Adın Soyadın"
+            placeholder={t('Your full name')}
             className="w-full rounded-lg border border-gray-300 px-4 py-2 sm:py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
-            E-posta
+            {t('Email')}
           </label>
           <input
             id="email"
@@ -86,26 +90,26 @@ export default function RegisterPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="ornek@eposta.com"
+            placeholder={t('name@example.com')}
             className="w-full rounded-lg border border-gray-300 px-4 py-2 sm:py-2.5 text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-900"
           />
         </div>
 
         <PasswordField
           id="password"
-          label="Şifre"
+          label={t('Password')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder={`En az ${PASSWORD_MIN_LENGTH} karakter`}
+          placeholder={t('At least {{min}} characters', { min: PASSWORD_MIN_LENGTH })}
           autoComplete="new-password"
         />
 
         <PasswordField
           id="confirmPassword"
-          label="Şifre (Tekrar)"
+          label={t('Confirm password')}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Şifreni tekrar gir"
+          placeholder={t('Enter your password again')}
           autoComplete="new-password"
         />
 
@@ -118,16 +122,16 @@ export default function RegisterPage() {
           disabled={isLoading}
           className="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold h-10 text-[15px] transition-colors"
         >
-          {isLoading ? 'Kayıt yapılıyor...' : 'Kayıt Ol'}
+          {isLoading ? t('Signing up...') : t('Sign up')}
         </button>
       </form>
 
-      <GoogleSignInButton label="Google ile kayıt ol" />
+      <GoogleSignInButton label={t('Sign up with Google')} />
 
       <p className="text-center text-sm text-gray-500 mt-4 sm:mt-6">
-        Zaten hesabın var mı?{' '}
+        {t('Already have an account?')}{' '}
         <Link to="/login" className="text-emerald-600 hover:text-emerald-700 hover:underline font-semibold">
-          Giriş Yap
+          {t('Log in')}
         </Link>
       </p>
     </AuthLayout>

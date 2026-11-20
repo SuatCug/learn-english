@@ -1,8 +1,10 @@
+import { currentLanguage } from '@/i18n';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   prepareHeaders: (headers, { getState }) => {
+    headers.set('Accept-Language', currentLanguage());
     const token = getState().auth.token;
     if (token) headers.set('Authorization', `Bearer ${token}`);
     return headers;
@@ -29,6 +31,11 @@ export const aiChatApi = createApi({
       query: (body) => ({ url: '/ai/conversations', method: 'POST', body }),
       invalidatesTags: ['AiConversations'],
     }),
+    // Konulu sohbeti bitirir; cevapta değerlendirmesi (result) dolu sohbet döner.
+    finishConversation: builder.mutation({
+      query: (id) => ({ url: `/ai/conversations/${id}/finish`, method: 'POST' }),
+      invalidatesTags: ['AiConversations'],
+    }),
     deleteConversation: builder.mutation({
       query: (id) => ({ url: `/ai/conversations/${id}`, method: 'DELETE' }),
       invalidatesTags: ['AiConversations'],
@@ -41,5 +48,6 @@ export const {
   useGetConversationsQuery,
   useGetConversationQuery,
   useCreateConversationMutation,
+  useFinishConversationMutation,
   useDeleteConversationMutation,
 } = aiChatApi;
