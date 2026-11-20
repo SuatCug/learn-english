@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { localized } from '@/lib/localize';
-import { Badge, Book, File, NotebookPen, Headphones, Menu, X, Search, School, Clipboard, Gauge, Mic, MessageCircle } from 'lucide-react';
+import { Menu, X, Search, School, Clipboard, Gauge, Mic, MessageCircle } from 'lucide-react';
+import { CategoryIcon, LevelBadge, categoryColor } from '@/components/CategoryIcon';
 import { LEVELS, CATEGORIES } from '@/lib/constants';
 import { AI_SECTIONS, levelPath } from '@/lib/aiSections';
 import { useGetTopicsQuery } from '@/services/topicsApi';
@@ -12,51 +13,13 @@ import { useSelector } from 'react-redux';
 import { rememberReturnTo } from '@/lib/returnTo';
 import BrandMark from '@/components/BrandMark';
 
-// Açılır menüdeki seviye rozetlerinin rengi (ana sayfa kartlarıyla aynı kategori renkleri).
-const CATEGORY_COLORS = {
-  grammar: '#1a8ec1',
-  vocabulary: '#ff6699',
-  reading: '#ed1c24',
-  writing: '#a84d98',
-  listening: '#f7741d',
-};
-
-// Her kategorinin kendi hazır Lucide ikonu var; içine seviye kodu yazılır.
-// Grammar: dalgalı rozet, Vocabulary: kitap, Reading: sayfa, Writing: kalemli defter, Listening: kulaklık.
-const CATEGORY_LEVEL_ICONS = {
-  grammar: Badge,
-  vocabulary: Book,
-  reading: File,
-  writing: NotebookPen,
-  listening: Headphones,
-};
-
-// Kalemli defterde kalem sağ üstte; kod defterin alttaki boş kısmına kaydırılır.
-const CODE_OFFSET = {
-  writing: 'translate-x-[1px] translate-y-[7px]',
-  // Kulaklıkta boşluk, bandın altında iki kulaklık arasında.
-  listening: 'translate-y-[4px]',
-};
-
 // Orta menü yazıları: normalde beyaza yakın, üzerine gelince ve açık sayfada tam beyaz.
 const navItemClass = (active) =>
   `text-sm font-medium transition-colors py-2 ${active ? 'text-white' : 'text-gray-200 hover:text-white'}`;
 
-function LevelBadge({ code, color, slug }) {
-  const Icon = CATEGORY_LEVEL_ICONS[slug] ?? Badge;
-  return (
-    <span className="relative w-9 h-9 shrink-0 flex items-center justify-center" style={{ color }}>
-      <Icon size={36} strokeWidth={1.1} className="absolute inset-0" aria-hidden="true" />
-      <span className={`relative font-medium leading-none ${CODE_OFFSET[slug] ?? ''} ${code.length > 2 ? 'text-[8.5px]' : 'text-[10px]'}`}>
-        {code}
-      </span>
-    </span>
-  );
-}
-
 function CategoryMenu({ label, slug, active }) {
   const { t } = useTranslation();
-  const color = CATEGORY_COLORS[slug] ?? '#50af31';
+  const color = categoryColor(slug);
   return (
     <div className="relative group">
       {/* Tıklayınca kategorinin seviye sayfasına gider; üzerine gelince seviye menüsü açılır. */}
@@ -188,6 +151,41 @@ function AiMenu({ section, active }) {
   );
 }
 
+// Ders arama sonuçları listesi (masaüstü arama paneli ve mobil menü ortak kullanır).
+function SearchResults({ query, searching, results, onSelect }) {
+  const { t } = useTranslation();
+  if (query.length < 2) return null;
+  return (
+    <div className="mt-2 rounded-xl border border-emerald-100 bg-white py-1">
+      {searching && <p className="px-4 py-2.5 text-sm text-gray-400">{t('Searching...')}</p>}
+      {!searching && results.length === 0 && (
+        <p className="px-4 py-2.5 text-sm text-gray-400">{t('No lessons found for "{{query}}".', { query })}</p>
+      )}
+      {!searching &&
+        results.map((topic) => {
+          const categoryInfo = CATEGORIES.find((c) => c.slug === topic.category);
+          return (
+            <button
+              key={topic._id}
+              type="button"
+              onClick={() => onSelect(topic._id)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-100 transition-colors"
+            >
+              {/* Menülerle aynı ikon: kategorinin Lucide ikonu, içinde dersin seviye kodu. */}
+              <LevelBadge code={topic.level} slug={topic.category} />
+              <span className="min-w-0">
+                <span className="block text-sm font-medium text-gray-800 truncate">{localized(topic)}</span>
+                <span className="block text-xs text-gray-400">
+                  {topic.level} · {t(categoryInfo?.label ?? topic.category)}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+    </div>
+  );
+}
+
 export default function Navbar() {
   const { t } = useTranslation();
   // Giriş yapmamış ziyaretçi: profil menüsü yerine dil seçici ve Giriş yap / Kayıt ol.
@@ -198,18 +196,21 @@ export default function Navbar() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Masaüstünde ders araması sadece giriş yapmış kullanıcılara: ikona tıklayınca kayarak genişleyen kutu.
+  const [searchOpen, setSearchOpen] = useState(false);
 
-  // Ders araması sadece mobil menüde (masaüstünde navbar'a sığmadığı için kaldırıldı).
   // Kullanıcı yazarken her tuşta istek atmamak için arama metnini kısa bir gecikmeyle uygular.
   useEffect(() => {
     const handle = setTimeout(() => setDebouncedSearch(search.trim()), 300);
     return () => clearTimeout(handle);
   }, [search]);
 
-  // Rota değişince mobil menüyü kapat.
+  // Rota değişince mobil menüyü ve arama panelini kapat.
   useEffect(() => {
     setMobileOpen(false);
+    setSearchOpen(false);
   }, [location.pathname]);
+
 
   // Mobil menü açıkken arkadaki sayfanın kaymasını engelle.
   useEffect(() => {
@@ -231,6 +232,9 @@ export default function Navbar() {
     setSearch('');
     setDebouncedSearch('');
     setMobileOpen(false);
+    setSearchOpen(false);
+    // Odak kutuda kalırsa bir sonraki tıklamada onFocus tetiklenmez ve kutu açılmaz.
+    document.activeElement?.blur();
     navigate(`/lesson/${topicId}`);
   };
 
@@ -301,7 +305,56 @@ export default function Navbar() {
               </Link>
             </div>
           ) : (
-            <AvatarMenu />
+            <>
+              {/* Kapalıyken sadece büyüteç ikonu görünür; tıklanınca kutu sağdan sola yumuşakça genişler. */}
+              <div className="relative hidden md:flex items-center">
+                <Search
+                  size={18}
+                  strokeWidth={2}
+                  className={`absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors ${
+                    searchOpen ? 'text-gray-400' : 'text-gray-300'
+                  }`}
+                  aria-hidden="true"
+                />
+                <input
+                  type="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onFocus={() => setSearchOpen(true)}
+                  onBlur={() => !search && setSearchOpen(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      setSearch('');
+                      setSearchOpen(false);
+                      e.currentTarget.blur();
+                    }
+                    handleSearchKeyDown(e);
+                  }}
+                  aria-label={t('Search lessons...')}
+                  placeholder={t('Search lessons...')}
+                  className={`rounded-md border pl-9 pr-3 py-1.5 text-sm text-white transition-all duration-300 ease-out focus:outline-none ${
+                    searchOpen
+                      ? 'w-56 lg:w-64 bg-gray-800 border-gray-600 placeholder-gray-400'
+                      : 'w-9 bg-transparent border-transparent placeholder-transparent cursor-pointer hover:bg-gray-800'
+                  }`}
+                />
+                {searchOpen && debouncedSearch.length >= 2 && (
+                  // mousedown'u engelle ki sonuca tıklarken input blur olup liste kapanmasın.
+                  <div
+                    onMouseDown={(e) => e.preventDefault()}
+                    className="absolute top-full right-0 w-72 max-h-96 overflow-y-auto z-50 [&>div]:shadow-lg"
+                  >
+                    <SearchResults
+                      query={debouncedSearch}
+                      searching={searching}
+                      results={searchResults}
+                      onSelect={handleSelectResult}
+                    />
+                  </div>
+                )}
+              </div>
+              <AvatarMenu />
+            </>
           )}
 
           <button
@@ -334,38 +387,12 @@ export default function Navbar() {
                 placeholder={t('Search lessons...')}
                 className="w-full rounded-md border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-gray-400"
               />
-              {debouncedSearch.length >= 2 && (
-                <div className="mt-2 rounded-xl border border-emerald-100 bg-white py-1">
-                  {searching && <p className="px-4 py-2.5 text-sm text-gray-400">{t('Searching...')}</p>}
-                  {!searching && searchResults.length === 0 && (
-                    <p className="px-4 py-2.5 text-sm text-gray-400">
-                      {t('No lessons found for "{{query}}".', { query: debouncedSearch })}
-                    </p>
-                  )}
-                  {!searching &&
-                    searchResults.map((topic) => {
-                      const categoryInfo = CATEGORIES.find((c) => c.slug === topic.category);
-                      return (
-                        <button
-                          key={topic._id}
-                          type="button"
-                          onClick={() => handleSelectResult(topic._id)}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-emerald-50 transition-colors"
-                        >
-                          <span className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-base shrink-0">
-                            {categoryInfo?.icon}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block text-sm font-medium text-gray-800 truncate">{localized(topic)}</span>
-                            <span className="block text-xs text-gray-400">
-                              {topic.level} · {t(categoryInfo?.label ?? topic.category)}
-                            </span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                </div>
-              )}
+              <SearchResults
+                query={debouncedSearch}
+                searching={searching}
+                results={searchResults}
+                onSelect={handleSelectResult}
+              />
             </div>
 
             <nav className="grid grid-cols-2 gap-2">
@@ -376,7 +403,7 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2 rounded-lg border border-emerald-100 px-3 py-2.5 text-sm font-semibold text-gray-800 hover:bg-emerald-50 transition-colors"
                 >
-                  <span className="text-base">{category.icon}</span>
+                  <CategoryIcon slug={category.slug} size={18} />
                   <span className="truncate">{t(category.label)}</span>
                 </Link>
               ))}

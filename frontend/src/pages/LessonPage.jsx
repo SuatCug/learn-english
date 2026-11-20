@@ -25,6 +25,7 @@ import VocabularyExplanation from '@/components/lesson/VocabularyExplanation';
 import { Trans, useTranslation } from 'react-i18next';
 import { localized } from '@/lib/localize';
 import usePageTitle from '@/hooks/usePageTitle';
+import { CategoryIcon } from '@/components/CategoryIcon';
 import { tk } from '@/i18n';
 
 const TABS = [
@@ -962,7 +963,7 @@ export default function LessonPage() {
                         {image ? (
                           <FadeImage src={image} width={1200} height={630} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-3xl">{categoryInfo?.icon}</span>
+                          <CategoryIcon slug={related.category} size={36} strokeWidth={1.25} />
                         )}
                       </div>
                       <p className="px-3 py-2.5 text-sm font-medium text-gray-800 leading-snug line-clamp-2">{localized(related)}</p>

@@ -5,6 +5,7 @@ import { CATEGORIES, LEVELS, CATEGORY_BANNER_CLASS, DEFAULT_BANNER_CLASS } from 
 import { levelIllustration } from '@/lib/categoryIllustrations';
 import { useTranslation } from 'react-i18next';
 import usePageTitle from '@/hooks/usePageTitle';
+import { CategoryIcon } from '@/components/CategoryIcon';
 
 const PALETTES = [
   'from-emerald-500 to-emerald-700',
@@ -52,7 +53,7 @@ export default function CategoryLevelsPage() {
                 {illustrationFor(level.code) ? (
                   <img src={illustrationFor(level.code)} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-5xl">{categoryInfo?.icon}</span>
+                  <CategoryIcon slug={categoryInfo?.slug} size={56} color="white" strokeWidth={1.25} />
                 )}
                 <span className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
                   {level.code}

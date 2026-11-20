@@ -10,6 +10,7 @@ import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrati
 import { useTranslation } from 'react-i18next';
 import { localized } from '@/lib/localize';
 import usePageTitle from '@/hooks/usePageTitle';
+import { CategoryIcon } from '@/components/CategoryIcon';
 
 const PALETTES = [
   'from-emerald-500 to-emerald-700',
@@ -67,7 +68,7 @@ function TopicCard({
           ) : illustration ? (
             <img src={illustration} alt="" className="w-full h-full object-cover" />
           ) : (
-            <span className="text-5xl">{categoryInfo?.icon}</span>
+            <CategoryIcon slug={categoryInfo?.slug} size={56} color="white" strokeWidth={1.25} />
           )}
           <span className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
             {level}
