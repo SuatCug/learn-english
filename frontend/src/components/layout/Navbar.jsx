@@ -249,12 +249,12 @@ export default function Navbar() {
       <div className="w-full px-4 sm:px-6 h-16 flex items-center justify-between gap-4 lg:gap-6">
         <Link to="/" className="flex items-center gap-2 min-w-0 shrink-0">
           <BrandMark size={30} />
-          <span className="text-lg font-bold text-white truncate md:hidden lg:inline">
+          <span className="text-lg font-bold text-white truncate">
             learnenglish
           </span>
         </Link>
 
-        <nav className="hidden md:flex flex-1 min-w-0 items-center justify-center gap-2.5 lg:gap-5 xl:gap-8">
+        <nav className="hidden xl:flex flex-1 min-w-0 items-center justify-center gap-5 2xl:gap-8">
           {CATEGORIES.map((category) => (
             <CategoryMenu
               key={category.slug}
@@ -283,7 +283,7 @@ export default function Navbar() {
             }`}
           >
             <School size={17} strokeWidth={1.75} aria-hidden="true" />
-            <span className="md:hidden xl:inline">{t('School Mode')}</span>
+            <span className="xl:hidden 2xl:inline">{t('School Mode')}</span>
           </Link>
 
           {isGuest ? (
@@ -362,7 +362,7 @@ export default function Navbar() {
             onClick={() => setMobileOpen((o) => !o)}
             aria-label={mobileOpen ? t('Close menu') : t('Open menu')}
             aria-expanded={mobileOpen}
-            className="md:hidden -mr-1 p-2 text-gray-300 hover:text-white transition-colors"
+            className="xl:hidden -mr-1 p-2 text-gray-300 hover:text-white transition-colors"
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -370,7 +370,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-800 bg-white shadow-sm">
+        <div className="xl:hidden border-t border-gray-800 bg-white shadow-sm">
           <div className="max-h-[calc(100vh-4rem)] overflow-y-auto px-4 py-4 space-y-5">
             <div className="relative">
               <Search

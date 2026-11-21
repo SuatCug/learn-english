@@ -660,17 +660,17 @@ export default function ProfilePage() {
           />
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <StrengthsCard progress={progress} />
           <RecentActivityCard progress={progress} />
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <StreakCard progress={progress} />
           <TopicsToReviewCard progress={progress} />
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <BadgesCard badges={user.badges} />
           <QuickLinksCard isPremium={user.isPremium} hasLevel={Boolean(user.level)} />
         </div>
