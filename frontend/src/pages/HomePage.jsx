@@ -170,29 +170,29 @@ function CategoryCard({ card }) {
   const { t } = useTranslation();
   const { Icon } = card;
   return (
-    <div className="px-4 py-2.5 sm:p-4 h-full">
+    <div className="px-4 py-2 sm:p-4 h-full">
       <div className="group h-full bg-white border border-[#f0f0f0] rounded-sm flex flex-col shadow-[0_1px_2px_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] transition-shadow duration-500 ease-in-out hover:shadow-[0_8px_17px_rgba(0,0,0,0.2),0_6px_20px_rgba(0,0,0,0.19)]">
-        <div className="relative h-48 sm:h-60 overflow-hidden rounded-t-[15px]">
+        <div className="relative h-36 sm:h-60 overflow-hidden rounded-t-[15px]">
           <img src={card.image} alt="" loading="lazy" className="w-full h-full object-cover" />
           <span
-            className="absolute top-3 right-0 text-white font-bold text-base sm:text-lg px-3 sm:px-4 py-1"
+            className="absolute top-2 sm:top-3 right-0 text-white font-bold text-sm sm:text-lg px-3 sm:px-4 py-1"
             style={{ backgroundColor: card.color }}
           >
             {t(card.tag)}
           </span>
           <span
-            className="absolute bottom-2 left-2 w-9 h-9 rounded-full flex items-center justify-center text-white"
+            className="absolute bottom-2 left-2 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-white"
             style={{ backgroundColor: card.color }}
           >
             <Icon size={18} strokeWidth={2} />
           </span>
         </div>
 
-        <div className="p-4 flex flex-col items-start flex-1">
-          <h4 className="text-xl sm:text-2xl font-semibold leading-none" style={{ color: card.color }}>
+        <div className="p-3 sm:p-4 flex flex-col items-start flex-1">
+          <h4 className="text-lg sm:text-2xl font-semibold leading-none" style={{ color: card.color }}>
             {t(card.title)}
           </h4>
-          <p className="mt-3 text-[15px] font-light text-gray-600 leading-snug flex-1">
+          <p className="mt-2 sm:mt-3 text-sm sm:text-[15px] font-light text-gray-600 leading-snug flex-1">
             {card.text ? (
               t(card.text)
             ) : (
@@ -205,7 +205,7 @@ function CategoryCard({ card }) {
           <Link
             to={card.to}
             style={{ '--card-color': card.color }}
-            className="mt-4 inline-block border-2 border-[#9d9d9d] text-[#9d9d9d] rounded-lg px-3 py-2 text-[17px] group-hover:border-[var(--card-color)] group-hover:text-[var(--card-color)] hover:bg-[var(--card-color)] hover:!text-white transition-colors"
+            className="mt-3 sm:mt-4 inline-block border-2 border-[#9d9d9d] text-[#9d9d9d] rounded-lg px-3 py-1.5 sm:py-2 text-[15px] sm:text-[17px] group-hover:border-[var(--card-color)] group-hover:text-[var(--card-color)] hover:bg-[var(--card-color)] hover:!text-white transition-colors"
           >
             {t(card.cta)}
           </Link>

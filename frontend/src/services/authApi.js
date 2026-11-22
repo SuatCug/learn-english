@@ -28,9 +28,13 @@ export const authApi = createApi({
     verifyEmailCode: builder.mutation({
       query: ({ email, code }) => ({ url: '/auth/verify-email', method: 'POST', body: { email, code } }),
     }),
-    // Google ile giriş: Google'dan gelen ID token (credential) backend'e gönderilir.
+    // Google ile giriş: Google'dan gelen ID token (credential) veya access token (accessToken) backend'e gönderilir.
     googleLogin: builder.mutation({
-      query: ({ credential }) => ({ url: '/auth/google', method: 'POST', body: { credential } }),
+      query: ({ credential, accessToken }) => ({
+        url: '/auth/google',
+        method: 'POST',
+        body: credential ? { credential } : { accessToken },
+      }),
     }),
     // Şifremi unuttum: kod gönder → kodu doğrula (resetToken döner) → yeni şifreyi kaydet.
     forgotPassword: builder.mutation({

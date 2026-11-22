@@ -82,7 +82,7 @@ function TopicCard({ topic, index, level, bannerClass, palettes, disabled, onSta
             {topic.emoji}
           </span>
         )}
-        <span className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
+        <span className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
           {level}
         </span>
       </div>
@@ -90,7 +90,7 @@ function TopicCard({ topic, index, level, bannerClass, palettes, disabled, onSta
         <BrandMark size={16} />
         <span className="text-white text-xs font-bold tracking-wide">learnenglish</span>
       </div>
-      <div className="p-4 bg-white text-center min-h-[5.5rem] flex flex-col items-center justify-center gap-1">
+      <div className="p-2.5 sm:p-4 bg-white text-center min-h-[5.5rem] flex flex-col items-center justify-center gap-1">
         <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-1">{localized(topic)}</p>
         <p className="text-xs text-gray-500 leading-snug line-clamp-2">{localized(topic, 'description')}</p>
       </div>
@@ -164,7 +164,7 @@ export default function AiTopicsPage({ section: sectionKey = 'chat' }) {
         {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
         {!isError && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {isLoading
               ? Array.from({ length: 6 }).map((_, i) => <PlaceholderCard key={i} />)
               : topics.map((topic, index) => (

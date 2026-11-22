@@ -70,7 +70,7 @@ function TopicCard({
           ) : (
             <CategoryIcon slug={categoryInfo?.slug} size={56} color="white" strokeWidth={1.25} />
           )}
-          <span className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
+          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
             {level}
           </span>
         </div>
@@ -78,7 +78,7 @@ function TopicCard({
           <BrandMark size={16} />
           <span className="text-white text-xs font-bold tracking-wide">learnenglish</span>
         </div>
-        <div className="p-4 bg-white text-center min-h-[4.5rem] flex items-center justify-center">
+        <div className="p-2.5 sm:p-4 bg-white text-center min-h-[4.5rem] flex items-center justify-center">
           <p className="text-sm font-medium text-gray-800 leading-snug line-clamp-2">{localized(topic)}</p>
         </div>
       </Link>
@@ -131,7 +131,7 @@ export default function TopicListPage() {
         )}
 
         {!isError && (isLoading || topics.length > 0) && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {isLoading
               ? Array.from({ length: 6 }).map((_, i) => <PlaceholderCard key={i} />)
               : topics.map((topic, index) => (

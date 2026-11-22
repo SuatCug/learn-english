@@ -58,17 +58,17 @@ function TopicCard({ category, topic, isLoading }) {
       <div className={`relative ${CARD_IMAGE_BOX} overflow-hidden bg-gray-100`}>
         <FadeImage src={image} width={1200} height={630} className="w-full h-full object-cover" />
         <span
-          className="absolute top-3 right-0 text-white font-bold text-sm px-3 py-1"
+          className="absolute top-2 sm:top-3 right-0 text-white font-bold text-xs sm:text-sm px-2 sm:px-3 py-1"
           style={{ backgroundColor: category.color }}
         >
           {t(category.label)}
         </span>
       </div>
-      <div className="p-4 min-h-[5.5rem] flex flex-col justify-center">
+      <div className="p-2.5 sm:p-4 min-h-[5.5rem] flex flex-col justify-center">
         <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: category.color }}>
           {topic.level} · {t(category.label)}
         </p>
-        <p className="mt-1 text-[15px] font-medium text-gray-800 leading-snug line-clamp-2">{localized(topic)}</p>
+        <p className="mt-1 text-sm sm:text-[15px] font-medium text-gray-800 leading-snug line-clamp-2">{localized(topic)}</p>
       </div>
     </Link>
   );
@@ -112,7 +112,7 @@ export default function TopicsOfTheDay() {
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-6">
         {CATEGORIES.map((category, i) => (
           <CategoryTopic key={category.slug} category={category} level={level} completedIds={completedIds} salt={i} />
         ))}
