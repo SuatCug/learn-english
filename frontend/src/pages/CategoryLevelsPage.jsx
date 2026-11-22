@@ -38,7 +38,7 @@ export default function CategoryLevelsPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 pt-6 flex-1 w-full">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {LEVELS.map((level, index) => (
             <Link
               key={level.code}
@@ -46,7 +46,7 @@ export default function CategoryLevelsPage() {
               className="rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
             >
               <div
-                className={`relative h-48 flex items-center justify-center overflow-hidden ${
+                className={`relative h-32 sm:h-48 flex items-center justify-center overflow-hidden ${
                   illustrationFor(level.code) ? '' : `bg-gradient-to-br ${PALETTES[index % PALETTES.length]}`
                 }`}
               >
@@ -55,15 +55,15 @@ export default function CategoryLevelsPage() {
                 ) : (
                   <CategoryIcon slug={categoryInfo?.slug} size={56} color="white" strokeWidth={1.25} />
                 )}
-                <span className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
+                <span className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/90 flex items-center justify-center text-xs font-bold text-gray-700 shadow">
                   {level.code}
                 </span>
-                <span className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm px-4 py-2.5">
+                <span className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm px-2.5 py-1.5 sm:px-4 sm:py-2.5">
                   <span className="block text-white font-bold text-sm leading-tight">{t(level.name)}</span>
                   <span className="block text-white/80 text-xs">{t('{{category}} Exercises', { category: categoryLabel })}</span>
                 </span>
               </div>
-              <div className="p-4 bg-white">
+              <div className="p-2.5 sm:p-4 bg-white">
                 <p className="text-sm font-medium text-gray-800 leading-snug">
                   {t('{{level}} {{category}} lessons and exercises', { level: level.code, category: categoryLabel })}
                 </p>
