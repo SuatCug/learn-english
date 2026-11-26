@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 const { Badge, Topic, Conversation } = require('../models');
 const { evaluateBadges, longestStreak, currentStreak, dayKey } = require('../utils/badgeEngine');
 
+// Konu tamamlama alıştırma sayısını Question koleksiyonundan okur (utils/topicCompletion.util.js);
+// testte veritabanı yok: her konu tek alıştırmalı sayılır.
+require('node:test').mock.method(require('../models').Question, 'aggregate', async () => []);
+
 const id = () => new mongoose.Types.ObjectId();
 const daysAgo = (n) => {
   const d = new Date();

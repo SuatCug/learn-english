@@ -1,4 +1,5 @@
 const { Topic } = require('../models');
+const { fullyCompletedTopicIds } = require('./topicCompletion.util');
 
 const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2'];
 
@@ -21,7 +22,8 @@ const maybeLevelUp = async (user) => {
   const nextLevel = LEVEL_ORDER[levelIndex + 1];
   if (!nextLevel) return null;
 
-  const distinctTopicIds = [...new Set(user.progress.filter((p) => p.topicId).map((p) => p.topicId.toString()))];
+  // Yalnızca TÜM alıştırmaları bitirilmiş konular sayılır.
+  const distinctTopicIds = [...(await fullyCompletedTopicIds(user.progress))];
   if (!distinctTopicIds.length) return null;
 
   const completedAtLevel = await Topic.countDocuments({ _id: { $in: distinctTopicIds }, level: user.level });

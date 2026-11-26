@@ -1,4 +1,5 @@
 const { Badge, Topic, Conversation } = require('../models');
+const { fullyCompletedTopicIds } = require('./topicCompletion.util');
 
 const dayKey = (date) => new Date(date).toISOString().slice(0, 10);
 
@@ -40,12 +41,14 @@ const currentStreak = (days) => {
 const buildStats = async (user) => {
   // Canlı oyun (Live Game) kayıtlarının topicId'si yoktur — gerçek bir konu tamamlanmış sayılmaz.
   const lessonEntries = user.progress.filter((p) => p.topicId);
-  const completedTopicIds = new Set(lessonEntries.map((p) => p.topicId.toString()));
+  // Konu, TÜM alıştırmaları bitince tamamlanmış sayılır (utils/topicCompletion.util.js).
+  const completedTopicIds = await fullyCompletedTopicIds(lessonEntries);
 
   const topicsByCategory = {};
   lessonEntries.forEach((p) => {
-    if (!p.category) return;
-    (topicsByCategory[p.category] ??= new Set()).add(p.topicId.toString());
+    const id = (p.topicId._id ?? p.topicId).toString();
+    if (!p.category || !completedTopicIds.has(id)) return;
+    (topicsByCategory[p.category] ??= new Set()).add(id);
   });
 
   let levelCompleted = false;

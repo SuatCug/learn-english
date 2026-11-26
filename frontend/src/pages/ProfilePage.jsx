@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next';
 import { localized } from '@/lib/localize';
 import usePageTitle from '@/hooks/usePageTitle';
 import { tk, dateLocale } from '@/i18n';
+import { completedTopicSet } from '../lib/completedTopics';
 
 // Kategori ikonları (Strengths by Category, Recent Activity, Topics to Review) — navbar menüleriyle aynı.
 const CATEGORY_ICONS = {
@@ -564,10 +565,11 @@ export default function ProfilePage() {
   const { levelProgress } = data.data;
   const progress = user.progress;
   const initial = user.name?.trim()?.charAt(0)?.toUpperCase() || '?';
-  const topicsCompleted = progress.length;
+  // Tamamlanan ders = bütün alıştırmaları bitmiş ders (sunucu hesaplar).
+  const topicsCompleted = completedTopicSet(user).size;
   // Toplam puan: sınıf sayfasındaki puan hesabıyla (classroom.controller.js) aynı — tamamlanan egzersizlerin skor toplamı.
   const totalPoints = progress.reduce((sum, entry) => sum + entry.score, 0);
-  const averageScore = topicsCompleted ? Math.round(totalPoints / topicsCompleted) : null;
+  const averageScore = progress.length ? Math.round(totalPoints / progress.length) : null;
   const levelIndex = LEVELS.findIndex((l) => l.code === user.level);
   const nextLevel = levelIndex >= 0 ? LEVELS[levelIndex + 1] : null;
 

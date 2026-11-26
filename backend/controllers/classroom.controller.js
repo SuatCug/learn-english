@@ -2,6 +2,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const { Classroom, Assignment, Topic, User, Question } = require('../models');
 const { generateJoinCode } = require('../utils/joinCode');
+const { getExerciseCounts, groupByTopic } = require('../utils/topicCompletion.util');
 
 const createUniqueJoinCode = async () => {
   for (let attempt = 0; attempt < 10; attempt += 1) {
@@ -169,15 +170,24 @@ const getResults = asyncHandler(async (req, res) => {
 
   // Ayrı bir sonuç şeması yok: her (öğrenci, ödev) çifti için user.progress içinden
   // assignmentId eşleşmesi aranıyor.
+  // Ödev, konunun TÜM alıştırmaları bitince tamamlanmış sayılır; puan = her alıştırmanın son puanının ortalaması.
+  const exerciseCounts = await getExerciseCounts(assignments.map((a) => a.topicId?._id).filter(Boolean));
   const results = students.map((student) => {
+    const byTopic = groupByTopic(student.progress);
     const scores = {};
     assignments.forEach((assignment) => {
-      const entry = student.progress.find(
-        (p) => p.assignmentId && p.assignmentId.toString() === assignment._id.toString()
-      );
-      scores[assignment._id.toString()] = entry
-        ? { completed: true, score: entry.score, completedAt: entry.completedAt }
-        : { completed: false, score: null, completedAt: null };
+      const topicId = assignment.topicId?._id?.toString();
+      const entry = topicId ? byTopic.get(topicId) : null;
+      const needed = (topicId && exerciseCounts.get(topicId)) || 1;
+      const done = entry && entry.groups.size >= needed;
+      const groupScores = entry ? [...entry.groups.values()].map((g) => g.score) : [];
+      scores[assignment._id.toString()] = done
+        ? {
+            completed: true,
+            score: Math.round(groupScores.reduce((a, b) => a + b, 0) / groupScores.length),
+            completedAt: entry.lastAt,
+          }
+        : { completed: false, score: null, completedAt: null, exercisesDone: entry ? entry.groups.size : 0, exercisesTotal: needed };
     });
     return { studentId: student._id, name: student.name, email: student.email, scores };
   });

@@ -5,6 +5,7 @@ const { User, Topic, Classroom, Assignment } = require('../models');
 const { dayKey, currentStreak, evaluateBadges } = require('../utils/badgeEngine');
 const { appendProgressEntry } = require('../utils/progress.util');
 const { getRequiredTopicCount } = require('../utils/levelProgress.util');
+const { fullyCompletedTopicIds } = require('../utils/topicCompletion.util');
 
 const me = asyncHandler(async (req, res) => {
   // Profil açılınca rozetler yeniden kontrol edilir: yeni eklenen rozetlerin şartını zaten sağlayanlar da kazanır.
@@ -21,11 +22,17 @@ const me = asyncHandler(async (req, res) => {
 
   const streak = currentStreak(user.progress.map((p) => dayKey(p.completedAt)));
 
+  // Tüm alıştırmaları bitirilmiş konular: istemciler "tamamlandı" işaretini buna göre koyar.
+  const completedSet = await fullyCompletedTopicIds(user.progress);
+  const completedTopicIds = [...completedSet];
+
   let levelProgress = null;
   if (user.level) {
     const requiredCount = await getRequiredTopicCount(user.level);
     const completedAtLevel = new Set(
-      user.progress.filter((p) => p.topicId?.level === user.level).map((p) => p.topicId._id.toString())
+      user.progress
+        .filter((p) => p.topicId?.level === user.level && completedSet.has(p.topicId._id.toString()))
+        .map((p) => p.topicId._id.toString())
     ).size;
     levelProgress = {
       completed: completedAtLevel,
@@ -34,7 +41,7 @@ const me = asyncHandler(async (req, res) => {
     };
   }
 
-  res.json({ success: true, data: { user: user.toSafeJSON(), streak, levelProgress } });
+  res.json({ success: true, data: { user: { ...user.toSafeJSON(), completedTopicIds }, streak, levelProgress } });
 });
 
 const addProgress = asyncHandler(async (req, res) => {

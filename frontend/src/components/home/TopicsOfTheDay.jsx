@@ -8,6 +8,7 @@ import { cloudinaryUrl } from '@/lib/cloudinary';
 import FadeImage from '@/components/FadeImage';
 import { CATEGORY_ILLUSTRATIONS, CARD_IMAGE_BOX } from '@/lib/categoryIllustrations';
 import { tk } from '@/i18n';
+import { completedTopicSet } from '../../lib/completedTopics';
 
 const CATEGORIES = [
   { slug: 'grammar', label: tk('Grammar'), color: '#1a8ec1' },
@@ -89,7 +90,7 @@ export default function TopicsOfTheDay() {
 
   const level = user?.level || DEFAULT_LEVEL;
   const hasLevel = Boolean(user?.level);
-  const completedIds = new Set((user?.progress ?? []).map((p) => p.topicId?.toString()).filter(Boolean));
+  const completedIds = completedTopicSet(user);
 
   return (
     <section className="max-w-[1400px] mx-auto px-4 sm:px-8 pb-12 sm:pb-16">

@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 import { localized } from '@/lib/localize';
 import usePageTitle from '@/hooks/usePageTitle';
 import i18n, { dateLocale } from '@/i18n';
+import { assignmentResult } from '../lib/completedTopics';
 
 // Oda detay sayfası: odanın renginde başlık (öğretmene katılma kodu), solda ödevler, sağda canlı oyun ve sınıf kartları.
 
@@ -356,15 +357,17 @@ function TeacherAssignments({ classroomId, assignments }) {
 function StudentAssignments({ classroomId, assignments }) {
   const { t } = useTranslation();
   const { data: meData } = useGetMeQuery();
-  const progress = meData?.data?.user?.progress;
+  const meUser = meData?.data?.user;
 
+  // Ödev, dersin TÜM alıştırmaları bitince yapılmış sayılır (lib/completedTopics.js).
   const progressByAssignment = useMemo(() => {
     const map = new Map();
-    (progress ?? []).forEach((p) => {
-      if (p.assignmentId) map.set(p.assignmentId, p);
+    assignments.forEach((a) => {
+      const result = assignmentResult(meUser, a);
+      if (result) map.set(a._id, result);
     });
     return map;
-  }, [progress]);
+  }, [meUser, assignments]);
 
   const doneCount = assignments.filter((a) => progressByAssignment.has(a._id)).length;
 

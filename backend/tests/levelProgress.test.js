@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 const { Topic } = require('../models');
 const { maybeLevelUp, LEVEL_UP_TOPICS_REQUIRED } = require('../utils/levelProgress.util');
 
+// Konu tamamlama alıştırma sayısını Question koleksiyonundan okur (utils/topicCompletion.util.js);
+// testte veritabanı yok: her konu tek alıştırmalı sayılır.
+require('node:test').mock.method(require('../models').Question, 'aggregate', async () => []);
+
 const makeUser = (level, topicCount) => {
   const user = {
     level,
