@@ -11,7 +11,8 @@
     "migrate:progress-titles": "node utils/migrateProgressTopicTitles.js",
     "migrate:levels": "node utils/migrateLevels.js",
     "upload:images": "node utils/uploadTopicImages.js",
-    "generate:listening": "node utils/generateListeningAudio.js"
+    "generate:listening": "node utils/generateListeningAudio.js",
+    "postinstall": "node scripts/install-piper.js"
   },
   "keywords": [],
   "author": "",

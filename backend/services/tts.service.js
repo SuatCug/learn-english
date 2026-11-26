@@ -11,7 +11,11 @@ const os = require('os');
 const path = require('path');
 const { spawn } = require('child_process');
 
-const PIPER_DIR = process.env.PIPER_DIR || path.join(os.homedir(), 'AppData', 'Local', 'piper-tts');
+// Render'da scripts/install-piper.js derleme sırasında backend/.piper-tts içine kurar; yerelde Windows klasörü.
+const BUNDLED_DIR = path.join(__dirname, '..', '.piper-tts');
+const PIPER_DIR =
+  process.env.PIPER_DIR ||
+  (fs.existsSync(BUNDLED_DIR) ? BUNDLED_DIR : path.join(os.homedir(), 'AppData', 'Local', 'piper-tts'));
 const PIPER_EXE = path.join(PIPER_DIR, 'piper', process.platform === 'win32' ? 'piper.exe' : 'piper');
 const VOICE = process.env.AI_TALK_VOICE || 'en_GB-cori-medium';
 const MODEL = path.join(PIPER_DIR, 'voices', `${VOICE}.onnx`);
@@ -129,8 +133,11 @@ class PiperWorker {
   }
 }
 
+// Her Piper işlemi modeli belleğe yükler (~100+ MB). Belleği az sunucuda (Render) seviyeler tek bir işlemi
+// paylaşır (B1 hızı); yerelde her seviyenin kendi hızıyla ayrı işlemi olur. PIPER_SINGLE_WORKER=1/0 ile ezilebilir.
+const SINGLE_WORKER = process.env.PIPER_SINGLE_WORKER ? process.env.PIPER_SINGLE_WORKER === '1' : Boolean(process.env.RENDER);
 const workers = {};
-const workerFor = (level) => (workers[level] ??= new PiperWorker(level));
+const workerFor = (level) => (SINGLE_WORKER ? (workers.shared ??= new PiperWorker('B1')) : (workers[level] ??= new PiperWorker(level)));
 
 // Aynı cümleler (konuların ilk mesajları, "Listen again") tekrar üretilmesin diye küçük bir bellek önbelleği;
 // aynı anda gelen aynı istekler (ön hazırlık + tarayıcı isteği) tek bir işi paylaşır.
@@ -162,7 +169,7 @@ const synthesize = (text, level = 'B1') => {
 // ısıtılmazsa her seviyede ilk sesli cevap çok gecikiyordu. Seviyeler sırayla ısıtılır (aynı anda 4 model yüklenmesin).
 const warmUp = async () => {
   if (!isAvailable()) return;
-  for (const level of Object.keys(STYLE)) {
+  for (const level of SINGLE_WORKER ? ['B1'] : Object.keys(STYLE)) {
     await synthesize('Hello.', level).catch(() => {});
   }
 };
