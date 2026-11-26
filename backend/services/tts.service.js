@@ -21,7 +21,8 @@ const VOICE = process.env.AI_TALK_VOICE || 'en_GB-cori-medium';
 const MODEL = path.join(PIPER_DIR, 'voices', `${VOICE}.onnx`);
 const OUT_DIR = path.join(os.tmpdir(), 'learn-english-tts'); // Piper'ın geçici WAV dosyaları
 const MAX_CHARS = 1500;
-const JOB_TIMEOUT_MS = 20000;
+// Render'ın zayıf işlemcisinde bir cümle daha uzun sürebilir; yarıda öldürmek modeli yeniden yüklettirip her şeyi yavaşlatır.
+const JOB_TIMEOUT_MS = Number(process.env.PIPER_JOB_TIMEOUT_MS) || (process.env.RENDER ? 60000 : 20000);
 
 // Listening kayıtlarıyla aynı: A1–A2 daha yavaş ve net, B1–B2 doğal hızda (lengthScale > 1 yavaşlatır).
 const STYLE = {
@@ -71,10 +72,17 @@ class PiperWorker {
       OUT_DIR,
     ]);
     proc.stdout.on('data', (d) => this.onStdout(d));
-    proc.stderr.on('data', () => {});
+    // Piper'ın hata çıktısı Render loglarında görünsün (yalnızca son satırlar).
+    proc.stderr.on('data', (d) => {
+      const line = d.toString().trim().split(/\r?\n/).pop();
+      if (/error|fail|cannot|not found/i.test(line)) console.warn('[tts] piper:', line);
+    });
     proc.stdin.on('error', () => {});
     proc.on('error', (err) => this.fail(proc, err));
-    proc.on('close', (code) => this.fail(proc, new Error(`Piper kapandı (kod ${code})`)));
+    proc.on('close', (code) => {
+      console.warn(`[tts] Piper işlemi kapandı (kod ${code}, seviye ${this.level})`);
+      this.fail(proc, new Error(`Piper kapandı (kod ${code})`));
+    });
     this.proc = proc;
   }
 
@@ -153,12 +161,18 @@ const synthesize = (text, level = 'B1') => {
   if (cache.has(key)) return Promise.resolve(cache.get(key));
   if (inFlight.has(key)) return inFlight.get(key);
 
+  const started = Date.now();
   const job = workerFor(lv)
     .run(clean)
     .then((wav) => {
+      console.log(`[tts] ${lv} ${clean.length} harf → ${Date.now() - started} ms`);
       cache.set(key, wav);
       if (cache.size > CACHE_LIMIT) cache.delete(cache.keys().next().value);
       return wav;
+    })
+    .catch((err) => {
+      console.warn(`[tts] ${lv} ${clean.length} harf başarısız (${Date.now() - started} ms): ${err.message}`);
+      throw err;
     })
     .finally(() => inFlight.delete(key));
   inFlight.set(key, job);
@@ -167,7 +181,10 @@ const synthesize = (text, level = 'B1') => {
 
 // Sunucu açılınca her seviyenin Piper işlemini önceden başlatır: ilk açılışta model ~10 sn'de yüklendiği için,
 // ısıtılmazsa her seviyede ilk sesli cevap çok gecikiyordu. Seviyeler sırayla ısıtılır (aynı anda 4 model yüklenmesin).
+// Render'da (ücretsiz plan) önceden yükleme yapılmaz: istemciler şimdilik sunucu sesini kullanmıyor, kullanılmayan
+// Piper işlemi kıt belleği ve işlemciyi harcamasın. PIPER_WARMUP=1 ile açılır.
 const warmUp = async () => {
+  if (process.env.RENDER && process.env.PIPER_WARMUP !== '1') return;
   if (!isAvailable()) return;
   for (const level of SINGLE_WORKER ? ['B1'] : Object.keys(STYLE)) {
     await synthesize('Hello.', level).catch(() => {});
