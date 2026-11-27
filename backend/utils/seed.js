@@ -4,6 +4,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 const connectDB = require('../config/db');
 const { Topic, Question, Badge } = require('../models');
+const { GAME_BADGES } = require('./gameBadges');
 const { snapshotIds, withStableTopicIds, withStableQuestionIds } = require('./stableIds');
 const { grammarTopics } = require('../data/grammarCurriculum');
 const { GRAMMAR_EXERCISES } = require('../data/grammarExercises');
@@ -94,6 +95,8 @@ const badges = [
   // Live Game
   { title: 'Game On', description: 'You played your first live game.', icon: '🎮', criteriaType: 'games_played', criteriaValue: 1 },
   { title: 'Quiz Regular', description: 'You played 10 live games.', icon: '🕹️', criteriaType: 'games_played', criteriaValue: 10 },
+  // Oyun Merkezi (tek kişilik oyunlar): tanımlar utils/gameBadges.js'te.
+  ...GAME_BADGES,
 ];
 
 // Genel Seviye Belirleme Sınavı: sabit, 55 sorudan oluşan tek bir test

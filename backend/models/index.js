@@ -6,4 +6,5 @@ module.exports = {
   Classroom: require('./classroom.model'),
   Assignment: require('./assignment.model'),
   Conversation: require('./conversation.model'),
+  GameResult: require('./gameResult.model'),
 };

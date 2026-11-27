@@ -9,5 +9,6 @@ router.use('/exams', require('./exam.routes'));
 router.use('/badges', require('./badge.routes'));
 router.use('/classrooms', require('./classroom.routes'));
 router.use('/ai', require('./aiChat.routes'));
+router.use('/games', require('./game.routes'));
 
 module.exports = router;

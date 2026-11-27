@@ -13,6 +13,7 @@ const { languageMiddleware } = require('./i18n');
 const registerGameSockets = require('./sockets');
 const { startStreakReminders } = require('./utils/streakReminder');
 const ttsService = require('./services/tts.service');
+const { ensureGameBadges } = require('./utils/gameBadges');
 
 const app = express();
 
@@ -56,4 +57,6 @@ connectDB().then(() => {
   ttsService.warmUp();
   // Seri hatırlatma mailleri (saat başı kontrol; STREAK_REMINDERS=off ile kapatılır).
   startStreakReminders();
+  // Oyun Merkezi rozetleri seed çalıştırılmamış veritabanında da olsun.
+  ensureGameBadges().catch((err) => console.error('Oyun rozetleri eklenemedi:', err.message));
 });

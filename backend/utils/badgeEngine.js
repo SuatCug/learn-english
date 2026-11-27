@@ -1,4 +1,4 @@
-const { Badge, Topic, Conversation } = require('../models');
+const { Badge, Topic, Conversation, GameResult } = require('../models');
 const { fullyCompletedTopicIds } = require('./topicCompletion.util');
 
 const dayKey = (date) => new Date(date).toISOString().slice(0, 10);
@@ -65,6 +65,18 @@ const buildStats = async (user) => {
   const aiCount = Object.fromEntries(aiRows.map((r) => [r._id, r.count]));
   const aiBest = aiRows.reduce((max, r) => Math.max(max, r.best ?? 0), 0);
 
+  // Oyun Merkezi: oyun türüne göre sayı ve hatasız bitirilen en uzun oyun (soru sayısı).
+  const soloRows = await GameResult.aggregate([
+    { $match: { userId: user._id } },
+    {
+      $group: {
+        _id: '$type',
+        count: { $sum: 1 },
+        longestPerfect: { $max: { $cond: [{ $eq: ['$correct', '$total'] }, '$total', 0] } },
+      },
+    },
+  ]);
+
   return {
     topicsCompleted: completedTopicIds.size,
     topicsByCategory,
@@ -76,6 +88,9 @@ const buildStats = async (user) => {
     aiCount,
     aiBest,
     gamesPlayed: user.progress.filter((p) => p.source === 'game').length,
+    soloGames: soloRows.reduce((n, r) => n + r.count, 0),
+    soloTypes: soloRows.length,
+    soloLongestPerfect: soloRows.reduce((max, r) => Math.max(max, r.longestPerfect ?? 0), 0),
   };
 };
 
@@ -91,6 +106,9 @@ const criteriaCheckers = {
   ai_conversations: (s, b) => (s.aiCount[b.criteriaCategory] ?? 0) >= b.criteriaValue,
   ai_high_score: (s, b) => s.aiBest >= b.criteriaValue,
   games_played: (s, b) => s.gamesPlayed >= b.criteriaValue,
+  solo_games_played: (s, b) => s.soloGames >= b.criteriaValue,
+  solo_game_perfect: (s, b) => s.soloLongestPerfect >= b.criteriaValue,
+  solo_game_types: (s, b) => s.soloTypes >= b.criteriaValue,
 };
 
 // Kullanıcının henüz kazanmadığı rozetleri kontrol edip kazandırır; yeni kazanılanları döndürür.

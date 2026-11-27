@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
-const { User, Topic, Classroom, Assignment } = require('../models');
+const { User, Topic, Classroom, Assignment, GameResult } = require('../models');
 const { dayKey, currentStreak, evaluateBadges } = require('../utils/badgeEngine');
 const { appendProgressEntry } = require('../utils/progress.util');
 const { getRequiredTopicCount } = require('../utils/levelProgress.util');
@@ -144,6 +144,7 @@ const deleteAccount = asyncHandler(async (req, res) => {
   }
   await Classroom.updateMany({ students: user._id }, { $pull: { students: user._id } });
 
+  await GameResult.deleteMany({ userId: user._id });
   await User.deleteOne({ _id: user._id });
 
   res.json({ success: true, message: 'Hesap silindi.' });

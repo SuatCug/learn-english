@@ -19,6 +19,9 @@ const badgeSchema = new mongoose.Schema(
         'ai_conversations', // bitirilen AI sohbeti sayısı; criteriaCategory: 'talk' | 'chat'
         'ai_high_score', // bir AI sohbetinde en az criteriaValue/10 puan
         'games_played', // oynanan canlı oyun sayısı
+        'solo_games_played', // Oyun Merkezi'nde bitirilen oyun sayısı
+        'solo_game_perfect', // en az criteriaValue soruluk bir oyunu hatasız bitirme
+        'solo_game_types', // oynanan farklı oyun türü sayısı
       ],
       required: true,
     },

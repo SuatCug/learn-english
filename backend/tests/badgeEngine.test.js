@@ -2,7 +2,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
-const { Badge, Topic, Conversation } = require('../models');
+const { Badge, Topic, Conversation, GameResult } = require('../models');
 const { evaluateBadges, longestStreak, currentStreak, dayKey } = require('../utils/badgeEngine');
 
 // Konu tamamlama alıştırma sayısını Question koleksiyonundan okur (utils/topicCompletion.util.js);
@@ -51,6 +51,10 @@ const BADGES = [
   badge('Chat Starter', 'ai_conversations', 1, 'chat'),
   badge('Fluent Moment', 'ai_high_score', 9),
   badge('Game On', 'games_played', 1),
+  badge('Player One', 'solo_games_played', 1),
+  badge('Game Fan', 'solo_games_played', 10),
+  badge('Flawless Run', 'solo_game_perfect', 10),
+  badge('All-Rounder', 'solo_game_types', 4),
 ];
 
 const makeUser = (overrides = {}) => {
@@ -72,10 +76,11 @@ const lesson = (topicId, { score = 80, category = 'grammar', day = 0 } = {}) => 
   topicId, score, category, source: 'lesson', completedAt: daysAgo(day),
 });
 
-const mockDb = (t, { levelTopicIds = [], aiRows = [] } = {}) => {
+const mockDb = (t, { levelTopicIds = [], aiRows = [], soloRows = [] } = {}) => {
   t.mock.method(Badge, 'find', () => ({ sort: async () => BADGES }));
   t.mock.method(Topic, 'find', () => ({ distinct: async () => levelTopicIds }));
   t.mock.method(Conversation, 'aggregate', async () => aiRows);
+  t.mock.method(GameResult, 'aggregate', async () => soloRows);
 };
 
 const titles = (badges) => badges.map((b) => b.title).sort();
@@ -140,4 +145,22 @@ test('artık var olmayan rozet bağlantıları ve tekrarlar temizlenir', async (
   assert.deepEqual(await evaluateBadges(user), []);
   assert.deepEqual(user.badges.map(String), [String(firstStep._id)]);
   assert.equal(user.saveCount, 1, 'temizlik kaydedilmeli');
+});
+
+test('Oyun Merkezi rozetleri: ilk oyun, hatasız 10 soruluk oyun, dört oyun türü', async (t) => {
+  mockDb(t, {
+    soloRows: [
+      { _id: 'quiz', count: 3, longestPerfect: 10 },
+      { _id: 'match', count: 1, longestPerfect: 0 },
+      { _id: 'builder', count: 1, longestPerfect: 5 },
+      { _id: 'truefalse', count: 1, longestPerfect: 0 },
+    ],
+  });
+  // 6 oyun → Game Fan (10) yok.
+  assert.deepEqual(titles(await evaluateBadges(makeUser())), ['All-Rounder', 'Flawless Run', 'Player One']);
+});
+
+test('Oyun Merkezi: 5 soruluk hatasız oyun Flawless Run vermez', async (t) => {
+  mockDb(t, { soloRows: [{ _id: 'quiz', count: 10, longestPerfect: 5 }] });
+  assert.deepEqual(titles(await evaluateBadges(makeUser())), ['Game Fan', 'Player One']);
 });
